@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "title": "Server Authority",
+  "intro": "Roblox now offers a server-authoritative netcode model: the server becomes the single source of truth for game state, and clients are only trusted to report inputs. This supplement explains why it exists, how it differs from the classic model taught in Unit 7, and what building on it looks like in practice.",
+  "note": "Platform-update supplement — added on request. Unit 7 (sections 44–46) describes the classic client-authoritative movement model, which remains the default; this module covers the newer opt-in alternative. Details follow the official documentation linked below.",
+  "relatedSections": [44, 45, 46],
+  "topics": [
+    {
+      "id": "why",
+      "title": "Why Server Authority Exists",
+      "summary": "In the classic model, each client simulates and owns its own character movement — which is exactly what movement exploits abuse.",
+      "points": [
+        "Classically, the client is authoritative over its own character's physics: position updates flow from client to server largely on trust. Speed, fly, and teleport exploits are all abuses of that trust.",
+        "Server-side checks on remotes (what Unit 7 teaches) protect your game logic and economy — but they can't fully protect movement itself while the client owns it.",
+        "Under Server Authority, the server simulates the world and owns the truth; clients send inputs, not positions. Movement cheating becomes a server-side validation problem instead of a trust problem.",
+        "The classic model is still the default and still fine for many games — the new model matters most where movement integrity is competitive or economic (PvP, races, anything worth cheating at)."
+      ],
+      "sources": [
+        { "label": "Roblox: Server authority model", "url": "https://create.roblox.com/docs/projects/server-authority" }
+      ]
+    },
+    {
+      "id": "models",
+      "title": "The Two Models Compared",
+      "summary": "Client-authoritative movement with network ownership vs. server-authoritative simulation with client prediction.",
+      "points": [
+        "Classic: each client owns its character physics; network ownership assigns other parts to clients or the server (section 44's model). Responsive by construction, exploitable by construction.",
+        "Server Authority: the server owns simulation. Naive versions of this feel laggy — every input would take a round trip before anything moves.",
+        "The fix is client-side prediction: your client simulates your inputs immediately and locally, while the server catches up and confirms — responsiveness without giving the client authority.",
+        "Network ownership as a concept doesn't disappear; the authority *model* for gameplay-critical simulation is what changes."
+      ],
+      "sources": [
+        { "label": "Roblox: Server authority model", "url": "https://create.roblox.com/docs/projects/server-authority" },
+        { "label": "Roblox: Network ownership", "url": "https://create.roblox.com/docs/physics/network-ownership" }
+      ]
+    },
+    {
+      "id": "enable",
+      "title": "Enabling It",
+      "summary": "Server Authority is opt-in and configured on Workspace — one property switches the mode, several supporting systems must be on.",
+      "points": [
+        "Set Workspace.AuthorityMode to Server — this is the master switch and configures the related settings.",
+        "The mode relies on: next-generation replication, the Input Action System for player scripts, deferred signal behavior, fixed-step simulation, and streaming enabled.",
+        "Because inputs become the only trusted client contribution, gameplay-affecting input should flow through the Input Action System rather than ad-hoc remotes.",
+        "Treat enabling it as an architectural decision at project start, not a toggle to flip on a shipped game — the simulation and replication semantics change."
+      ],
+      "sources": [
+        { "label": "Roblox: Server authority model", "url": "https://create.roblox.com/docs/projects/server-authority" }
+      ]
+    },
+    {
+      "id": "prediction",
+      "title": "Prediction, Misprediction, Rollback",
+      "summary": "The mental model that makes server-authoritative games feel instant.",
+      "points": [
+        "Prediction: your client applies your inputs immediately in a local simulation running ahead of the last confirmed server state — that's why movement feels instant despite the round trip.",
+        "Misprediction: the server's authoritative result can differ from what your client predicted — because of other players, server-only logic, or changing network conditions.",
+        "Rollback & resimulation: on divergence, the client resets to the server's confirmed state and re-applies its pending local inputs to catch back up.",
+        "Your job as a developer is to make rollbacks invisible: smooth rendering over corrections and design effects so a rolled-back prediction doesn't leave visible artifacts."
+      ],
+      "metrics": [
+        { "term": "RunService:BindToSimulation()", "meaning": "Runs your core gameplay simulation code in the fixed simulation step — shared between client prediction and server truth." },
+        { "term": "RunService:SetPredictionMode()", "meaning": "Fine-grained control over what the client predicts versus waits for." },
+        { "term": "Input Action System", "meaning": "The structured input layer; under Server Authority, inputs are the client's only trusted contribution." },
+        { "term": "Attributes", "meaning": "The synchronized custom-state channel between server truth and client prediction." }
+      ],
+      "sources": [
+        { "label": "Roblox: Server authority model", "url": "https://create.roblox.com/docs/projects/server-authority" }
+      ]
+    },
+    {
+      "id": "techniques",
+      "title": "Building Techniques",
+      "summary": "Patterns from the official techniques guide for shipping real mechanics on top of prediction.",
+      "points": [
+        "Predictive instance creation: clients can create instances inside the bound simulation without waiting for the server; deterministic IDs let client and server versions reconcile automatically (instance stitching).",
+        "Position smoothing: keep the simulated object invisible and render a visual clone that eases toward it — rollback corrections stop looking like teleports.",
+        "Effects through state machines: drive particles and sounds from predicted state so a misprediction can cleanly 'un-happen' instead of leaving a stray explosion.",
+        "Animations: mirror animation logic in the shared simulation and re-query tracks by animation ID instead of caching track objects — cached tracks go stale across rollbacks.",
+        "Design around latency: mechanics with built-in wind-up (a fuse before the explosion, gradual acceleration) hide network artifacts better than instant ones."
+      ],
+      "sources": [
+        { "label": "Roblox: Server authority techniques", "url": "https://create.roblox.com/docs/projects/server-authority/techniques" }
+      ]
+    },
+    {
+      "id": "limits",
+      "title": "Limits & Debugging",
+      "summary": "The current constraints to know before committing, and the tools for seeing what prediction is doing.",
+      "points": [
+        "Attribute sync has hard limits (a bounded number per instance and bounded name/string sizes) — design your synchronized state to be small and flat.",
+        "Only properties marked with simulation access in the reference can be used inside bound simulation code.",
+        "Remote events are not guaranteed to stay ordered relative to property and attribute updates — don't build sequencing assumptions across the two channels.",
+        "Studio ships a prediction visualizer (toggle in Studio) showing prediction success rates, input acceptance, and server frame rate — use it before guessing.",
+        "Watch misprediction rates like a stat: rising rates mean your simulation code diverges between client and server."
+      ],
+      "sources": [
+        { "label": "Roblox: Server authority techniques", "url": "https://create.roblox.com/docs/projects/server-authority/techniques" }
+      ]
+    }
+  ]
+}

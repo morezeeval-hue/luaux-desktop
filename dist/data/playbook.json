@@ -1,0 +1,135 @@
+{
+  "version": 1,
+  "title": "Producer Playbook",
+  "intro": "The course teaches you to engineer Luau systems. This module covers the other half of shipping a successful game: reading live-game data, understanding how Roblox distributes games, and designing for retention. Concepts are distilled from producer practice; each card links to the official Roblox documentation where the platform describes these systems itself.",
+  "note": "Supplementary module — added on request. Not part of the LuauX server curriculum and kept separate from the verified course content.",
+  "topics": [
+    {
+      "id": "metrics",
+      "title": "Reading the Numbers",
+      "summary": "Every decision about a live game should start from its data. These are the numbers that matter and what they actually tell you.",
+      "points": [
+        "Check stats before and after every change you ship — a change that doesn't move a number is a guess, not an improvement.",
+        "A single metric in isolation misleads. High visits with low retention means discovery is working but the game isn't holding anyone.",
+        "Watch trends over days and weeks, not hourly noise."
+      ],
+      "metrics": [
+        { "term": "CCU", "meaning": "Concurrent users — how many players are in the game right now. The headline health number; peaks show your ceiling." },
+        { "term": "Visits", "meaning": "Total sessions ever. Grows forever, so it measures reach, not current health." },
+        { "term": "D1 / D7 / D30 retention", "meaning": "The share of new players who come back one, seven, or thirty days later. D1 is the single strongest signal that the first session worked." },
+        { "term": "Average session time", "meaning": "How long a typical session lasts. Short sessions usually mean players run out of understandable things to do." },
+        { "term": "Early quits", "meaning": "Players leaving in the first minutes (a bounce). Almost always an onboarding or first-impression problem, not a content problem." },
+        { "term": "Payer conversion / revenue per user", "meaning": "How monetization performs relative to your audience size — revenue alone hides whether it comes from many small or few large purchases." }
+      ],
+      "sources": [
+        { "label": "Roblox: Analytics overview", "url": "https://create.roblox.com/docs/production/analytics" },
+        { "label": "Roblox: Retention analytics", "url": "https://create.roblox.com/docs/production/analytics/retention" },
+        { "label": "Roblox: Engagement analytics", "url": "https://create.roblox.com/docs/production/analytics/engagement" }
+      ]
+    },
+    {
+      "id": "discovery",
+      "title": "How Discovery Works",
+      "summary": "Roblox decides which games to show players. You cannot trick that system — you can only feed it the signals it rewards.",
+      "points": [
+        "Recommendations favor games whose players stay, return, and engage. Retention and session quality are the input; visibility is the output.",
+        "The home page, search, and the charts are different surfaces — a game can rise on one before the others.",
+        "Growth speed matters: a game climbing quickly gets tested in front of more players. That's why iteration velocity feeds discovery.",
+        "If distribution drops, the fix is almost never a marketing trick — it's improving the underlying engagement numbers."
+      ],
+      "sources": [
+        { "label": "Roblox: Discovery", "url": "https://create.roblox.com/docs/discovery" }
+      ]
+    },
+    {
+      "id": "research",
+      "title": "Idea & Market Research",
+      "summary": "Ideas are abundant; validated demand is rare. Research is how you tell the difference before spending months building.",
+      "points": [
+        "Study the top and trending charts on a regular schedule — not to copy, but to understand what fantasies players are currently paying attention to.",
+        "Play top games deliberately, like study sessions: what do you understand in the first 30 seconds, what pulls you back, where does the money sit?",
+        "Ask whether the core fantasy has mass appeal. A niche you love is not automatically a market.",
+        "Watch what's rising off-platform too — formats and memes often arrive on Roblox after proving themselves elsewhere."
+      ]
+    },
+    {
+      "id": "simplicity",
+      "title": "Simplicity × Depth",
+      "summary": "The winning pattern on the platform: one instantly understandable core mechanic that generates endless situations.",
+      "points": [
+        "A new player should understand cause and effect immediately: press this, that happens. If they have to figure the game out, most won't.",
+        "Depth should be emergent (collection, optimization, competition, randomness creating variety) — not a pile of extra features.",
+        "Much of the audience is very young. 'Easy to consume' is a design requirement, not a compromise.",
+        "Complexity is the default failure mode of skilled developers: every feature you add must survive the question 'does a nine-year-old get this in five seconds?'"
+      ]
+    },
+    {
+      "id": "firstsession",
+      "title": "First Session & Platform UX",
+      "summary": "D1 retention is decided in the first minutes of the first session — on whatever device the player happens to hold.",
+      "points": [
+        "Play your own game, constantly, on a fresh account — broken prompts and confusing first steps are invisible to the person who built them.",
+        "Test on mobile and console, not just desktop. Console and mobile players can be a third or more of your audience, and their input works differently.",
+        "Treat the tutorial as a live system: measure, rewrite, and re-test it repeatedly rather than shipping it once.",
+        "A short scripted intro (even a simple cutscene) can measurably cut early quits by giving new players context before they're dropped into the world.",
+        "Hunt friction relentlessly: every extra tap, unclear button, or dead moment in minute one costs real retention."
+      ],
+      "sources": [
+        { "label": "Roblox: Retention analytics", "url": "https://create.roblox.com/docs/production/analytics/retention" }
+      ]
+    },
+    {
+      "id": "loops",
+      "title": "Retention Loops & Social Flex",
+      "summary": "Players need a concrete reason to come back tomorrow — and a way to show others what they've built or earned.",
+      "points": [
+        "Design an explicit answer to 'what do I come back for tomorrow?' — a new unlock, a next collection tier, progress that continues.",
+        "Curiosity is a loop: 'what's the next thing I could get?' outperforms raw reward size.",
+        "Most top games have a social flex element: progress that other players can see, compare, and envy inside the game.",
+        "Competition between players (stealing, raiding, rankings) turns single-player progress into a reason to defend and return."
+      ],
+      "sources": [
+        { "label": "Roblox: Engagement analytics", "url": "https://create.roblox.com/docs/production/analytics/engagement" }
+      ]
+    },
+    {
+      "id": "clippability",
+      "title": "Clippability",
+      "summary": "Moments worth recording are free marketing. Design them on purpose.",
+      "points": [
+        "Watch what creators actually clip from games like yours: dramatic wins, funny physics, absurd fails, big steals.",
+        "Exaggerate feedback on your game's peak moments — a ragdoll flying into the void is a clip; a number ticking up is not.",
+        "If content creators can make an entertaining video without being paid, your game markets itself.",
+        "Ask of every major mechanic: what does its best moment look like in a 20-second clip?"
+      ]
+    },
+    {
+      "id": "iteration",
+      "title": "Iteration Velocity",
+      "summary": "The loop that compounds: research → hypothesis → ship → measure → repeat. Speed through this loop is a competitive weapon.",
+      "points": [
+        "Ship small changes frequently — daily patches and substantial weekly updates keep both players and the discovery system engaged.",
+        "Every change is an experiment: know beforehand which number it should move, then check whether it did.",
+        "Cross-reference multiple sources — your analytics, in-game behavior, community feedback, and competitor data — before trusting a conclusion.",
+        "Most attempts won't work. Volume of shipped experiments, not perfection per attempt, is what finds the wins."
+      ],
+      "sources": [
+        { "label": "Roblox: Analytics overview", "url": "https://create.roblox.com/docs/production/analytics" }
+      ]
+    },
+    {
+      "id": "production",
+      "title": "Team & Production",
+      "summary": "Execution beats ideas, and execution is a people problem: skill, speed, and clear roles.",
+      "points": [
+        "The idea is a fraction of the outcome; the quality and speed of execution is most of it.",
+        "Clear roles help: someone owns building the game, someone owns data, monetization, and distribution. Both jobs are full-time mindsets.",
+        "Buying templates or outsourcing without understanding the craft teaches you nothing and shows in the product.",
+        "Monetization is a design discipline of its own — plan what players pay for and why it feels fair, don't bolt it on at the end."
+      ],
+      "sources": [
+        { "label": "Roblox: Monetization analytics", "url": "https://create.roblox.com/docs/production/analytics/monetization" }
+      ]
+    }
+  ]
+}
