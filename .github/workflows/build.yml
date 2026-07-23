@@ -46,7 +46,7 @@ jobs:
           tagName: desktop-v__VERSION__
           releaseName: "LuauX Desktop v__VERSION__"
           releaseBody: |
-            Offline LuauX learning course — Journey, Practice with a real Luau
+            Offline LuauX learning course: Journey, Practice with a real Luau
             WebAssembly runtime, Reference docs, and the Producer Playbook /
             Server Authority extras. No account, no server, no telemetry.
 
