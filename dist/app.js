@@ -492,10 +492,30 @@
 
   LuauProgress.onChange(() => { if (route.view === "home" || route.view === "learn") render(); });
 
+  const ONBOARD_KEY = "luaux.desktop.onboarded.v1";
+
+  function showOnboarding() {
+    const overlay = document.createElement("div");
+    overlay.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:100";
+    overlay.innerHTML = `<div style="background:var(--bg);border-radius:16px;max-width:480px;padding:28px" onclick="event.stopPropagation()">
+      <h2 style="margin-top:0">Welcome to LuauX</h2>
+      <p>This is an offline course for learning Luau and Roblox game development — the Journey (lessons), Practice (real code exercises running a real Luau WebAssembly runtime), and Reference docs.</p>
+      <p><strong>No account, no server, no internet needed.</strong> Your progress is saved only on this computer.</p>
+      <p>Use the sidebar on the left to move between <strong>Home</strong>, <strong>Journey</strong>, <strong>Practice</strong>, and <strong>Reference</strong>. Home always shows what to continue next.</p>
+      <button class="btn primary" id="onboard-close" style="margin-top:8px">Get started</button>
+    </div>`;
+    document.body.appendChild(overlay);
+    $("#onboard-close").addEventListener("click", () => {
+      overlay.remove();
+      localStorage.setItem(ONBOARD_KEY, "1");
+    });
+  }
+
   window.addEventListener("DOMContentLoaded", async () => {
     try {
       await LuauData.load();
       render();
+      if (!localStorage.getItem(ONBOARD_KEY)) showOnboarding();
     } catch (err) {
       $("#main").innerHTML = `<h1 class="pagetitle">Couldn't load course data</h1><p class="subtitle">${esc(err.message)}</p>`;
     }
