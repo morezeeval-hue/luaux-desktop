@@ -508,6 +508,9 @@
     renderSidebar();
     const main = $("#main");
     main.className = ["lesson", "runner"].includes(route.view) ? "" : "narrow";
+    main.classList.remove("view-anim");
+    void main.offsetWidth;
+    main.classList.add("view-anim");
     switch (route.view) {
       case "home": viewHome(); break;
       case "learn": viewLearn(); break;
@@ -555,11 +558,13 @@
     dim.id = "tour-dim";
     const card = document.createElement("div");
     card.id = "tour-card";
+    card.className = "tour-card-anim";
+    const dimTransition = "transition:left .3s var(--ease),top .3s var(--ease),width .3s var(--ease),height .3s var(--ease);";
 
     if (step.navId) {
       const target = document.querySelector(`[data-nav="${step.navId}"]`);
       const rect = target.getBoundingClientRect();
-      dim.style.cssText = `position:fixed;left:${rect.left - 6}px;top:${rect.top - 6}px;width:${rect.width + 12}px;height:${rect.height + 12}px;border-radius:10px;box-shadow:0 0 0 9999px rgba(0,0,0,.65);z-index:100;pointer-events:none`;
+      dim.style.cssText = `${dimTransition}position:fixed;left:${rect.left - 6}px;top:${rect.top - 6}px;width:${rect.width + 12}px;height:${rect.height + 12}px;border-radius:10px;box-shadow:0 0 0 9999px rgba(0,0,0,.65);z-index:100;pointer-events:none`;
       card.style.cssText = `position:fixed;left:${Math.min(rect.right + 16, window.innerWidth - 300)}px;top:${rect.top}px;background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:18px;width:250px;z-index:101;box-shadow:0 12px 32px rgba(0,0,0,.35)`;
     } else {
       dim.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100";
@@ -580,11 +585,12 @@
 
   function showUpdateBanner(update) {
     const bar = document.createElement("div");
-    bar.style.cssText = "position:fixed;bottom:20px;right:20px;background:var(--accent);color:#fff;padding:16px 18px;border-radius:14px;max-width:300px;z-index:90;box-shadow:0 8px 24px rgba(0,0,0,.35)";
+    bar.className = "update-banner-anim";
+    bar.style.cssText = "position:fixed;bottom:20px;right:20px;background:var(--accent);color:#08120b;padding:16px 18px;border-radius:14px;max-width:300px;z-index:90;box-shadow:0 8px 24px rgba(0,0,0,.35)";
     bar.innerHTML = `<div style="font-weight:700;margin-bottom:4px">Update available: v${esc(update.version)}</div>
       <div style="font-size:12px;opacity:.9;margin-bottom:12px">Installs on restart. Your progress stays intact.</div>
-      <button id="update-install-btn" style="background:#fff;color:var(--accent);border:none;padding:7px 14px;border-radius:8px;font-weight:700;cursor:pointer">Install &amp; Restart</button>
-      <button id="update-dismiss-btn" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.5);margin-left:8px;padding:7px 12px;border-radius:8px;cursor:pointer">Later</button>`;
+      <button id="update-install-btn" style="background:#08120b;color:var(--accent);border:none;padding:7px 14px;border-radius:8px;font-weight:700;cursor:pointer">Install &amp; Restart</button>
+      <button id="update-dismiss-btn" style="background:transparent;color:#08120b;border:1px solid rgba(8,18,11,.4);margin-left:8px;padding:7px 12px;border-radius:8px;cursor:pointer">Later</button>`;
     document.body.appendChild(bar);
     $("#update-dismiss-btn", bar).addEventListener("click", () => bar.remove());
     $("#update-install-btn", bar).addEventListener("click", async () => {
@@ -608,14 +614,48 @@
     }
   }
 
+  function typeLine(el, text, speed) {
+    return new Promise((resolve) => {
+      let i = 0;
+      const tick = () => {
+        el.textContent = text.slice(0, i);
+        i++;
+        if (i <= text.length) setTimeout(tick, speed);
+        else resolve();
+      };
+      tick();
+    });
+  }
+
+  async function runBoot() {
+    const textEl = document.getElementById("boot-text");
+    const lines = ["booting luaux...", "loading course data...", "ready."];
+    for (const line of lines) {
+      await typeLine(textEl, line, 14);
+      await new Promise((r) => setTimeout(r, 220));
+      if (line !== lines[lines.length - 1]) textEl.textContent = "";
+    }
+    const boot = document.getElementById("boot");
+    const app = document.getElementById("app");
+    boot.classList.add("boot-out");
+    app.classList.remove("app-hidden");
+    app.classList.add("app-in");
+    setTimeout(() => boot.remove(), 500);
+  }
+
   window.addEventListener("DOMContentLoaded", async () => {
     try {
-      await LuauData.load();
+      const [ready] = await Promise.all([
+        LuauData.load(),
+        new Promise((r) => setTimeout(r, 550)),
+      ]);
       render();
+      await runBoot();
       if (!localStorage.getItem(ONBOARD_KEY)) tourStep(0);
       checkForUpdate();
     } catch (err) {
       $("#main").innerHTML = `<h1 class="pagetitle">Couldn't load course data</h1><p class="subtitle">${esc(err.message)}</p>`;
+      await runBoot();
     }
   });
 })();
