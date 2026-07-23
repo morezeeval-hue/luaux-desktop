@@ -39,7 +39,7 @@
   function renderSidebar() {
     const el = $("#sidebar");
     el.innerHTML =
-      '<div class="brand">{ } LuauX</div>' +
+      '<div class="brand"><span class="windots"><i></i><i></i><i></i></span>LuauX</div>' +
       NAV.map((n) => `<button class="navbtn ${(route.view === n.id || (n.id === "more" && MORE_VIEWS.includes(route.view))) ? "active" : ""}" data-nav="${n.id}"><span class="ic">${n.ic}</span>${n.label}</button>`).join("") +
       '<div class="spacer"></div>' +
       `<div class="streak">🔥 ${LuauProgress.streak}-day streak</div>`;
