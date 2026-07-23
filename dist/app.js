@@ -511,11 +511,42 @@
     });
   }
 
+  function showUpdateBanner(update) {
+    const bar = document.createElement("div");
+    bar.style.cssText = "position:fixed;bottom:20px;right:20px;background:var(--accent);color:#fff;padding:16px 18px;border-radius:14px;max-width:300px;z-index:90;box-shadow:0 8px 24px rgba(0,0,0,.35)";
+    bar.innerHTML = `<div style="font-weight:700;margin-bottom:4px">Update available: v${esc(update.version)}</div>
+      <div style="font-size:12px;opacity:.9;margin-bottom:12px">Installs on restart. Your progress stays intact.</div>
+      <button id="update-install-btn" style="background:#fff;color:var(--accent);border:none;padding:7px 14px;border-radius:8px;font-weight:700;cursor:pointer">Install &amp; Restart</button>
+      <button id="update-dismiss-btn" style="background:transparent;color:#fff;border:1px solid rgba(255,255,255,.5);margin-left:8px;padding:7px 12px;border-radius:8px;cursor:pointer">Later</button>`;
+    document.body.appendChild(bar);
+    $("#update-dismiss-btn", bar).addEventListener("click", () => bar.remove());
+    $("#update-install-btn", bar).addEventListener("click", async () => {
+      bar.innerHTML = '<div style="font-weight:600">Downloading update…</div>';
+      try {
+        await update.downloadAndInstall();
+        await window.__TAURI__.process.relaunch();
+      } catch (err) {
+        bar.innerHTML = `<div style="font-weight:600">Update failed</div><div style="font-size:12px;opacity:.9">${esc(err.message || String(err))}</div>`;
+      }
+    });
+  }
+
+  async function checkForUpdate() {
+    if (!window.__TAURI__ || !window.__TAURI__.updater) return;
+    try {
+      const update = await window.__TAURI__.updater.check();
+      if (update) showUpdateBanner(update);
+    } catch (err) {
+      // Offline or update server unreachable — fail silently, the app works fully offline.
+    }
+  }
+
   window.addEventListener("DOMContentLoaded", async () => {
     try {
       await LuauData.load();
       render();
       if (!localStorage.getItem(ONBOARD_KEY)) showOnboarding();
+      checkForUpdate();
     } catch (err) {
       $("#main").innerHTML = `<h1 class="pagetitle">Couldn't load course data</h1><p class="subtitle">${esc(err.message)}</p>`;
     }
