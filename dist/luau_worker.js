@@ -1,4 +1,4 @@
-/* Web Worker for Luau WASM execution — ported directly from the LuauX
+/* Web Worker for Luau WASM execution, ported directly from the LuauX
  * server's public/wasm/luau_worker.js so behavior matches exactly. */
 importScripts("wasm/luau.js");
 

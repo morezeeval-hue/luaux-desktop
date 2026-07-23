@@ -14,7 +14,7 @@ window.LuauProgress = (function () {
     try {
       const raw = localStorage.getItem(KEY);
       if (raw) return Object.assign(blank(), JSON.parse(raw));
-    } catch (e) { /* corrupt or unavailable storage — start fresh */ }
+    } catch (e) { /* corrupt or unavailable storage, start fresh */ }
     return blank();
   }
 
