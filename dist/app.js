@@ -1,4 +1,4 @@
-/* LuauX Desktop — vanilla JS shell. One purpose: let the learner study the
+/* LuauX Desktop: vanilla JS shell. One purpose: let the learner study the
  * verified LuauX course and run real Luau, offline, with no account. */
 (function () {
   "use strict";
@@ -24,10 +24,9 @@
     { id: "home", label: "Home", ic: "◐" },
     { id: "learn", label: "Journey", ic: "▤" },
     { id: "practice", label: "Practice", ic: "▷" },
-    { id: "reference", label: "Reference", ic: "▥" },
-    { id: "playbook", label: "Extras", ic: "✦" },
-    { id: "you", label: "You", ic: "◔" },
+    { id: "more", label: "More", ic: "▥" },
   ];
+  const MORE_VIEWS = ["reference", "playbook", "you"];
 
   let route = { view: "home" };
 
@@ -41,7 +40,7 @@
     const el = $("#sidebar");
     el.innerHTML =
       '<div class="brand">{ } LuauX</div>' +
-      NAV.map((n) => `<button class="navbtn ${route.view === n.id ? "active" : ""}" data-nav="${n.id}"><span class="ic">${n.ic}</span>${n.label}</button>`).join("") +
+      NAV.map((n) => `<button class="navbtn ${(route.view === n.id || (n.id === "more" && MORE_VIEWS.includes(route.view))) ? "active" : ""}" data-nav="${n.id}"><span class="ic">${n.ic}</span>${n.label}</button>`).join("") +
       '<div class="spacer"></div>' +
       `<div class="streak">🔥 ${LuauProgress.streak}-day streak</div>`;
     el.querySelectorAll("[data-nav]").forEach((btn) => btn.addEventListener("click", () => go(btn.dataset.nav)));
@@ -104,7 +103,7 @@
 
   function viewLearn() {
     const data = LuauData.current;
-    let html = '<h1 class="pagetitle">Journey</h1><p class="subtitle">10 units, in the recommended order — nothing is locked.</p>';
+    let html = '<h1 class="pagetitle">Journey</h1><p class="subtitle">10 units, in the recommended order. Nothing is locked.</p>';
     html += '<input class="searchbox" id="search" placeholder="Search lessons, docs, exercises…">';
     html += '<div id="search-results"></div><div id="chapter-list">';
     for (const unit of data.textbook.units) {
@@ -333,7 +332,7 @@
     window.__currentMode = mode;
     window.__currentExerciseID = params.exerciseID;
 
-    document.title = "LuauX — " + title;
+    document.title = "LuauX · " + title;
     $("#main").innerHTML = `<div class="runner">
       ${prompt ? `<div class="prompt">${esc(prompt)}</div>` : ""}
       <textarea id="editor" spellcheck="false">${esc(code)}</textarea>
@@ -382,7 +381,7 @@
         LuauProgress.setExerciseDone(window.__currentExerciseID);
         alert("Exercise Completed! Your code passed all runtime assertions.");
       } else {
-        alert("Not yet — an assertion failed or the script hit a syntax/runtime error. Check the console.");
+        alert("Not yet: an assertion failed or the script hit a syntax/runtime error. Check the console.");
       }
       return;
     }
@@ -391,12 +390,12 @@
     const text = result.stdout.join("\n");
     const bad = firstCapture(ch.badPattern, text), good = firstCapture(ch.goodPattern, text);
     if (result.exitCode !== 0 || bad == null || good == null || good <= 0) {
-      alert("Not yet — " + data0strip(ch.failHint || "the benchmark output did not match the expected format."));
+      alert("Not yet: " + data0strip(ch.failHint || "the benchmark output did not match the expected format."));
       return;
     }
     const margin = bad / good;
     const passed = margin >= ch.threshold;
-    alert((passed ? "Passed! " : "Not yet — ") + `Slow: ${bad.toFixed(3)}ms · Fast: ${good.toFixed(3)}ms · Speedup: ${margin.toFixed(2)}x (target ${ch.threshold}x)\n\n` + data0strip(passed ? ch.successMsg : ch.failHint));
+    alert((passed ? "Passed! " : "Not yet: ") + `Slow: ${bad.toFixed(3)}ms · Fast: ${good.toFixed(3)}ms · Speedup: ${margin.toFixed(2)}x (target ${ch.threshold}x)\n\n` + data0strip(passed ? ch.successMsg : ch.failHint));
   }
   function data0strip(html) { return LuauData.current.stripHTML(html || ""); }
   function firstCapture(pattern, text) {
@@ -432,7 +431,7 @@
     for (const topic of playbook.topics) {
       html += `<details class="details-panel"><summary><strong>${esc(topic.title)}</strong><div style="font-size:12px;color:var(--secondary);margin-top:2px">${esc(topic.summary)}</div></summary>
         <div class="body"><ul>${topic.points.map((p) => `<li>${esc(p)}</li>`).join("")}</ul>`;
-      if (topic.metrics) html += topic.metrics.map((m) => `<p><strong>${esc(m.term)}</strong> — ${esc(m.meaning)}</p>`).join("");
+      if (topic.metrics) html += topic.metrics.map((m) => `<p><strong>${esc(m.term)}</strong>: ${esc(m.meaning)}</p>`).join("");
       if (topic.sources) html += topic.sources.map((s) => `<p><a href="${esc(s.url)}" target="_blank">${esc(s.label)} ↗</a></p>`).join("");
       html += "</div></details>";
     }
@@ -442,7 +441,7 @@
 
   function viewExtras() {
     const data = LuauData.current;
-    let html = '<h1 class="pagetitle">Extras</h1><p class="subtitle">Supplementary modules — game production practice and platform updates, kept separate from the verified course content.</p>';
+    let html = '<h1 class="pagetitle">Extras</h1><p class="subtitle">Supplementary modules: game production practice and platform updates, kept separate from the verified course content.</p>';
     html += playbookSectionHTML(data.playbook);
     html += playbookSectionHTML(data.serverAuthority);
     $("#main").innerHTML = html;
@@ -460,11 +459,26 @@
     </div>`;
     html += `<div class="card"><div class="row" style="margin-bottom:10px"><span style="width:150px;color:var(--secondary);font-size:13px">Course revision</span><span style="font-family:monospace;font-size:12px">${esc(data.learning.revision.slice(0,12))}</span></div>
       <div class="row"><span style="width:150px;color:var(--secondary);font-size:13px">Documentation</span><a href="${esc(data.path.meta.docsBase)}" target="_blank">${esc(data.path.meta.source)}</a></div></div>`;
+    html += `<button class="btn ghost" id="tour-btn" style="margin-top:10px">Show App Tour Again</button>`;
     html += `<button class="btn ghost" id="reset-btn" style="margin-top:10px;color:var(--red)">Reset All Progress</button>`;
     $("#main").innerHTML = html;
+    $("#tour-btn").addEventListener("click", () => tourStep(0));
     $("#reset-btn").addEventListener("click", () => {
       if (confirm("Reset all progress? Course content is unchanged.")) { LuauProgress.resetAll(); render(); }
     });
+  }
+
+  function viewMore() {
+    const journey = LuauProgress.journeyProgress();
+    let html = '<h1 class="pagetitle">More</h1><p class="subtitle">Docs, extra reading, and your stats.</p>';
+    html += `<div class="chapter" data-go="reference"><div class="badge">▥</div><div class="info">
+      <div class="name">Reference</div><div class="skill">Look up syntax, functions, and Roblox APIs</div></div></div>`;
+    html += `<div class="chapter" data-go="playbook"><div class="badge">✦</div><div class="info">
+      <div class="name">Extras</div><div class="skill">Game production practice and platform deep-dives</div></div></div>`;
+    html += `<div class="chapter" data-go="you"><div class="badge">◔</div><div class="info">
+      <div class="name">You</div><div class="skill">${journey.done} of ${journey.total} milestones · ${LuauProgress.streak}-day streak</div></div></div>`;
+    $("#main").innerHTML = html;
+    $("#main").querySelectorAll("[data-go]").forEach((el) => el.addEventListener("click", () => go(el.dataset.go)));
   }
 
   function render() {
@@ -485,6 +499,7 @@
       case "track": viewTrack(route.trackID); break;
       case "playbook": viewExtras(); break;
       case "you": viewYou(); break;
+      case "more": viewMore(); break;
       default: viewHome();
     }
     main.scrollTop = 0;
@@ -494,21 +509,50 @@
 
   const ONBOARD_KEY = "luaux.desktop.onboarded.v1";
 
-  function showOnboarding() {
-    const overlay = document.createElement("div");
-    overlay.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:100";
-    overlay.innerHTML = `<div style="background:var(--bg);border-radius:16px;max-width:480px;padding:28px" onclick="event.stopPropagation()">
-      <h2 style="margin-top:0">Welcome to LuauX</h2>
-      <p>This is an offline course for learning Luau and Roblox game development — the Journey (lessons), Practice (real code exercises running a real Luau WebAssembly runtime), and Reference docs.</p>
-      <p><strong>No account, no server, no internet needed.</strong> Your progress is saved only on this computer.</p>
-      <p>Use the sidebar on the left to move between <strong>Home</strong>, <strong>Journey</strong>, <strong>Practice</strong>, and <strong>Reference</strong>. Home always shows what to continue next.</p>
-      <button class="btn primary" id="onboard-close" style="margin-top:8px">Get started</button>
-    </div>`;
-    document.body.appendChild(overlay);
-    $("#onboard-close").addEventListener("click", () => {
-      overlay.remove();
-      localStorage.setItem(ONBOARD_KEY, "1");
-    });
+  const TOUR_STEPS = [
+    { navId: null, title: "Welcome to LuauX", body: "An offline course for Luau and Roblox game development. No account, no server: everything you do is saved only on this computer." },
+    { navId: "home", title: "Home", body: "Your home base. Always shows what to continue next, your streak, and any bookmarks." },
+    { navId: "learn", title: "Journey", body: "Ten units of lessons, in a suggested order. Nothing is locked, jump anywhere." },
+    { navId: "practice", title: "Practice", body: "Coding exercises that run on a real Luau engine, right on this computer." },
+    { navId: "more", title: "More", body: "Reference docs, extra reading, and your stats live here." },
+  ];
+
+  function removeTourUI() {
+    const dim = document.getElementById("tour-dim"); if (dim) dim.remove();
+    const card = document.getElementById("tour-card"); if (card) card.remove();
+  }
+
+  function tourStep(i) {
+    removeTourUI();
+    if (i >= TOUR_STEPS.length) { localStorage.setItem(ONBOARD_KEY, "1"); return; }
+    const step = TOUR_STEPS[i];
+    if (step.navId) go(step.navId);
+
+    const dim = document.createElement("div");
+    dim.id = "tour-dim";
+    const card = document.createElement("div");
+    card.id = "tour-card";
+
+    if (step.navId) {
+      const target = document.querySelector(`[data-nav="${step.navId}"]`);
+      const rect = target.getBoundingClientRect();
+      dim.style.cssText = `position:fixed;left:${rect.left - 6}px;top:${rect.top - 6}px;width:${rect.width + 12}px;height:${rect.height + 12}px;border-radius:10px;box-shadow:0 0 0 9999px rgba(0,0,0,.65);z-index:100;pointer-events:none`;
+      card.style.cssText = `position:fixed;left:${Math.min(rect.right + 16, window.innerWidth - 300)}px;top:${rect.top}px;background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:18px;width:250px;z-index:101;box-shadow:0 12px 32px rgba(0,0,0,.35)`;
+    } else {
+      dim.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100";
+      card.style.cssText = "position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:26px;width:320px;z-index:101;box-shadow:0 12px 32px rgba(0,0,0,.35)";
+    }
+
+    card.innerHTML = `<div style="font-weight:700;font-size:16px;margin-bottom:8px">${esc(step.title)}</div>
+      <div style="font-size:13px;color:var(--secondary);line-height:1.5;margin-bottom:16px">${esc(step.body)}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <button id="tour-skip" style="background:transparent;border:none;color:var(--secondary);cursor:pointer;font-size:12px;padding:4px">Skip</button>
+        <button id="tour-next" class="btn primary" style="padding:7px 16px">${i === TOUR_STEPS.length - 1 ? "Done" : "Next"}</button>
+      </div>`;
+    document.body.appendChild(dim);
+    document.body.appendChild(card);
+    $("#tour-skip").addEventListener("click", () => { removeTourUI(); localStorage.setItem(ONBOARD_KEY, "1"); });
+    $("#tour-next").addEventListener("click", () => tourStep(i + 1));
   }
 
   function showUpdateBanner(update) {
@@ -537,7 +581,7 @@
       const update = await window.__TAURI__.updater.check();
       if (update) showUpdateBanner(update);
     } catch (err) {
-      // Offline or update server unreachable — fail silently, the app works fully offline.
+      // Offline or update server unreachable: fail silently, the app works fully offline.
     }
   }
 
@@ -545,7 +589,7 @@
     try {
       await LuauData.load();
       render();
-      if (!localStorage.getItem(ONBOARD_KEY)) showOnboarding();
+      if (!localStorage.getItem(ONBOARD_KEY)) tourStep(0);
       checkForUpdate();
     } catch (err) {
       $("#main").innerHTML = `<h1 class="pagetitle">Couldn't load course data</h1><p class="subtitle">${esc(err.message)}</p>`;
