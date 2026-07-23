@@ -407,10 +407,25 @@
     const data = LuauData.current;
     let html = `<h1 class="pagetitle">Reference</h1><p class="subtitle">${esc(data.path.meta.tagline)}<br><span style="font-size:12px">Source: ${esc(data.path.meta.source)}</span></p>`;
     for (const track of data.path.tracks) {
-      html += `<div class="chapter" data-track="${esc(track.id)}"><div class="badge">${track.no}</div><div class="info"><div class="name">${esc(track.name)}</div><div class="skill">${esc(track.blurb)}</div></div></div>`;
+      const dives = track.deepDives ? track.deepDives.length : 0;
+      html += `<div class="chapter" data-track="${esc(track.id)}"><div class="badge">${track.no}</div><div class="info"><div class="name">${esc(track.name)}</div><div class="skill">${esc(track.blurb)}${dives ? ` · ${dives} deep dive${dives > 1 ? "s" : ""}` : ""}</div></div></div>`;
     }
     $("#main").innerHTML = html;
     $("#main").querySelectorAll("[data-track]").forEach((el) => el.addEventListener("click", () => go("track", { trackID: el.dataset.track })));
+  }
+
+  function renderDeepDiveBlock(b) {
+    let out = "";
+    if (b.h) out += `<h4>${esc(b.h)}</h4>`;
+    if (b.p) out += `<p>${esc(b.p)}</p>`;
+    if (b.code) out += `<pre><code>${highlight(b.code)}</code></pre>`;
+    if (b.list) out += "<ul>" + b.list.map((li) => `<li>${esc(li)}</li>`).join("") + "</ul>";
+    if (b.table) {
+      out += "<table class='gap-table'><thead><tr>" + b.table.head.map((h) => `<th>${esc(h)}</th>`).join("") + "</tr></thead><tbody>" +
+        b.table.rows.map((row) => "<tr>" + row.map((c) => `<td>${esc(c)}</td>`).join("") + "</tr>").join("") +
+        "</tbody></table>";
+    }
+    return out;
   }
 
   function viewTrack(trackID) {
@@ -423,6 +438,13 @@
         <div class="body"><p>${esc(item.c)}</p>${item.prt ? `<p style="color:var(--secondary)">↳ ${esc(item.prt)}</p>` : ""}
         <p><a href="${esc(data.docsURL(item))}" target="_blank">Open in Roblox Docs ↗</a></p></div></details>`;
     }
+    if (track.deepDives && track.deepDives.length) {
+      html += `<h3 style="margin-top:30px">Deep Dives</h3><p class="subtitle" style="margin-top:-6px">Answers to the questions the official docs leave out.</p>`;
+      for (const g of track.deepDives) {
+        html += `<details class="details-panel"><summary><strong>${esc(g.title)}</strong><div style="font-size:12px;color:var(--secondary);margin-top:2px">${esc(g.why)}</div></summary>
+          <div class="body">${g.body.map(renderDeepDiveBlock).join("")}</div></details>`;
+      }
+    }
     $("#main").innerHTML = html;
   }
 
@@ -432,6 +454,7 @@
       html += `<details class="details-panel"><summary><strong>${esc(topic.title)}</strong><div style="font-size:12px;color:var(--secondary);margin-top:2px">${esc(topic.summary)}</div></summary>
         <div class="body"><ul>${topic.points.map((p) => `<li>${esc(p)}</li>`).join("")}</ul>`;
       if (topic.metrics) html += topic.metrics.map((m) => `<p><strong>${esc(m.term)}</strong>: ${esc(m.meaning)}</p>`).join("");
+      if (topic.code) html += `<pre><code>${highlight(topic.code)}</code></pre>`;
       if (topic.sources) html += topic.sources.map((s) => `<p><a href="${esc(s.url)}" target="_blank">${esc(s.label)} ↗</a></p>`).join("");
       html += "</div></details>";
     }

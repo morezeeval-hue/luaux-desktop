@@ -116,6 +116,10 @@ button.btn.ghost { background: var(--card); color: var(--fg); }
 .details-panel .body { background: var(--card); border-radius: 0 0 12px 12px; padding: 4px 16px 16px; margin-bottom: 8px; }
 .pill { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 10px; background: var(--accent); color: white; opacity: 0.85; }
 
+.gap-table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin: 10px 0; }
+.gap-table th, .gap-table td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--border); }
+.gap-table th { color: var(--secondary); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .03em; }
+
 .searchbox { width: 100%; padding: 9px 12px; border-radius: 9px; border: 1px solid var(--border); background: var(--bg); color: var(--fg); font-size: 13.5px; margin-bottom: 16px; }
 .hit { padding: 10px 12px; border-radius: 10px; cursor: pointer; }
 .hit:hover { background: var(--card); }
