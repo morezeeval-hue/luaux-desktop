@@ -1,0 +1,689 @@
+{
+  "version": 3,
+  "revision": "378be153d4ac78448142b83976cc2d60726d3c1be1946830da0abd14d806d092",
+  "units": {
+    "1": {
+      "slug": "language-control",
+      "skill": "Control the language",
+      "outcome": "Read and write Luau expressions, decisions, and loops without guessing.",
+      "proof": {
+        "id": "proof:language-control",
+        "title": "Interactive gameplay rule",
+        "brief": "Prove the fundamentals inside Roblox Studio with one small, observable system.",
+        "checks": [
+          "Create a Script that stores at least two local values with clear names.",
+          "Use a conditional to change an Instance property from those values.",
+          "Use a bounded loop and confirm the Output has no warnings or infinite yields."
+        ],
+        "stepIds": [
+          "proof:language-control:step:0",
+          "proof:language-control:step:1",
+          "proof:language-control:step:2"
+        ],
+        "premium": false
+      }
+    },
+    "2": {
+      "slug": "functions-data",
+      "skill": "Design reusable code",
+      "outcome": "Build functions and table APIs with intentional scope and state.",
+      "proof": {
+        "id": "proof:functions-data",
+        "title": "Reusable inventory module",
+        "brief": "Build a ModuleScript whose state cannot be accidentally overwritten by callers.",
+        "checks": [
+          "Create a ModuleScript with add, remove, and get functions.",
+          "Keep the backing table local and return copies or controlled results.",
+          "Require it from a second Script and test success plus failure cases."
+        ],
+        "stepIds": [
+          "proof:functions-data:step:0",
+          "proof:functions-data:step:1",
+          "proof:functions-data:step:2"
+        ],
+        "premium": false
+      }
+    },
+    "3": {
+      "slug": "standard-libraries",
+      "skill": "Use the standard library",
+      "outcome": "Transform strings, tables, numbers, buffers, and coroutines with the right tool.",
+      "proof": {
+        "id": "proof:standard-libraries",
+        "title": "Utility pipeline",
+        "stepIds": [
+          "proof:standard-libraries:step:0",
+          "proof:standard-libraries:step:1",
+          "proof:standard-libraries:step:2"
+        ],
+        "premium": true,
+        "brief": "Turn raw gameplay data into a safe, formatted result using standard libraries.",
+        "checks": [
+          "Normalize and format a player-facing string from raw input.",
+          "Process a table as a queue without leaving invalid indices.",
+          "Clamp a gameplay value and print tests for its minimum and maximum boundaries."
+        ]
+      }
+    },
+    "4": {
+      "slug": "type-system",
+      "skill": "Model systems with types",
+      "outcome": "Use strict types to make invalid game states difficult to represent.",
+      "proof": {
+        "id": "proof:type-system",
+        "title": "Strict inventory model",
+        "stepIds": [
+          "proof:type-system:step:0",
+          "proof:type-system:step:1",
+          "proof:type-system:step:2"
+        ],
+        "premium": true,
+        "brief": "Use Luau's type system to document and defend a real data boundary.",
+        "checks": [
+          "Enable --!strict and define exported item plus inventory types.",
+          "Represent at least one optional or union state explicitly.",
+          "Remove all type errors without replacing useful types with any."
+        ]
+      }
+    },
+    "5": {
+      "slug": "vm-performance",
+      "skill": "Reason about execution",
+      "outcome": "Explain bytecode, registers, allocation, and optimization without cargo culting.",
+      "proof": {
+        "id": "proof:vm-performance",
+        "title": "Evidence-led performance pass",
+        "stepIds": [
+          "proof:vm-performance:step:0",
+          "proof:vm-performance:step:1",
+          "proof:vm-performance:step:2"
+        ],
+        "premium": true,
+        "brief": "Measure one hot path, change it, and preserve the evidence rather than guessing.",
+        "checks": [
+          "Capture a baseline in Studio's MicroProfiler or Script Performance view.",
+          "Change one allocation, bridge access, or repeated lookup in the measured path.",
+          "Re-measure and write one sentence explaining whether the change helped."
+        ]
+      }
+    },
+    "6": {
+      "slug": "engine-runtime",
+      "skill": "Work with the engine runtime",
+      "outcome": "Coordinate Instances, tasks, signals, and engine boundaries safely.",
+      "proof": {
+        "id": "proof:engine-runtime",
+        "title": "Lifecycle-safe signal controller",
+        "stepIds": [
+          "proof:engine-runtime:step:0",
+          "proof:engine-runtime:step:1",
+          "proof:engine-runtime:step:2"
+        ],
+        "premium": true,
+        "brief": "Build an engine-facing controller that cleans up every connection it creates.",
+        "checks": [
+          "Connect an Instance or RunService signal through one controller module.",
+          "Store and disconnect every connection when the controller is destroyed.",
+          "Run the lifecycle twice and confirm callbacks do not duplicate."
+        ]
+      }
+    },
+    "7": {
+      "slug": "networked-world",
+      "skill": "Build authoritative multiplayer",
+      "outcome": "Replicate, validate, persist, and query world state from the correct side.",
+      "proof": {
+        "id": "proof:networked-world",
+        "title": "Two-player authoritative action",
+        "stepIds": [
+          "proof:networked-world:step:0",
+          "proof:networked-world:step:1",
+          "proof:networked-world:step:2"
+        ],
+        "premium": true,
+        "brief": "Prove a client request can be useful without letting the client own the truth.",
+        "checks": [
+          "Send one player action through a RemoteEvent in a two-player Studio test.",
+          "Validate type, range, ownership, and rate on the server before mutation.",
+          "Show the accepted result to both clients and reject one intentionally invalid request."
+        ]
+      }
+    },
+    "8": {
+      "slug": "parallel-security",
+      "skill": "Isolate work and defend trust",
+      "outcome": "Use parallel boundaries and security identities without sharing unsafe state.",
+      "proof": {
+        "id": "proof:parallel-security",
+        "title": "Parallel safety audit",
+        "stepIds": [
+          "proof:parallel-security:step:0",
+          "proof:parallel-security:step:1",
+          "proof:parallel-security:step:2"
+        ],
+        "premium": true,
+        "brief": "Move a suitable workload behind an Actor boundary and document its trust model.",
+        "checks": [
+          "Choose a workload with no unsafe shared Instance mutation.",
+          "Exchange only explicit, serializable data across the boundary.",
+          "Document one exploit or race the architecture prevents."
+        ]
+      }
+    },
+    "9": {
+      "slug": "responsive-ui",
+      "skill": "Create responsive interfaces",
+      "outcome": "Build Roblox UI that responds, animates, and remains usable across devices.",
+      "proof": {
+        "id": "proof:responsive-ui",
+        "title": "Responsive shop HUD",
+        "stepIds": [
+          "proof:responsive-ui:step:0",
+          "proof:responsive-ui:step:1",
+          "proof:responsive-ui:step:2"
+        ],
+        "premium": true,
+        "brief": "Build one real HUD surface and validate it on desktop plus a mobile emulator.",
+        "checks": [
+          "Use layout and scale constraints instead of one fixed screen size.",
+          "Wire an input event and a state-driven tween with a clear disabled state.",
+          "Test desktop and mobile emulation with no clipped controls or unsafe touch target."
+        ]
+      }
+    },
+    "10": {
+      "slug": "capstone",
+      "skill": "Ship a complete system",
+      "outcome": "Combine architecture, persistence, remotes, UI, cleanup, and testing into a playable slice.",
+      "proof": {
+        "id": "proof:capstone",
+        "title": "Playable tycoon vertical slice",
+        "stepIds": [
+          "proof:capstone:step:0",
+          "proof:capstone:step:1",
+          "proof:capstone:step:2"
+        ],
+        "premium": true,
+        "brief": "Complete the smallest version that proves the whole system works together.",
+        "checks": [
+          "A player can claim a plot, buy an upgrade, and see authoritative state change.",
+          "State survives rejoin and invalid remote requests do not change the economy.",
+          "The HUD reflects server state and all runtime connections clean up correctly."
+        ]
+      }
+    }
+  },
+  "exerciseSections": {
+    "1": [
+      2,
+      3,
+      4,
+      6
+    ],
+    "2": [
+      9,
+      10,
+      12,
+      13
+    ],
+    "3": [
+      16,
+      18,
+      20,
+      22
+    ],
+    "4": [
+      25,
+      26,
+      27,
+      29
+    ],
+    "5": [
+      34,
+      35,
+      36,
+      33
+    ],
+    "6": [
+      39,
+      43,
+      40,
+      42
+    ],
+    "7": [
+      44,
+      45,
+      50,
+      51
+    ],
+    "8": [
+      52,
+      53,
+      54,
+      55
+    ],
+    "9": [
+      57,
+      58,
+      60,
+      62
+    ],
+    "10": [
+      63,
+      65,
+      64,
+      66
+    ]
+  },
+  "exercises": {
+    "exercise:1:0": {
+      "id": "exercise:1:0",
+      "name": "Variable Binding",
+      "prompt": "Create a local variable named 'limit' with value 100, and a local variable named 'name' with value 'Roblox'.",
+      "starter": "-- Set variables here\n\n",
+      "harness": "assert(limit == 100, 'limit must be exactly 100')\nassert(name == 'Roblox', 'name must be exactly \"Roblox\"')\n",
+      "unitId": 1
+    },
+    "exercise:1:1": {
+      "id": "exercise:1:1",
+      "name": "Arithmetic & Precedence",
+      "prompt": "Compute the average of three numbers 'a', 'b', and 'c' and store it in a local variable 'average' using parentheses to ensure correct precedence.",
+      "starter": "local a, b, c = 10, 20, 30\nlocal average = a + b + c / 3 -- Fix this expression!\n",
+      "harness": "assert(average == 20, 'average must be computed using correct parentheses precedence, got: ' .. tostring(average))\n",
+      "unitId": 1
+    },
+    "exercise:1:2": {
+      "id": "exercise:1:2",
+      "name": "Logical Operators",
+      "prompt": "Complete the function 'canEnterLevel(level, isPro, badgeCount)' to return true if the player is Pro OR has at least 5 badges, AND the level is not gated (level <= 10).",
+      "starter": "local function canEnterLevel(level: number, isPro: boolean, badgeCount: number): boolean\n    return false\nend\n",
+      "harness": "assert(canEnterLevel(5, true, 2) == true, 'Pro should access level 5')\nassert(canEnterLevel(5, false, 6) == true, 'Non-Pro with 6 badges should access level 5')\nassert(canEnterLevel(5, false, 2) == false, 'Non-Pro with 2 badges should be denied')\nassert(canEnterLevel(12, true, 10) == false, 'Pro should be denied access to level 12 (gated)')\n",
+      "unitId": 1
+    },
+    "exercise:1:3": {
+      "id": "exercise:1:3",
+      "name": "While Loop Accumulator",
+      "prompt": "Write a function 'sumNumbers(n)' that uses a while loop to sum all integers from 1 up to 'n' (inclusive) and return the result.",
+      "starter": "local function sumNumbers(n: number): number\n    return 0\nend\n",
+      "harness": "assert(sumNumbers(5) == 15, 'sum of 1..5 must be 15')\nassert(sumNumbers(1) == 1, 'sum of 1..1 must be 1')\nassert(sumNumbers(10) == 55, 'sum of 1..10 must be 55')\n",
+      "unitId": 1
+    },
+    "exercise:2:0": {
+      "id": "exercise:2:0",
+      "name": "Multiple Returns",
+      "prompt": "Complete the function 'minMax(t)' to return both the minimum and maximum values in an array of numbers (in that order).",
+      "starter": "local function minMax(t: { number }): (number, number)\n    return 0, 0\nend\n",
+      "harness": "local min, max = minMax({5, 1, 9, 3})\nassert(min == 1, 'min must be 1')\nassert(max == 9, 'max must be 9')\nlocal min2, max2 = minMax({-10, 20, 0})\nassert(min2 == -10, 'min must be -10')\nassert(max2 == 20, 'max must be 20')\n",
+      "unitId": 2
+    },
+    "exercise:2:1": {
+      "id": "exercise:2:1",
+      "name": "Lexical Scope (Closure)",
+      "prompt": "Write a function 'createCounter(startVal)' that returns a closure. Each time the closure is called, it increments the internal counter value by 1 and returns the new value.",
+      "starter": "local function createCounter(startVal: number): () -> number\n    return function()\n        return 0\n    end\nend\n",
+      "harness": "local c = createCounter(10)\nassert(c() == 11, 'first call should yield 11')\nassert(c() == 12, 'second call should yield 12')\n",
+      "unitId": 2
+    },
+    "exercise:2:2": {
+      "id": "exercise:2:2",
+      "name": "Array Filtering",
+      "prompt": "Write a function 'filterPositive(arr)' that returns a new array containing only elements from 'arr' that are strictly greater than 0.",
+      "starter": "local function filterPositive(arr: { number }): { number }\n    return {}\nend\n",
+      "harness": "local res = filterPositive({ -2, 5, 0, 10, -5 })\nassert(#res == 2, 'should contain exactly 2 elements')\nassert(res[1] == 5 and res[2] == 10, 'should be {5, 10}')\nlocal res2 = filterPositive({ -1, -3 })\nassert(#res2 == 0, 'should contain 0 elements for all negative inputs')\n",
+      "unitId": 2
+    },
+    "exercise:2:3": {
+      "id": "exercise:2:3",
+      "name": "Dictionary Lookup",
+      "prompt": "Write a function 'getItemPrice(inventory, itemName)' that returns the price of 'itemName' in the 'inventory' dictionary, or 0 if it doesn't exist.",
+      "starter": "local function getItemPrice(inventory: { [string]: number }, itemName: string): number\n    return 0\nend\n",
+      "harness": "local shop = { Sword = 100, Shield = 50 }\nassert(getItemPrice(shop, 'Sword') == 100, 'Sword price should be 100')\nassert(getItemPrice(shop, 'Potion') == 0, 'Potion price should be 0')\nassert(getItemPrice({ Axe = 75 }, 'Axe') == 75, 'Axe price should be 75')\n",
+      "unitId": 2
+    },
+    "exercise:3:0": {
+      "id": "exercise:3:0",
+      "name": "String Substrings",
+      "prompt": "Extract the username portion from an email address (everything before the '@' symbol) using string.find and string.sub.",
+      "starter": "local function getUsername(email: string): string\n    return \"\"\nend\n",
+      "harness": "assert(getUsername('alex@luaux.com') == 'alex', 'username should be alex')\nassert(getUsername('user1_test@domain.org') == 'user1_test', 'username should be user1_test')\n",
+      "unitId": 3
+    },
+    "exercise:3:1": {
+      "id": "exercise:3:1",
+      "name": "String Formatting",
+      "prompt": "Format a score display into a zero-padded 6-digit score using string.format (e.g. 123 -> 'Score: 000123').",
+      "starter": "local function formatScore(score: number): string\n    return \"\"\nend\n",
+      "harness": "assert(formatScore(123) == 'Score: 000123', 'should pad to 6 digits')\nassert(formatScore(0) == 'Score: 000000', 'should pad zero to 6 digits')\n",
+      "unitId": 3
+    },
+    "exercise:3:2": {
+      "id": "exercise:3:2",
+      "name": "Table Queue Operations",
+      "prompt": "Maintain a queue array of player names. Implement enqueue(queue, name) (adds to end) and dequeue(queue) (removes and returns from front) using standard table methods.",
+      "starter": "local function enqueue(queue: { string }, name: string)\n    -- Insert code here\nend\n\nlocal function dequeue(queue: { string }): string\n    return \"\"\nend\n",
+      "harness": "local q = {}\nenqueue(q, 'Alex')\nenqueue(q, 'Bob')\nassert(q[1] == 'Alex' and q[2] == 'Bob', 'enqueue order is incorrect')\nlocal name = dequeue(q)\nassert(name == 'Alex', 'dequeue should return the first item')\nassert(#q == 1 and q[1] == 'Bob', 'dequeue should shift elements left')\n",
+      "unitId": 3
+    },
+    "exercise:3:3": {
+      "id": "exercise:3:3",
+      "name": "Math Clamp Health",
+      "prompt": "Implement a function 'clampHealth(hp)' that limits character health between a minimum of 0 and a maximum of 100 using math.clamp.",
+      "starter": "local function clampHealth(hp: number): number\n    return hp\nend\n",
+      "harness": "assert(clampHealth(120) == 100, '120 should clamp to 100')\nassert(clampHealth(-10) == 0, '-10 should clamp to 0')\nassert(clampHealth(55) == 55, '55 should stay 55')\n",
+      "unitId": 3
+    },
+    "exercise:4:0": {
+      "id": "exercise:4:0",
+      "name": "Explicit Table Types",
+      "prompt": "Define a type alias 'Point' with coordinates 'x' and 'y' as numbers. Complete the function 'dist(p1: Point, p2: Point): number' to return the Euclidean distance between them.",
+      "starter": "-- Define type Point here\n\nlocal function dist(p1, p2): number\n    return 0\nend\n",
+      "harness": "local p1 = { x = 0, y = 0 }\nlocal p2 = { x = 3, y = 4 }\nassert(dist(p1, p2) == 5, 'distance must be 5')\n",
+      "unitId": 4
+    },
+    "exercise:4:1": {
+      "id": "exercise:4:1",
+      "name": "Union Types",
+      "prompt": "Define a function 'toString(val)' that accepts a parameter of type 'string | number' and returns its string representation.",
+      "starter": "local function toString(val: string | number): string\n    return \"\"\nend\n",
+      "harness": "assert(toString(123) == '123', 'should format numbers')\nassert(toString('test') == 'test', 'should return strings')\n",
+      "unitId": 4
+    },
+    "exercise:4:2": {
+      "id": "exercise:4:2",
+      "name": "Optional Parameters",
+      "prompt": "Write a function 'greet(name: string, prefix: string?)' that returns 'Hello, [prefix] [name]' if a prefix is provided, or 'Hello, [name]' if omitted.",
+      "starter": "local function greet(name: string, prefix: string?): string\n    return \"\"\nend\n",
+      "harness": "assert(greet('John') == 'Hello, John', 'should greet without prefix')\nassert(greet('John', 'Mr.') == 'Hello, Mr. John', 'should greet with prefix')\n",
+      "unitId": 4
+    },
+    "exercise:4:3": {
+      "id": "exercise:4:3",
+      "name": "Generics Identity Wrapper",
+      "prompt": "Write a generic function 'wrap<T>(value: T): { data: T }' that wraps any input in a table under the 'data' key.",
+      "starter": "local function wrap(value)\n    return value -- TODO: wrap this in a { data = ... } table instead\nend\n",
+      "harness": "local w1 = wrap(42)\nlocal w2 = wrap('test')\nassert(w1.data == 42, 'should wrap number')\nassert(w2.data == 'test', 'should wrap string')\n",
+      "unitId": 4
+    },
+    "exercise:5:0": {
+      "id": "exercise:5:0",
+      "name": "GC Memory Tracking",
+      "prompt": "Write measureAllocation() that records gcinfo(), allocates and retains 50,000 small tables through the second measurement, then returns the observed difference in KB. Treat the number as a noisy observation, not a guaranteed benchmark.",
+      "starter": "local function measureAllocation(): number\n    local before = gcinfo()\n    local retained = {}\n    -- Allocate 50,000 tables into retained, then measure while they are still reachable\n    return 0\nend\n",
+      "harness": "local diff = measureAllocation()\nassert(type(diff) == 'number', 'measurement must return a number')\nassert(diff > 0, 'retained allocations should increase the observed memory reading, got: ' .. tostring(diff))\n",
+      "unitId": 5
+    },
+    "exercise:5:1": {
+      "id": "exercise:5:1",
+      "name": "String Equality Semantics",
+      "prompt": "Complete hasSameText(s1, s2) using Luau's equality operator. The language lets code observe equal string contents; internal interning is an implementation detail and this exercise deliberately does not claim to expose memory addresses.",
+      "starter": "local function hasSameText(s1: string, s2: string): boolean\n    return false\nend\n",
+      "harness": "local a = 'hello' .. ' world'\nlocal b = 'hello world'\nassert(hasSameText(a, b) == true, 'matching string contents must compare equal')\nassert(hasSameText('hello', 'Hello') == false, 'string equality is case-sensitive')\n",
+      "unitId": 5
+    },
+    "exercise:5:2": {
+      "id": "exercise:5:2",
+      "name": "Builtin Call Loop",
+      "prompt": "Complete sumSines(count) by calling math.sin for each integer from 1 through count. This runtime test proves behavior only; inspecting compiler output is required before making claims about a particular FASTCALL opcode.",
+      "starter": "local function sumSines(count: number): number\n    local sum = 0\n    return sum\nend\n",
+      "harness": "assert(sumSines(0) == 0, 'sum of 0 should be 0')\nassert(sumSines(2) == math.sin(1) + math.sin(2), 'sum should match loop sines')\n",
+      "unitId": 5
+    },
+    "exercise:5:3": {
+      "id": "exercise:5:3",
+      "name": "Table Resizing Optimization",
+      "prompt": "Complete buildPreallocatedArray(n) with table.create(n), then fill indices 1 through n. Preallocation reserves array storage up front; measure a real workload before treating it as a meaningful optimization.",
+      "starter": "local function buildPreallocatedArray(n: number): { number }\n    local t = {} -- TODO: pre-allocate with table.create(n), then fill 1..n\n    return t\nend\n",
+      "harness": "local t = buildPreallocatedArray(5000)\nassert(#t == 5000, 'table size must be 5000')\nassert(t[5000] == 5000, 'last item value must be 5000')\n",
+      "unitId": 5
+    },
+    "exercise:6:0": {
+      "id": "exercise:6:0",
+      "name": "Boundary Value Snapshot",
+      "prompt": "Model an engine-boundary read in pure Luau: cache part.Position.Y once before a 1,000-iteration loop, then sum the snapshot. In Studio, measure before assuming that fewer property reads materially improve performance.",
+      "starter": "local function sumPositions(part: any): number\n    -- TODO: cache part.Position.Y in a local, then sum it 1,000 times\n    return 0\nend\n",
+      "harness": "local part = { Position = { Y = 5 } }\nassert(sumPositions(part) == 5000, 'cached Y=5 summed 1,000 times must be 5,000')\npart.Position.Y = 2\nassert(sumPositions(part) == 2000, 'the next call must snapshot the new Y value')\n",
+      "unitId": 6
+    },
+    "exercise:6:1": {
+      "id": "exercise:6:1",
+      "name": "Static Closure References",
+      "prompt": "Optimize 'processItems(items)' to use a static helper function declared outside the loop instead of creating inline anonymous closures.",
+      "starter": "local processItem -- TODO: declare a static helper function here\n\nlocal function processItems(items: { any })\n    for _, item in ipairs(items) do\n        -- TODO: call the static helper to increment item.Y by 1\n    end\nend\n",
+      "harness": "local items = { {Y = 0}, {Y = 1} }\nprocessItems(items)\nassert(items[1].Y == 1 and items[2].Y == 2, 'elements must update correctly')\n",
+      "unitId": 6
+    },
+    "exercise:6:2": {
+      "id": "exercise:6:2",
+      "name": "Deferred Execution Queue",
+      "prompt": "The engine's task scheduler queues deferred callbacks and flushes them at defined resumption points. Model the mechanism: implement schedule(fn) that queues callbacks WITHOUT running them, and flush() that runs all queued callbacks in FIFO order, then clears the queue.",
+      "starter": "local queue = {}\n\nlocal function schedule(fn: () -> ())\n    -- TODO: add fn to the queue (do NOT call it here)\nend\n\nlocal function flush()\n    -- TODO: run every queued callback in order, then clear the queue\nend\n",
+      "harness": "local order = {}\nschedule(function() table.insert(order, 1) end)\nschedule(function() table.insert(order, 2) end)\nassert(#order == 0, 'callbacks must NOT run when scheduled - only on flush')\nflush()\nassert(#order == 2 and order[1] == 1 and order[2] == 2, 'flush must run callbacks in FIFO order')\nflush()\nassert(#order == 2, 'flush must clear the queue - callbacks run only once')\n",
+      "unitId": 6
+    },
+    "exercise:6:3": {
+      "id": "exercise:6:3",
+      "name": "Boundary Payload Guard",
+      "prompt": "Implement safeSetPosition(part, pos) in pure Luau. Accept only a table containing numeric X, Y, and Z fields; return true and assign it when valid, otherwise return false without changing part.Position. Roblox Vector3 validation in Studio would use typeof(pos) == 'Vector3'.",
+      "starter": "local function safeSetPosition(part: any, pos: any): boolean\n    -- Validate this sandbox's {X, Y, Z} payload before assigning it\n    return false\nend\n",
+      "harness": "local p = { Position = { X = 0, Y = 0, Z = 0 } }\nassert(safeSetPosition(p, { X = 1, Y = 2, Z = 3 }) == true, 'valid numeric vector payload should be accepted')\nassert(p.Position.X == 1 and p.Position.Y == 2 and p.Position.Z == 3, 'valid payload should write all coordinates')\nassert(safeSetPosition(p, 'invalid') == false, 'non-table payload must be rejected')\nassert(safeSetPosition(p, { X = 9, Y = 'bad', Z = 9 }) == false, 'every coordinate must be numeric')\nassert(p.Position.X == 1, 'rejected payload must not mutate the prior position')\n",
+      "unitId": 6
+    },
+    "exercise:7:0": {
+      "id": "exercise:7:0",
+      "name": "Delta Compression Packet",
+      "prompt": "Construct a delta compression packet. Given an old state and a new state dictionary, return a new dictionary containing only the modified key-value pairs.",
+      "starter": "local function getDelta(oldState: { [string]: number }, newState: { [string]: number }): { [string]: number }\n    return {}\nend\n",
+      "harness": "local old = { hp = 100, gold = 50 }\nlocal new = { hp = 95, gold = 50 }\nlocal delta = getDelta(old, new)\nassert(delta.hp == 95, 'hp changed to 95')\nassert(delta.gold == nil, 'gold did not change and should be compressed out')\nlocal delta2 = getDelta({ x = 1 }, { x = 1, y = 2 })\nassert(delta2.y == 2, 'added fields must be included')\n",
+      "unitId": 7
+    },
+    "exercise:7:1": {
+      "id": "exercise:7:1",
+      "name": "Client Rate Limiter",
+      "prompt": "Implement allowRequest(playerId, timestamp) to return false if the player's last request occurred less than 0.1 seconds ago, and true otherwise.",
+      "starter": "local lastRequest = {}\nlocal function allowRequest(playerId: number, timestamp: number): boolean\n    return false\nend\n",
+      "harness": "assert(allowRequest(1, 1.0) == true, 'first request allowed')\nassert(allowRequest(1, 1.05) == false, 'request after 0.05s throttled')\nassert(allowRequest(1, 1.15) == true, 'request after 0.15s allowed')\n",
+      "unitId": 7
+    },
+    "exercise:7:2": {
+      "id": "exercise:7:2",
+      "name": "JSON Serialization",
+      "prompt": "In Roblox you'd call HttpService:JSONEncode; this sandbox has no engine services, so build the core yourself. Implement packData(data) that serializes a flat table of number values into a JSON object string with keys sorted alphabetically, e.g. {x=10, y=20} -> '{\"x\":10,\"y\":20}'.",
+      "starter": "local function packData(data: { [string]: number }): string\n    -- TODO: build '{\"key\":value,...}' with keys sorted alphabetically\n    return \"\"\nend\n",
+      "harness": "assert(packData({ x = 10, y = 20 }) == '{\"x\":10,\"y\":20}', 'must serialize flat tables')\nassert(packData({ b = 2, a = 1 }) == '{\"a\":1,\"b\":2}', 'keys must be sorted alphabetically')\nassert(packData({}) == '{}', 'an empty table must serialize to {}')\n",
+      "unitId": 7
+    },
+    "exercise:7:3": {
+      "id": "exercise:7:3",
+      "name": "GUID Wrapping",
+      "prompt": "Engine identifiers arrive raw; transaction systems wrap and normalize them. Using the provided nextGuid() source (in Roblox: HttpService:GenerateGUID(false)), implement getTransactionKey() returning the next GUID wrapped in curly braces and uppercased, e.g. '{GUID-1}'.",
+      "starter": "-- provided: a raw GUID source (stand-in for HttpService:GenerateGUID)\nlocal __counter = 0\nlocal function nextGuid(): string\n    __counter += 1\n    return \"guid-\" .. __counter\nend\n\nlocal function getTransactionKey(): string\n    -- TODO: wrap nextGuid() in curly braces, uppercased\n    return \"\"\nend\n",
+      "harness": "local k1 = getTransactionKey()\nlocal k2 = getTransactionKey()\nassert(string.sub(k1, 1, 1) == '{' and string.sub(k1, -1) == '}', 'key must be wrapped in braces')\nassert(k1 == string.upper(k1), 'key must be uppercase')\nassert(#k1 > 2, 'braces must wrap a real GUID, not be empty')\nassert(k1 ~= k2, 'each transaction key must be unique')\n",
+      "unitId": 7
+    },
+    "exercise:8:0": {
+      "id": "exercise:8:0",
+      "name": "Actor State Protection",
+      "prompt": "Compute the sum of elements in an array without modifying any global tables (such as _G) to ensure the operation remains thread-safe.",
+      "starter": "local function parallelSafeCompute(t: { number }): number\n    return 0\nend\n",
+      "harness": "assert(parallelSafeCompute({ 1, 2 }) == 3, 'should compute sum')\n",
+      "unitId": 8
+    },
+    "exercise:8:1": {
+      "id": "exercise:8:1",
+      "name": "Isolated Random State",
+      "prompt": "The global math.random state is shared across the whole VM — parallel-safe code needs per-actor generators (in Roblox you would reach for Random.new; this sandbox is pure Luau, so build the isolation yourself). Implement makeRandom(seed) returning a generator function: each call advances state = (state * 48271) % 2147483647 and returns state / 2147483647.",
+      "starter": "local function makeRandom(seed: number)\n    -- TODO: keep the state in a closure and advance it on every call\n    return function() return 0 end\nend\n",
+      "harness": "local r1 = makeRandom(42)\nlocal r2 = makeRandom(42)\nlocal r3 = makeRandom(7)\nlocal a, b = r1(), r1()\nassert(a >= 0 and a < 1, 'values must be in [0,1)')\nassert(a ~= b, 'successive calls must advance the internal state')\nassert(r2() == a, 'the same seed must reproduce the same sequence')\nassert(r3() ~= a, 'different seeds must produce different sequences')\n",
+      "unitId": 8
+    },
+    "exercise:8:2": {
+      "id": "exercise:8:2",
+      "name": "Metatable Protection",
+      "prompt": "Protect a table's metatable with the standard __metatable field so getmetatable returns a public sentinel string instead of exposing the real metatable.",
+      "starter": "local function protectMetatable(t: any)\n    -- Protect metatable here\nend\n",
+      "harness": "local t = {}\nprotectMetatable(t)\nlocal meta = getmetatable(t)\nassert(typeof(meta) == 'string', 'metatable lookup must return the public sentinel string')\n",
+      "unitId": 8
+    },
+    "exercise:8:3": {
+      "id": "exercise:8:3",
+      "name": "Vector Math Optimizations",
+      "prompt": "Calculate the magnitude of a 3D vector represented as a dictionary {X, Y, Z} using standard math.sqrt.",
+      "starter": "local function vectorMagnitude(v: { X: number, Y: number, Z: number }): number\n    return 0\nend\n",
+      "harness": "local v = { X = 3, Y = 4, Z = 0 }\nassert(vectorMagnitude(v) == 5, 'magnitude must be 5')\nassert(vectorMagnitude({ X = 0, Y = 12, Z = 5 }) == 13, 'magnitude must be 13')\n",
+      "unitId": 8
+    },
+    "exercise:9:0": {
+      "id": "exercise:9:0",
+      "name": "Scale Coordinate Alignment",
+      "prompt": "Create an object size boundary occupying exactly 80% of width and 60% of height using UDim2.new. Mock a UDim2 struct or use UDim2.new.",
+      "starter": "local UDim2 = {} -- Mock if needed\nfunction UDim2.new(xs, xo, ys, yo)\n    return { Width = { Scale = xs }, Height = { Scale = ys } }\nend\nlocal function getMenuSize(): any\n    return nil\nend\n",
+      "harness": "local size = getMenuSize()\nassert(size.Width.Scale == 0.8, 'width scale should be 0.8')\nassert(size.Height.Scale == 0.6, 'height scale should be 0.6')\n",
+      "unitId": 9
+    },
+    "exercise:9:1": {
+      "id": "exercise:9:1",
+      "name": "TweenInfo Setup",
+      "prompt": "Construct a TweenInfo-like dictionary with fields Time = 0.2, EasingStyle = 'Bounce', and EasingDirection = 'Out'.",
+      "starter": "local function getButtonTweenInfo(): { Time: number, EasingStyle: string, EasingDirection: string }\n    return {}\nend\n",
+      "harness": "local info = getButtonTweenInfo()\nassert(info.Time == 0.2, 'duration should be 0.2')\nassert(info.EasingStyle == 'Bounce', 'style should be Bounce')\nassert(info.EasingDirection == 'Out', 'direction should be Out')\n",
+      "unitId": 9
+    },
+    "exercise:9:2": {
+      "id": "exercise:9:2",
+      "name": "Linear Interpolation (Lerp)",
+      "prompt": "Implement a linear interpolation function lerp(startVal, endVal, alpha) that returns the value at progress fraction alpha.",
+      "starter": "local function lerp(startVal: number, endVal: number, alpha: number): number\n    return startVal\nend\n",
+      "harness": "assert(lerp(10, 20, 0.5) == 15, 'lerp middle point must be 15')\nassert(lerp(0, 100, 0.1) == 10, 'lerp 10% point must be 10')\n",
+      "unitId": 9
+    },
+    "exercise:9:3": {
+      "id": "exercise:9:3",
+      "name": "Mobile Safe Target Offset",
+      "prompt": "Return a mock Size offset structure whose Width.Offset and Height.Offset both meet this course's 44-pixel minimum touch-target heuristic. In a real Roblox UI, also test the physical result across devices and input modes.",
+      "starter": "local function getMobileButtonSize(): any\n    return nil\nend\n",
+      "harness": "local size = getMobileButtonSize()\nassert(size.Width.Offset >= 44, 'width offset must be at least 44')\nassert(size.Height.Offset >= 44, 'height offset must be at least 44')\n",
+      "unitId": 9
+    },
+    "exercise:10:0": {
+      "id": "exercise:10:0",
+      "name": "Plot Class Metatable",
+      "prompt": "Complete the Plot class constructor to bind the new instances to the class template using setmetatable with an __index lookup.",
+      "starter": "local Plot = {}\nPlot.__index = Plot\nfunction Plot.new()\n    local self = {}\n    -- Bind metatable here\n    return self\nend\n",
+      "harness": "local p = Plot.new()\nassert(getmetatable(p) ~= nil, 'plot must have a metatable')\nassert(getmetatable(p).__index == Plot, '__index must point to Plot class table')\n",
+      "unitId": 10
+    },
+    "exercise:10:1": {
+      "id": "exercise:10:1",
+      "name": "Server Purchase Validation",
+      "prompt": "Implement validateAndPurchase(gold, price) to return success (boolean) and remaining gold (number). Gold is only deducted if gold >= price.",
+      "starter": "local function validateAndPurchase(playerGold: number, itemPrice: number): (boolean, number)\n    return false, playerGold\nend\n",
+      "harness": "local ok, remaining = validateAndPurchase(100, 40)\nassert(ok == true and remaining == 60, 'valid purchase should succeed')\nlocal ok2, remaining2 = validateAndPurchase(30, 45)\nassert(ok2 == false and remaining2 == 30, 'invalid purchase should be denied')\n",
+      "unitId": 10
+    },
+    "exercise:10:2": {
+      "id": "exercise:10:2",
+      "name": "State Serialization",
+      "prompt": "Extract the names of purchases from a list of objects { { Name: string, Level: number } } and return them in a flat array of strings.",
+      "starter": "local function serializePurchases(purchases: { { Name: string, Level: number } }): { string }\n    return {}\nend\n",
+      "harness": "local data = { { Name = 'Wall1', Level = 1 }, { Name = 'Wall2', Level = 2 } }\nlocal serialized = serializePurchases(data)\nassert(serialized[1] == 'Wall1' and serialized[2] == 'Wall2', 'should serialize to list of strings')\nlocal serialized2 = serializePurchases({ { Name = 'Tower', Level = 5 } })\nassert(#serialized2 == 1 and serialized2[1] == 'Tower', 'should serialize singular item')\n",
+      "unitId": 10
+    },
+    "exercise:10:3": {
+      "id": "exercise:10:3",
+      "name": "Trove Connection Cleanup",
+      "prompt": "Complete cleanConnections(connections) to call disconnect on all connections and clear the array.",
+      "starter": "local function cleanConnections(connections: { { Disconnect: (any) -> () } })\n    -- Loop and disconnect\nend\n",
+      "harness": "local count = 0\nlocal conn = { Disconnect = function() count += 1 end }\nlocal list = { conn, conn }\ncleanConnections(list)\nassert(count == 2, 'all connections must call Disconnect')\nassert(#list == 0, 'connections list must be cleared')\n",
+      "unitId": 10
+    }
+  },
+  "missions": [
+    {
+      "id": "mission:responsive-hud",
+      "code": "MISSION 01",
+      "title": "Responsive Shop HUD",
+      "summary": "Build a typed, responsive Roblox shop surface with real state and interaction.",
+      "units": [
+        1,
+        2,
+        4,
+        9
+      ],
+      "proofUnit": 9,
+      "stepIds": [
+        "mission:responsive-hud:step:0",
+        "mission:responsive-hud:step:1",
+        "mission:responsive-hud:step:2",
+        "mission:responsive-hud:step:3",
+        "mission:responsive-hud:step:4"
+      ],
+      "premium": true,
+      "deliverable": "A desktop/mobile HUD with a controlled purchase interaction.",
+      "acceptance": [
+        "Define a typed view model and keep UI state behind a ModuleScript boundary.",
+        "Build the layout with constraints and touch targets that work at desktop and phone sizes.",
+        "Render price, ownership, loading, success, and rejected-purchase states from data.",
+        "Wire one controlled purchase request and prevent repeated input while it is pending.",
+        "Run desktop and mobile emulator passes and record that no control clips or becomes unreachable."
+      ]
+    },
+    {
+      "id": "mission:secure-round",
+      "code": "MISSION 02",
+      "title": "Secure Multiplayer Round",
+      "summary": "Build an authoritative two-player loop with remotes, lifecycle cleanup, and abuse resistance.",
+      "units": [
+        2,
+        6,
+        7,
+        8
+      ],
+      "proofUnit": 7,
+      "stepIds": [
+        "mission:secure-round:step:0",
+        "mission:secure-round:step:1",
+        "mission:secure-round:step:2",
+        "mission:secure-round:step:3",
+        "mission:secure-round:step:4"
+      ],
+      "premium": true,
+      "deliverable": "A two-player Studio test where invalid client requests are rejected.",
+      "acceptance": [
+        "Write the remote contract: request shape, accepted response, and rejected response.",
+        "Validate type, range, ownership, game state, and request rate on the server.",
+        "Keep round state authoritative and clean up every signal when the round ends.",
+        "Run a two-player Studio test that completes one valid round action on both clients.",
+        "Send malformed and spammed requests and confirm neither can mutate authoritative state."
+      ]
+    },
+    {
+      "id": "mission:persistent-tycoon",
+      "code": "MISSION 03",
+      "title": "Persistent Tycoon Slice",
+      "summary": "Connect your whole learning path into one small, playable, persistent experience.",
+      "units": [
+        2,
+        7,
+        9,
+        10
+      ],
+      "proofUnit": 10,
+      "stepIds": [
+        "mission:persistent-tycoon:step:0",
+        "mission:persistent-tycoon:step:1",
+        "mission:persistent-tycoon:step:2",
+        "mission:persistent-tycoon:step:3",
+        "mission:persistent-tycoon:step:4"
+      ],
+      "premium": true,
+      "deliverable": "A vertical slice that survives rejoin and keeps the server authoritative.",
+      "acceptance": [
+        "Model one plot, one currency, and one upgrade behind a server-owned player state object.",
+        "Validate a purchase request before changing currency, ownership, or world Instances.",
+        "Save and load the minimum persistent state with failure handling and bounded retries.",
+        "Bind the HUD to replicated server results instead of trusting client-side economy values.",
+        "Pass rejoin, invalid-remote, duplicate-connection, and two-player ownership tests."
+      ]
+    }
+  ]
+}
