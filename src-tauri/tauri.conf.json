@@ -7,9 +7,10 @@
     "frontendDist": "../dist"
   },
   "app": {
-    "withGlobalTauri": false,
+    "withGlobalTauri": true,
     "windows": [
       {
+        "label": "main",
         "title": "LuauX",
         "width": 1180,
         "height": 780,
@@ -25,6 +26,7 @@
   },
   "bundle": {
     "active": true,
+    "createUpdaterArtifacts": true,
     "targets": ["msi", "nsis", "app", "dmg", "deb", "appimage"],
     "icon": [
       "icons/32x32.png",
@@ -37,6 +39,14 @@
       "webviewInstallMode": {
         "type": "downloadBootstrapper"
       }
+    }
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDFCRkUzMTQ3QzhCNDM3OEQKUldTTk43VElSekgrR3h2cUF6bXp2Z2d0K3RWblQ5SkppWXZtazJUdTJTU0RVcXd6M0RsV2tpOWwK",
+      "endpoints": [
+        "https://github.com/morezeeval-hue/luaux-desktop/releases/latest/download/latest.json"
+      ]
     }
   }
 }
