@@ -25,9 +25,84 @@ window.LuauProgress = (function () {
     return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
   }
 
+  let syncTimer = null;
+  function scheduleDebouncedSync() {
+    if (!window.LuauAuth || !window.LuauAuth.isSignedIn()) return;
+    if (syncTimer) clearTimeout(syncTimer);
+    syncTimer = setTimeout(() => {
+      pushProgress();
+    }, 2000);
+  }
+
   function persist() {
     localStorage.setItem(KEY, JSON.stringify(state));
     listeners.forEach((fn) => fn());
+    scheduleDebouncedSync();
+  }
+
+  async function pushProgress() {
+    const token = window.LuauAuth && window.LuauAuth.getToken();
+    if (!token) return;
+    try {
+      const res = await fetch("https://luau.prestigex.space/api/progress", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ progress: state }),
+      });
+      if (res.status === 401 && window.LuauAuth) {
+        window.LuauAuth.signOut();
+      }
+    } catch (e) {
+      console.warn("[LuauProgress] pushProgress failed:", e);
+    }
+  }
+
+  async function syncOnSignIn() {
+    const token = window.LuauAuth && window.LuauAuth.getToken();
+    if (!token) return;
+    try {
+      const res = await fetch("https://luau.prestigex.space/api/progress", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ progress: state }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.progress) {
+          state = Object.assign(blank(), data.progress);
+          localStorage.setItem(KEY, JSON.stringify(state));
+          listeners.forEach((fn) => fn());
+        }
+      }
+    } catch (e) {
+      console.warn("[LuauProgress] syncOnSignIn failed:", e);
+    }
+  }
+
+  async function pullProgress() {
+    const token = window.LuauAuth && window.LuauAuth.getToken();
+    if (!token) return;
+    try {
+      const res = await fetch("https://luau.prestigex.space/api/progress", {
+        headers: { "Authorization": "Bearer " + token },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.progress) {
+          state = Object.assign(blank(), data.progress);
+          localStorage.setItem(KEY, JSON.stringify(state));
+          listeners.forEach((fn) => fn());
+        }
+      }
+    } catch (e) {
+      console.warn("[LuauProgress] pullProgress failed:", e);
+    }
   }
 
   function recordActivity() {
@@ -140,5 +215,9 @@ window.LuauProgress = (function () {
       state = blank();
       persist();
     },
+
+    syncOnSignIn,
+    pushProgress,
+    pullProgress,
   };
 })();

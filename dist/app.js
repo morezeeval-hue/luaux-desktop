@@ -474,6 +474,30 @@
     const data = LuauData.current;
     const journey = LuauProgress.journeyProgress();
     let html = `<h1 class="pagetitle">You</h1>`;
+    
+    if (window.LuauAuth && window.LuauAuth.isSignedIn()) {
+      const username = window.LuauAuth.currentUser() || "Discord User";
+      html += `<div class="card" style="margin-bottom:14px;border:1px solid var(--accent)">
+        <div class="row" style="justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-weight:600;font-size:15px;color:var(--text)">${esc(username)}</div>
+            <div style="font-size:12px;color:var(--secondary)">Progress syncing enabled</div>
+          </div>
+          <button class="btn ghost" id="signout-btn" style="color:var(--red);font-size:13px;padding:4px 10px">Sign Out</button>
+        </div>
+      </div>`;
+    } else {
+      html += `<div class="card" style="margin-bottom:14px">
+        <div class="row" style="justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-weight:600;font-size:14px;color:var(--text)">Cloud Progress Sync</div>
+            <div style="font-size:12px;color:var(--secondary)">Sync your progress across iOS, Web, and Desktop</div>
+          </div>
+          <button class="btn primary" id="signin-btn" style="font-size:13px;padding:6px 14px">Sign in with Discord</button>
+        </div>
+      </div>`;
+    }
+
     html += `<div class="card">
       <div class="row" style="margin-bottom:10px"><span style="width:150px;color:var(--secondary);font-size:13px">Sections</span><span>${LuauProgress.completedSectionCount} / ${data.textbook.sections.length}</span></div>
       <div class="row" style="margin-bottom:10px"><span style="width:150px;color:var(--secondary);font-size:13px">VM exercises</span><span>${LuauProgress.completedExerciseCount} / ${Object.keys(data.learning.exercises).length}</span></div>
@@ -485,9 +509,20 @@
     html += `<button class="btn ghost" id="tour-btn" style="margin-top:10px">Show App Tour Again</button>`;
     html += `<button class="btn ghost" id="reset-btn" style="margin-top:10px;color:var(--red)">Reset All Progress</button>`;
     $("#main").innerHTML = html;
+
+    const signinBtn = $("#signin-btn");
+    if (signinBtn) signinBtn.addEventListener("click", () => window.LuauAuth.signIn());
+    const signoutBtn = $("#signout-btn");
+    if (signoutBtn) signoutBtn.addEventListener("click", () => window.LuauAuth.signOut());
     $("#tour-btn").addEventListener("click", () => tourStep(0));
     $("#reset-btn").addEventListener("click", () => {
       if (confirm("Reset all progress? Course content is unchanged.")) { LuauProgress.resetAll(); render(); }
+    });
+  }
+
+  if (window.LuauAuth) {
+    window.LuauAuth.onChange(() => {
+      if (route.view === "you") viewYou();
     });
   }
 
