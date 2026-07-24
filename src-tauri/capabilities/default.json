@@ -1,7 +1,7 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "Capabilities for the main LuauX window",
-  "windows": ["main"],
+  "description": "Capabilities for LuauX windows",
+  "windows": ["*"],
   "permissions": ["core:default", "updater:default", "process:allow-restart"]
 }
