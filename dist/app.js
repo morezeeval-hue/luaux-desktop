@@ -20,11 +20,40 @@
     return out;
   }
 
+  /* Inline SVG icons. These used to be Unicode glyphs (◐ ▤ ▷ ✓ ↗ …), but the
+   * bundled Inter/JetBrains Mono subsets do not carry most of them, so each
+   * one silently fell back to whatever the OS offered. That looked fine on
+   * macOS and broken on Windows. Drawing them makes every platform identical. */
+  const SVG = (body, extra) =>
+    '<svg class="ic-svg"' + (extra || "") + ' viewBox="0 0 16 16" fill="none" stroke="currentColor" ' +
+    'stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + body + "</svg>";
+
+  const IC = {
+    home: SVG('<path d="M2.5 7 8 2.5 13.5 7v6a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5z"/>'),
+    journey: SVG('<path d="M3 4h10M3 8h10M3 12h6.5"/>'),
+    play: SVG('<path d="M5.5 3.4 12.2 8l-6.7 4.6z" fill="currentColor" stroke-width="1.2"/>'),
+    grid: SVG('<rect x="2.6" y="2.6" width="4.6" height="4.6" rx="1"/><rect x="8.8" y="2.6" width="4.6" height="4.6" rx="1"/><rect x="2.6" y="8.8" width="4.6" height="4.6" rx="1"/><rect x="8.8" y="8.8" width="4.6" height="4.6" rx="1"/>'),
+    check: SVG('<path d="M3.2 8.4 6.4 11.6 12.8 4.8"/>'),
+    circle: SVG('<circle cx="8" cy="8" r="4.6"/>'),
+    diamond: SVG('<path d="M8 2.8 13.2 8 8 13.2 2.8 8z"/>'),
+    spark: SVG('<path d="M8 2.2 9.5 6.5 13.8 8 9.5 9.5 8 13.8 6.5 9.5 2.2 8 6.5 6.5z" fill="currentColor" stroke-width="1.1"/>'),
+    person: SVG('<circle cx="8" cy="6" r="2.5"/><path d="M3.4 13.3a4.7 4.7 0 0 1 9.2 0"/>'),
+    reset: SVG('<path d="M12.9 8a4.9 4.9 0 1 1-1.5-3.5"/><path d="M13.1 2.6v3h-3"/>'),
+    external: SVG('<path d="M7 3.6H3.8a.6.6 0 0 0-.6.6v8a.6.6 0 0 0 .6.6h8a.6.6 0 0 0 .6-.6V9.2"/><path d="M9.6 3.4h3.2v3.2"/><path d="M7.5 8.9l5.1-5.1"/>', ' width="12" height="12"'),
+    subarrow: SVG('<path d="M4.2 3.6v4.8a1.2 1.2 0 0 0 1.2 1.2h6.4"/><path d="M9.4 7.1 12.2 9.6 9.4 12.1"/>', ' width="13" height="13"'),
+    flag: SVG('<path d="M4 13.5V3.2"/><path d="M4 3.6h7.4l-1.5 2.6 1.5 2.6H4z"/>'),
+    hammer: SVG('<path d="M9.4 3.1 12.9 6.6"/><path d="M11.1 1.4 14.6 4.9l-2 2-3.5-3.5z"/><path d="M9.6 5.4 3.2 11.8a1.5 1.5 0 0 0 2.1 2.1l6.4-6.4"/>'),
+    chart: SVG('<path d="M2.8 13.2h10.4"/><path d="M4.6 13.2V8.4M8 13.2V4.6M11.4 13.2v-3"/>'),
+    clipboard: SVG('<rect x="3.4" y="3.2" width="9.2" height="10.4" rx="1.2"/><path d="M6.2 3.2V2.4h3.6v.8"/><path d="M6 7.6h4M6 10.2h3"/>'),
+    map: SVG('<path d="M2.6 4.2 6 2.8v9L2.6 13.2z"/><path d="M6 2.8l4 1.4v9l-4-1.4z"/><path d="M10 4.2l3.4-1.4v9L10 13.2z"/>'),
+    link: SVG('<path d="M6.7 9.3a2.6 2.6 0 0 0 3.8.2l1.9-1.9a2.6 2.6 0 0 0-3.7-3.7l-1 1"/><path d="M9.3 6.7a2.6 2.6 0 0 0-3.8-.2L3.6 8.4a2.6 2.6 0 0 0 3.7 3.7l1-1"/>'),
+  };
+
   const NAV = [
-    { id: "home", label: "Home", ic: "◐" },
-    { id: "learn", label: "Journey", ic: "▤" },
-    { id: "practice", label: "Practice", ic: "▷" },
-    { id: "more", label: "More", ic: "▥" },
+    { id: "home", label: "Home", ic: IC.home },
+    { id: "learn", label: "Journey", ic: IC.journey },
+    { id: "practice", label: "Practice", ic: IC.play },
+    { id: "more", label: "More", ic: IC.grid },
   ];
   const MORE_VIEWS = ["reference", "playbook", "you"];
 
@@ -112,7 +141,7 @@
       const current = !completed && data.currentUnit && data.currentUnit.id === unit.id;
       const skill = data.skillUnit(unit.id);
       html += `<div class="chapter ${completed ? "done" : current ? "current" : ""}" data-unit="${unit.id}">
-        <div class="badge">${completed ? "✓" : unit.id}</div>
+        <div class="badge">${completed ? IC.check : unit.id}</div>
         <div class="info"><div class="name">${esc(unit.name)}</div><div class="skill">${skill ? esc(skill.skill) : ""}</div></div>
         <div class="count">${p.done}/${p.total}</div>
       </div>`;
@@ -121,12 +150,12 @@
     html += `<h3 style="margin-top:26px">Finale · Build Missions</h3>`;
     for (const m of data.learning.missions) {
       const done = LuauProgress.missionCompleted(m);
-      html += `<div class="chapter" data-mission="${esc(m.id)}"><div class="badge">${done ? "✓" : "🏁"}</div>
+      html += `<div class="chapter" data-mission="${esc(m.id)}"><div class="badge">${done ? IC.check : IC.flag}</div>
         <div class="info"><div class="name">${esc(m.code)} · ${esc(m.title)}</div><div class="skill">${esc(m.summary)}</div></div></div>`;
     }
     html += `<h3 style="margin-top:26px">Roblox Studio</h3>
-      <div class="chapter" data-launchpad="1"><div class="badge">🔨</div><div class="info"><div class="name">${esc(data.launchpad.title)}</div><div class="skill">${data.launchpad.stations.length} stations</div></div></div>
-      <div class="chapter" data-builder="1"><div class="badge">🗺</div><div class="info"><div class="name">Builder Paths</div><div class="skill">Milestone plans that pair lessons with real builds</div></div></div>`;
+      <div class="chapter" data-launchpad="1"><div class="badge">${IC.hammer}</div><div class="info"><div class="name">${esc(data.launchpad.title)}</div><div class="skill">${data.launchpad.stations.length} stations</div></div></div>
+      <div class="chapter" data-builder="1"><div class="badge">${IC.map}</div><div class="info"><div class="name">Builder Paths</div><div class="skill">Milestone plans that pair lessons with real builds</div></div></div>`;
 
     $("#main").innerHTML = html;
     $("#main").querySelectorAll("[data-unit]").forEach((el) => el.addEventListener("click", () => go("chapter", { unitID: Number(el.dataset.unit) })));
@@ -165,7 +194,7 @@
     for (const step of steps) {
       const done = LuauProgress.isStepDone(step);
       const kind = step.kind === "read" ? "Read" : step.kind === "exercise" ? "Code" : "Studio Proof";
-      const icon = done ? "✓" : step.kind === "read" ? "▤" : step.kind === "exercise" ? "▷" : "◆";
+      const icon = done ? IC.check : step.kind === "read" ? IC.journey : step.kind === "exercise" ? IC.play : IC.diamond;
       html += `<div class="step" data-step-open="1" data-step='${esc(JSON.stringify(step.kind === "read" ? { k: "read", id: step.section.id } : step.kind === "exercise" ? { k: "ex", id: step.exercise.id } : { k: "proof" }))}'>
         <div class="dot">${icon}</div><div><div class="title">${esc(data.stepTitle(step))}</div><div class="kind">${kind}</div></div></div>`;
     }
@@ -178,7 +207,7 @@
       (proof.checks || []).forEach((check, i) => {
         const stepID = proof.stepIds[i] || (proof.id + ":step:" + i);
         const done = LuauProgress.isProofStepDone(stepID);
-        html += `<div class="step" data-toggle-proof="${esc(stepID)}"><div class="dot">${done ? "✓" : "○"}</div><div class="title">${esc(check)}</div></div>`;
+        html += `<div class="step" data-toggle-proof="${esc(stepID)}"><div class="dot">${done ? IC.check : IC.circle}</div><div class="title">${esc(check)}</div></div>`;
       });
       html += `<p class="subtitle" style="margin-top:8px">Complete these in Roblox Studio, then check them off as evidence.</p>`;
     }
@@ -207,12 +236,12 @@
     let html = `<div style="display:flex;justify-content:space-between;align-items:start">
       <div><div style="font-size:12px;color:var(--secondary)">${unit ? esc(unit.name) : ""}</div><h1 class="pagetitle" style="margin-top:2px">${esc(section.title)}</h1></div>
       <div style="display:flex;gap:8px">
-        <button class="btn ghost" id="bookmark-btn">${bookmarked ? "🔖" : "🔗"} ${bookmarked ? "Bookmarked" : "Bookmark"}</button>
-        ${bp ? '<button class="btn ghost" id="blueprint-btn">📋 Blueprint</button>' : ""}
+        <button class="btn ghost" id="bookmark-btn">${bookmarked ? IC.spark : IC.link} ${bookmarked ? "Bookmarked" : "Bookmark"}</button>
+        ${bp ? '<button class="btn ghost" id="blueprint-btn">'+IC.clipboard+' Blueprint</button>' : ""}
       </div></div>
       <div class="lesson-body" style="margin-top:14px">${section.html}</div>
       <div class="lesson-actions">
-        <button class="btn primary ${done ? "done" : ""}" id="complete-btn">${done ? "✓ Completed" : "Mark Complete"}</button>
+        <button class="btn primary ${done ? "done" : ""}" id="complete-btn">${done ? IC.check + " Completed" : "Mark Complete"}</button>
       </div>`;
     $("#main").innerHTML = html;
     $("#main").querySelectorAll("pre").forEach((el) => {
@@ -241,7 +270,7 @@
     }
     if (bp.explain) body += `<h4>Explain</h4><p>${esc(bp.explain)}</p>`;
     if (bp.extend) body += `<h4>Extend</h4><p>${esc(bp.extend)}</p>`;
-    if (bp.sources) body += "<h4>Sources</h4>" + bp.sources.map((s) => `<p><a href="${esc(s.url)}" target="_blank">${esc(s.label)} ↗</a></p>`).join("");
+    if (bp.sources) body += "<h4>Sources</h4>" + bp.sources.map((s) => `<p><a href="${esc(s.url)}" target="_blank">${esc(s.label)} ${IC.external}</a></p>`).join("");
     body += '<button class="btn primary" onclick="this.closest(\'div[style]\').parentElement.remove()">Close</button></div>';
     overlay.innerHTML = body;
     overlay.addEventListener("click", () => overlay.remove());
@@ -257,7 +286,7 @@
     (mission.acceptance || []).forEach((item, i) => {
       const stepID = mission.stepIds[i] || (mission.id + ":step:" + i);
       const done = LuauProgress.isMissionStepDone(stepID);
-      html += `<div class="step" data-toggle-mission="${esc(stepID)}"><div class="dot">${done ? "✓" : "○"}</div><div class="title">${esc(item)}</div></div>`;
+      html += `<div class="step" data-toggle-mission="${esc(stepID)}"><div class="dot">${done ? IC.check : IC.circle}</div><div class="title">${esc(item)}</div></div>`;
     });
     $("#main").innerHTML = html;
     $("#main").querySelectorAll("[data-toggle-mission]").forEach((el) => el.addEventListener("click", () => {
@@ -271,8 +300,8 @@
     let html = `<h1 class="pagetitle">${esc(data.launchpad.title)}</h1><p class="subtitle">${esc(data.launchpad.intro)}</p>`;
     for (const st of data.launchpad.stations) {
       html += `<details class="details-panel"><summary><span class="pill">${esc(st.number)}</span> ${esc(st.title)}</summary>
-        <div class="body"><p>${esc(st.body)}</p>${(st.checks||[]).map((c)=>`<p>✓ ${esc(c)}</p>`).join("")}
-        ${(st.sources||[]).map((s)=>`<p><a href="${esc(s.url)}" target="_blank">${esc(s.label)} ↗</a></p>`).join("")}</div></details>`;
+        <div class="body"><p>${esc(st.body)}</p>${(st.checks||[]).map((c)=>`<p>${IC.check} ${esc(c)}</p>`).join("")}
+        ${(st.sources||[]).map((s)=>`<p><a href="${esc(s.url)}" target="_blank">${esc(s.label)} ${IC.external}</a></p>`).join("")}</div></details>`;
     }
     $("#main").innerHTML = html;
   }
@@ -283,7 +312,11 @@
     for (const key of Object.keys(data.builderos)) {
       const p = data.builderos[key];
       html += `<h3>${esc(p.name)}</h3><p class="subtitle">${esc(p.audience)}</p>`;
-      const milestoneSets = p.milestones ? { "": p.milestones } : (p.templates || {});
+      // Paths B and C carry a flat milestones array; path A groups its
+      // milestones inside named templates, so unwrap that shape too.
+      const milestoneSets = p.milestones
+        ? { "": p.milestones }
+        : Object.fromEntries(Object.entries(p.templates || {}).map(([k, t]) => [k, t.milestones || []]));
       for (const tkey in milestoneSets) {
         const list = milestoneSets[tkey];
         if (p.templates && p.templates[tkey]) html += `<h4>${esc(p.templates[tkey].name)}</h4>`;
@@ -298,11 +331,11 @@
   function viewPractice() {
     const data = LuauData.current;
     let html = '<h1 class="pagetitle">Practice</h1><p class="subtitle">Real Luau, executed locally in a WebAssembly VM.</p>';
-    html += `<div class="chapter" data-run="sandbox"><div class="badge">▷</div><div class="info"><div class="name">General Sandbox</div><div class="skill">Free-form Luau, executed locally</div></div></div>`;
+    html += `<div class="chapter" data-run="sandbox"><div class="badge">${IC.play}</div><div class="info"><div class="name">General Sandbox</div><div class="skill">Free-form Luau, executed locally</div></div></div>`;
     html += `<h3 style="margin-top:20px">Performance Drills</h3>`;
     for (const ch of data.challenges) {
       if (ch.id === "sandbox") continue;
-      html += `<div class="chapter" data-run="${esc(ch.id)}"><div class="badge">📈</div><div class="info"><div class="name">${esc(ch.name)}</div><div class="skill">${esc(ch.level||"")} ${ch.goal ? "· " + esc(ch.goal) : ""}</div></div></div>`;
+      html += `<div class="chapter" data-run="${esc(ch.id)}"><div class="badge">${IC.chart}</div><div class="info"><div class="name">${esc(ch.name)}</div><div class="skill">${esc(ch.level||"")} ${ch.goal ? "· " + esc(ch.goal) : ""}</div></div></div>`;
     }
     for (const unit of data.textbook.units) {
       const exs = data.exercisesIn(unit.id);
@@ -310,7 +343,7 @@
       html += `<h3 style="margin-top:20px">Unit ${unit.id} · ${esc(unit.name)}</h3>`;
       for (const ex of exs) {
         const done = LuauProgress.isExerciseDone(ex.id);
-        html += `<div class="chapter" data-runex="${esc(ex.id)}"><div class="badge">${done ? "✓" : "▷"}</div><div class="info"><div class="name">${esc(ex.name)}</div></div></div>`;
+        html += `<div class="chapter" data-runex="${esc(ex.id)}"><div class="badge">${done ? IC.check : IC.play}</div><div class="info"><div class="name">${esc(ex.name)}</div></div></div>`;
       }
     }
     $("#main").innerHTML = html;
@@ -338,9 +371,9 @@
       <textarea id="editor" spellcheck="false">${esc(code)}</textarea>
       <div class="console" id="console">${LuauRuntime.isReady ? "Output appears here." : "Starting Luau runtime…"}</div>
       <div class="controls">
-        <button class="btn primary" id="run-btn">▷ Run</button>
-        ${mode === "exercise" || (window.__currentChallenge && window.__currentChallenge.badPattern) ? '<button class="btn ghost" id="verify-btn">✓ Verify</button>' : ""}
-        <button class="btn ghost" id="reset-btn">↺ Reset</button>
+        <button class="btn primary" id="run-btn">${IC.play} Run</button>
+        ${mode === "exercise" || (window.__currentChallenge && window.__currentChallenge.badPattern) ? '<button class="btn ghost" id="verify-btn">'+IC.check+' Verify</button>' : ""}
+        <button class="btn ghost" id="reset-btn">${IC.reset} Reset</button>
       </div></div>`;
 
     $("#run-btn").addEventListener("click", () => runCode(false, harness));
@@ -435,8 +468,8 @@
     let html = `<h1 class="pagetitle">${esc(track.name)}</h1><p class="subtitle">${esc(track.blurb)}</p>`;
     for (const item of track.items) {
       html += `<details class="details-panel"><summary><span class="pill">${esc(item.t)}</span> ${esc(item.n)}</summary>
-        <div class="body"><p>${esc(item.c)}</p>${item.prt ? `<p style="color:var(--secondary)">↳ ${esc(item.prt)}</p>` : ""}
-        <p><a href="${esc(data.docsURL(item))}" target="_blank">Open in Roblox Docs ↗</a></p></div></details>`;
+        <div class="body"><p>${esc(item.c)}</p>${item.prt ? `<p style="color:var(--secondary)">${IC.subarrow} ${esc(item.prt)}</p>` : ""}
+        <p><a href="${esc(data.docsURL(item))}" target="_blank">Open in Roblox Docs ${IC.external}</a></p></div></details>`;
     }
     if (track.deepDives && track.deepDives.length) {
       html += `<h3 style="margin-top:30px">Deep Dives</h3><p class="subtitle" style="margin-top:-6px">Answers to the questions the official docs leave out.</p>`;
@@ -455,7 +488,7 @@
         <div class="body"><ul>${topic.points.map((p) => `<li>${esc(p)}</li>`).join("")}</ul>`;
       if (topic.metrics) html += topic.metrics.map((m) => `<p><strong>${esc(m.term)}</strong>: ${esc(m.meaning)}</p>`).join("");
       if (topic.code) html += `<pre><code>${highlight(topic.code)}</code></pre>`;
-      if (topic.sources) html += topic.sources.map((s) => `<p><a href="${esc(s.url)}" target="_blank">${esc(s.label)} ↗</a></p>`).join("");
+      if (topic.sources) html += topic.sources.map((s) => `<p><a href="${esc(s.url)}" target="_blank">${esc(s.label)} ${IC.external}</a></p>`).join("");
       html += "</div></details>";
     }
     html += `<p style="margin-top:10px;font-size:11.5px;color:var(--secondary)">${esc(playbook.note)}</p>`;
@@ -529,11 +562,11 @@
   function viewMore() {
     const journey = LuauProgress.journeyProgress();
     let html = '<h1 class="pagetitle">More</h1><p class="subtitle">Docs, extra reading, and your stats.</p>';
-    html += `<div class="chapter" data-go="reference"><div class="badge">▥</div><div class="info">
+    html += `<div class="chapter" data-go="reference"><div class="badge">${IC.grid}</div><div class="info">
       <div class="name">Reference</div><div class="skill">Look up syntax, functions, and Roblox APIs</div></div></div>`;
-    html += `<div class="chapter" data-go="playbook"><div class="badge">✦</div><div class="info">
+    html += `<div class="chapter" data-go="playbook"><div class="badge">${IC.spark}</div><div class="info">
       <div class="name">Extras</div><div class="skill">Game production practice and platform deep-dives</div></div></div>`;
-    html += `<div class="chapter" data-go="you"><div class="badge">◔</div><div class="info">
+    html += `<div class="chapter" data-go="you"><div class="badge">${IC.person}</div><div class="info">
       <div class="name">You</div><div class="skill">${journey.done} of ${journey.total} milestones · ${LuauProgress.streak}-day streak</div></div></div>`;
     $("#main").innerHTML = html;
     $("#main").querySelectorAll("[data-go]").forEach((el) => el.addEventListener("click", () => go(el.dataset.go)));
