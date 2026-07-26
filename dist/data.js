@@ -105,6 +105,42 @@ window.LuauData = (function () {
         return step.proof.title;
       },
 
+      /* Every step of the course in one flat, ordered list. Forward and back
+       * navigation follows this rather than section ids, so it never skips
+       * the exercise or proof that sits between two readings, and it carries
+       * on into the next unit instead of dead-ending. Built once and cached. */
+      _flat: null,
+      flatJourney() {
+        if (this._flat) return this._flat;
+        const out = [];
+        for (const unit of textbook.units)
+          for (const step of this.journeySteps(unit)) out.push({ step, unit });
+        this._flat = out;
+        return out;
+      },
+
+      /* Position of a step in the flat journey, or -1. Accepts the same
+       * shapes the views already hold: a section id, an exercise id, or a
+       * unit id for a proof. */
+      journeyIndex(kind, id) {
+        const flat = this.flatJourney();
+        return flat.findIndex(({ step }) => {
+          if (kind === "read") return step.kind === "read" && step.section.id === id;
+          if (kind === "exercise") return step.kind === "exercise" && step.exercise.id === id;
+          return step.kind === "proof" && step.unitID === id;
+        });
+      },
+
+      /* Neighbours of a position, with the unit they belong to so a view can
+       * say "next unit" rather than only naming the step. */
+      neighbours(index) {
+        const flat = this.flatJourney();
+        return {
+          prev: index > 0 ? flat[index - 1] : null,
+          next: index >= 0 && index < flat.length - 1 ? flat[index + 1] : null,
+        };
+      },
+
       allExercises() {
         return Object.values(learning.exercises).sort((a, b) =>
           a.unitId !== b.unitId ? a.unitId - b.unitId : (a.id < b.id ? -1 : 1));

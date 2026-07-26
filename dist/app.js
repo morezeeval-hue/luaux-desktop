@@ -266,6 +266,46 @@
     }));
   }
 
+  /* Forward and back along the course. Every reading, exercise and proof is
+   * a stop on one continuous path, so finishing one always offers the next
+   * instead of dropping the learner back on a list to find their own place. */
+  function journeyNavHTML(kind, id) {
+    const data = LuauData.current;
+    const i = data.journeyIndex(kind, id);
+    if (i < 0) return "";
+    const { prev, next } = data.neighbours(i);
+    const label = (entry) => {
+      const k = entry.step.kind === "read" ? "Read" : entry.step.kind === "exercise" ? "Practice" : "Studio Proof";
+      return `<div class="jn-kind">${k}</div><div class="jn-title">${esc(data.stepTitle(entry.step))}</div>`;
+    };
+    let html = '<nav class="journey-nav">';
+    html += prev
+      ? `<button class="jn-btn" data-jn="prev"><div class="jn-dir">${IC.subarrow} Previous</div>${label(prev)}</button>`
+      : '<span class="jn-btn jn-empty"></span>';
+    html += next
+      ? `<button class="jn-btn jn-next" data-jn="next"><div class="jn-dir">Next${
+           next.unit.id !== data.flatJourney()[i].unit.id ? " &middot; Unit " + next.unit.id : ""
+         } ${IC.play}</div>${label(next)}</button>`
+      : `<span class="jn-btn jn-empty jn-done">${IC.flag}<div class="jn-title">End of the course</div></span>`;
+    html += "</nav>";
+    return html;
+  }
+
+  function bindJourneyNav(kind, id) {
+    const data = LuauData.current;
+    const i = data.journeyIndex(kind, id);
+    if (i < 0) return;
+    const { prev, next } = data.neighbours(i);
+    const open = (entry) => {
+      const s = entry.step;
+      if (s.kind === "read") go("lesson", { sectionID: s.section.id });
+      else if (s.kind === "exercise") go("runner", { exerciseID: s.exercise.id });
+      else go("chapter", { unitID: s.unitID });
+    };
+    const p = $('[data-jn="prev"]'); if (p && prev) p.addEventListener("click", () => open(prev));
+    const n = $('[data-jn="next"]'); if (n && next) n.addEventListener("click", () => open(next));
+  }
+
   function viewLesson(sectionID) {
     const data = LuauData.current, section = data.section(sectionID);
     if (!section) return go("learn");
@@ -283,14 +323,30 @@
       <div class="lesson-body" style="margin-top:14px">${section.html}</div>
       <div class="lesson-actions">
         <button class="btn primary ${done ? "done" : ""}" id="complete-btn">${done ? IC.check + " Completed" : "Mark Complete"}</button>
-      </div>`;
+      </div>
+      ${journeyNavHTML("read", sectionID)}`;
     $("#main").innerHTML = html;
     $("#main").querySelectorAll("pre").forEach((el) => {
       if (!el.querySelector("code")) el.innerHTML = highlight(el.textContent);
     });
     $("#bookmark-btn").addEventListener("click", () => { LuauProgress.toggleBookmark(sectionID); viewLesson(sectionID); });
-    $("#complete-btn").addEventListener("click", () => { LuauProgress.setSectionDone(sectionID, !done); viewLesson(sectionID); });
+    $("#complete-btn").addEventListener("click", () => {
+      const nowDone = !done;
+      LuauProgress.setSectionDone(sectionID, nowDone);
+      // Marking complete is the moment the learner is ready to move on, so
+      // carry them there instead of leaving them on a finished page.
+      const i = LuauData.current.journeyIndex("read", sectionID);
+      const next = i >= 0 ? LuauData.current.neighbours(i).next : null;
+      if (nowDone && next) {
+        const s = next.step;
+        if (s.kind === "read") return go("lesson", { sectionID: s.section.id });
+        if (s.kind === "exercise") return go("runner", { exerciseID: s.exercise.id });
+        return go("chapter", { unitID: s.unitID });
+      }
+      viewLesson(sectionID);
+    });
     const bpBtn = $("#blueprint-btn"); if (bpBtn) bpBtn.addEventListener("click", () => showBlueprint(bp));
+    bindJourneyNav("read", sectionID);
   }
 
   function showBlueprint(bp) {
@@ -415,11 +471,13 @@
         <button class="btn primary" id="run-btn">${IC.play} Run</button>
         ${mode === "exercise" || (window.__currentChallenge && window.__currentChallenge.badPattern) ? '<button class="btn ghost" id="verify-btn">'+IC.check+' Verify</button>' : ""}
         <button class="btn ghost" id="reset-btn">${IC.reset} Reset</button>
-      </div></div>`;
+      </div></div>
+      ${mode === "exercise" && params.exerciseID ? journeyNavHTML("exercise", params.exerciseID) : ""}`;
 
     $("#run-btn").addEventListener("click", () => runCode(false, harness));
     const verifyBtn = $("#verify-btn"); if (verifyBtn) verifyBtn.addEventListener("click", () => runCode(true, harness));
     $("#reset-btn").addEventListener("click", () => { $("#editor").value = code; $("#console").textContent = ""; });
+    if (mode === "exercise" && params.exerciseID) bindJourneyNav("exercise", params.exerciseID);
   }
 
   function consoleLine(text, cls) {
