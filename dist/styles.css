@@ -369,6 +369,32 @@ strong { color: var(--text); }
 /* Tour + update banner motion */
 .tour-card-anim { animation: cardin .28s var(--ease); }
 @keyframes cardin { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: none; } }
+.update-banner {
+  position: fixed; bottom: 20px; right: 20px; z-index: 90; width: 290px;
+  background: var(--panel); color: var(--text);
+  border: 1px solid var(--line-2); border-radius: 14px; padding: 15px 16px;
+  box-shadow: 0 12px 32px rgba(0,0,0,.4);
+}
+.update-banner .ub-title { font-weight: 700; font-size: 14px; }
+.update-banner .ub-note { font-size: 12px; color: var(--text-faint); margin-top: 4px; line-height: 1.45; }
+.update-banner .ub-actions { display: flex; gap: 8px; margin-top: 12px; }
+.update-banner button {
+  font-family: var(--font); font-size: 12.5px; font-weight: 600;
+  border-radius: 8px; padding: 7px 13px; cursor: pointer; border: 1px solid transparent;
+  transition: border-color .15s var(--ease), opacity .15s var(--ease);
+}
+.update-banner .ub-primary { background: var(--accent); color: #08120b; }
+.update-banner .ub-primary:hover { opacity: .9; }
+.update-banner .ub-ghost { background: transparent; color: var(--text-dim); border-color: var(--line-2); }
+.update-banner .ub-ghost:hover { border-color: var(--accent); color: var(--accent); }
+.update-banner .ub-bar {
+  height: 6px; border-radius: 4px; background: var(--bg-0);
+  border: 1px solid var(--line); overflow: hidden; margin-top: 10px;
+}
+.update-banner .ub-bar i {
+  display: block; height: 100%; background: var(--accent);
+  transition: width .2s linear;
+}
 .update-banner-anim { animation: bannerin .4s var(--ease); }
 @keyframes bannerin { from { opacity: 0; transform: translateY(16px) scale(.98); } to { opacity: 1; transform: none; } }
 

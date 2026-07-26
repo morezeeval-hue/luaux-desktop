@@ -51,13 +51,16 @@ jobs:
             Server Authority extras. No account, no server, no telemetry.
 
             Download the file for your OS below:
-            - Windows: `.msi` or the NSIS `-setup.exe`
+            - Windows: `-setup.exe`
             - macOS: `.dmg`
             - Linux: `.deb` or `.AppImage`
 
-            Unsigned build — Windows SmartScreen or macOS Gatekeeper may warn
-            on first launch ("Windows protected your PC" → More info → Run
-            anyway; macOS: right-click → Open).
+            Windows installs per user, so no administrator rights are needed
+            and later updates apply in place from inside the app.
+
+            Unsigned build: Windows SmartScreen or macOS Gatekeeper may warn
+            on first launch ("Windows protected your PC", then More info,
+            then Run anyway; macOS: right-click, then Open).
           releaseDraft: false
           prerelease: false
           includeUpdaterJson: true

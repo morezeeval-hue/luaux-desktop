@@ -752,25 +752,90 @@
     $("#tour-next").addEventListener("click", () => tourStep(i + 1));
   }
 
+  /* Update flow, in the order a person actually wants it:
+   *   1. a quiet notice that something is ready
+   *   2. one click downloads it, with real progress
+   *   3. one more click installs and restarts
+   *
+   * Nothing is downloaded before it is asked for, and the app is never
+   * interrupted mid-session. On Windows this now runs the per-user NSIS
+   * installer silently, so there is no elevation prompt and no installer
+   * window; the app simply reappears on the new version. */
   function showUpdateBanner(update) {
     const bar = document.createElement("div");
-    bar.className = "update-banner-anim";
-    bar.style.cssText = "position:fixed;bottom:20px;right:20px;background:var(--accent);color:#08120b;padding:16px 18px;border-radius:14px;max-width:300px;z-index:90;box-shadow:0 8px 24px rgba(0,0,0,.35)";
-    bar.innerHTML = `<div style="font-weight:700;margin-bottom:4px">Update available: v${esc(update.version)}</div>
-      <div style="font-size:12px;opacity:.9;margin-bottom:12px">Installs on restart. Your progress stays intact.</div>
-      <button id="update-install-btn" style="background:#08120b;color:var(--accent);border:none;padding:7px 14px;border-radius:8px;font-weight:700;cursor:pointer">Install &amp; Restart</button>
-      <button id="update-dismiss-btn" style="background:transparent;color:#08120b;border:1px solid rgba(8,18,11,.4);margin-left:8px;padding:7px 12px;border-radius:8px;cursor:pointer">Later</button>`;
-    document.body.appendChild(bar);
-    $("#update-dismiss-btn", bar).addEventListener("click", () => bar.remove());
-    $("#update-install-btn", bar).addEventListener("click", async () => {
-      bar.innerHTML = '<div style="font-weight:600">Downloading update…</div>';
+    bar.className = "update-banner update-banner-anim";
+
+    const title = (t) => `<div class="ub-title">${t}</div>`;
+    const note = (t) => `<div class="ub-note">${t}</div>`;
+
+    function offer() {
+      bar.innerHTML =
+        title(`Update ready: v${esc(update.version)}`) +
+        note("Downloads in the background. Your progress stays on this computer.") +
+        '<div class="ub-actions">' +
+        '<button class="ub-primary" id="ub-get">Download</button>' +
+        '<button class="ub-ghost" id="ub-later">Later</button>' +
+        "</div>";
+      $("#ub-later", bar).addEventListener("click", () => bar.remove());
+      $("#ub-get", bar).addEventListener("click", download);
+    }
+
+    async function download() {
+      let received = 0, total = 0;
+      const render = () => {
+        const pct = total ? Math.min(100, Math.round((received / total) * 100)) : null;
+        bar.innerHTML =
+          title(`Downloading v${esc(update.version)}`) +
+          `<div class="ub-bar"><i style="width:${pct === null ? 15 : pct}%"></i></div>` +
+          note(pct === null ? "Starting…" : pct + "%");
+      };
+      render();
       try {
-        await update.downloadAndInstall();
-        await window.__TAURI__.process.relaunch();
+        await update.download((e) => {
+          if (e.event === "Started") total = e.data.contentLength || 0;
+          else if (e.event === "Progress") { received += e.data.chunkLength || 0; render(); }
+          else if (e.event === "Finished") ready();
+        });
+        ready();
       } catch (err) {
-        bar.innerHTML = `<div style="font-weight:600">Update failed</div><div style="font-size:12px;opacity:.9">${esc(err.message || String(err))}</div>`;
+        failed(err);
       }
-    });
+    }
+
+    function ready() {
+      if (bar.dataset.state === "ready") return;
+      bar.dataset.state = "ready";
+      bar.innerHTML =
+        title(`v${esc(update.version)} is ready`) +
+        note("Installing takes a moment and reopens the app.") +
+        '<div class="ub-actions">' +
+        '<button class="ub-primary" id="ub-install">Install and restart</button>' +
+        '<button class="ub-ghost" id="ub-later2">Not now</button>' +
+        "</div>";
+      $("#ub-later2", bar).addEventListener("click", () => bar.remove());
+      $("#ub-install", bar).addEventListener("click", async () => {
+        bar.innerHTML = title("Installing…") + note("The app will reopen on its own.");
+        try {
+          await update.install();
+          // The Windows installer relaunches the app itself; elsewhere we ask.
+          await window.__TAURI__.process.relaunch();
+        } catch (err) {
+          failed(err);
+        }
+      });
+    }
+
+    function failed(err) {
+      bar.dataset.state = "failed";
+      bar.innerHTML =
+        title("Update failed") +
+        note(esc(err && err.message ? err.message : String(err))) +
+        '<div class="ub-actions"><button class="ub-ghost" id="ub-close">Close</button></div>';
+      $("#ub-close", bar).addEventListener("click", () => bar.remove());
+    }
+
+    offer();
+    document.body.appendChild(bar);
   }
 
   async function checkForUpdate() {
