@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "note": "Placement of supplementary material inside the guide. Kept as data, not code, so the ordering can be reviewed and corrected without touching any app. 'source' records where each placement comes from: 'data' means the content itself states the link, 'editorial' means it is a judgement call about where a learner needs it.",
+  "phases": [
+    {
+      "id": "units",
+      "label": "The course",
+      "blurb": "Ten units in dependency order. Each one carries the deep dives and Studio work that belong with it."
+    },
+    {
+      "id": "missions",
+      "label": "Build missions",
+      "blurb": "Three end-to-end builds once every unit is complete."
+    },
+    {
+      "id": "running",
+      "label": "Running a game",
+      "blurb": "Discovery, retention, economy and iteration. This only becomes answerable once you have something people can play, which is why it sits at the end."
+    }
+  ],
+  "units": {
+    "1": {
+      "deepDives": [
+        { "id": "G10", "source": "editorial", "why": "Studio itself is the first tool a learner touches." }
+      ],
+      "launchpad": [
+        { "id": "output", "source": "editorial" },
+        { "id": "tree", "source": "editorial" },
+        { "id": "placement", "source": "editorial" }
+      ]
+    },
+    "2": {
+      "deepDives": [
+        { "id": "G1", "source": "editorial", "why": "The class convention is built out of tables and functions, which is exactly this unit." }
+      ]
+    },
+    "5": {
+      "deepDives": [
+        { "id": "G4", "source": "data", "why": "Section 34 in this unit is Garbage Collection." }
+      ]
+    },
+    "6": {
+      "deepDives": [
+        { "id": "G5", "source": "data", "why": "Section 43 in this unit is Signals." },
+        { "id": "G6", "source": "data", "why": "Sections 40 and 41 in this unit are the task scheduler." },
+        { "id": "G8", "source": "data", "why": "Section 39 in this unit is the reflection bridge these hot loops cross." }
+      ],
+      "launchpad": [
+        { "id": "build", "source": "editorial" },
+        { "id": "event", "source": "editorial" }
+      ]
+    },
+    "7": {
+      "serverAuthority": { "source": "data", "why": "server_authority.json states relatedSections 44, 45 and 46, all inside this unit." },
+      "deepDives": [
+        { "id": "G2", "source": "data", "why": "Sections 44 to 46 in this unit are replication and remotes." },
+        { "id": "G7", "source": "data", "why": "Section 44 in this unit is Replication." }
+      ],
+      "launchpad": [
+        { "id": "authority", "source": "data" },
+        { "id": "client-intent", "source": "data" },
+        { "id": "remote-map", "source": "data" },
+        { "id": "remote-server", "source": "data" },
+        { "id": "remote-client", "source": "data" },
+        { "id": "network-proof", "source": "data" },
+        { "id": "state-contract", "source": "editorial" },
+        { "id": "player-lifecycle", "source": "editorial" },
+        { "id": "server-state", "source": "editorial" },
+        { "id": "state-proof", "source": "editorial" }
+      ]
+    },
+    "8": {
+      "deepDives": [
+        { "id": "G3", "source": "data", "why": "Section 52 in this unit is Parallel Luau." }
+      ]
+    },
+    "10": {
+      "deepDives": [
+        { "id": "G9", "source": "editorial", "why": "Planning a whole game is the capstone's job." },
+        { "id": "G13", "source": "editorial" },
+        { "id": "G14", "source": "editorial" },
+        { "id": "G12", "source": "editorial" },
+        { "id": "G11", "source": "editorial", "why": "Choosing community libraries is a production decision, not a language one." }
+      ],
+      "launchpad": [
+        { "id": "save-contract", "source": "data", "why": "Section 64 in this unit is the DataStore capstone." },
+        { "id": "save-boundary", "source": "data" },
+        { "id": "save-failure", "source": "data" },
+        { "id": "save-test-boundary", "source": "data" },
+        { "id": "data-repository-load", "source": "data" },
+        { "id": "data-repository-save", "source": "data" },
+        { "id": "data-repository-integration", "source": "data" },
+        { "id": "data-repository-proof", "source": "data" },
+        { "id": "system-layout", "source": "data", "why": "Sections 63 and 68 in this unit are systems design and service wrappers." },
+        { "id": "service-module", "source": "data" },
+        { "id": "server-composition", "source": "data" },
+        { "id": "session-ownership", "source": "data" }
+      ]
+    }
+  }
+}

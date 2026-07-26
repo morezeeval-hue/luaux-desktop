@@ -55,7 +55,7 @@
     { id: "practice", label: "Practice", ic: IC.play },
     { id: "more", label: "More", ic: IC.grid },
   ];
-  const MORE_VIEWS = ["reference", "playbook", "you"];
+  const MORE_VIEWS = ["reference", "playbook", "you", "launchpad", "builder"];
 
   let route = { view: "home" };
 
@@ -147,20 +147,28 @@
       </div>`;
     }
     html += "</div>";
-    html += `<h3 style="margin-top:26px">Finale · Build Missions</h3>`;
+
+    const phase = (p) =>
+      `<h3 style="margin-top:30px">${esc(p.label)}</h3><p class="subtitle" style="margin-top:-6px">${esc(p.blurb)}</p>`;
+    const phases = Object.fromEntries(data.unitExtras.phases.map((p) => [p.id, p]));
+
+    html += phase(phases.missions);
     for (const m of data.learning.missions) {
       const done = LuauProgress.missionCompleted(m);
       html += `<div class="chapter" data-mission="${esc(m.id)}"><div class="badge">${done ? IC.check : IC.flag}</div>
         <div class="info"><div class="name">${esc(m.code)} · ${esc(m.title)}</div><div class="skill">${esc(m.summary)}</div></div></div>`;
     }
-    html += `<h3 style="margin-top:26px">Roblox Studio</h3>
-      <div class="chapter" data-launchpad="1"><div class="badge">${IC.hammer}</div><div class="info"><div class="name">${esc(data.launchpad.title)}</div><div class="skill">${data.launchpad.stations.length} stations</div></div></div>
-      <div class="chapter" data-builder="1"><div class="badge">${IC.map}</div><div class="info"><div class="name">Builder Paths</div><div class="skill">Milestone plans that pair lessons with real builds</div></div></div>`;
+
+    html += phase(phases.running);
+    html += `<div class="chapter" data-playbook="1"><div class="badge">${IC.chart}</div>
+      <div class="info"><div class="name">${esc(data.playbook.title)}</div><div class="skill">${data.playbook.topics.length} topics on discovery, retention and iteration</div></div></div>
+      <div class="chapter" data-builder="1"><div class="badge">${IC.map}</div>
+      <div class="info"><div class="name">Builder Paths</div><div class="skill">Milestone plans that pair lessons with real builds</div></div></div>`;
 
     $("#main").innerHTML = html;
     $("#main").querySelectorAll("[data-unit]").forEach((el) => el.addEventListener("click", () => go("chapter", { unitID: Number(el.dataset.unit) })));
     $("#main").querySelectorAll("[data-mission]").forEach((el) => el.addEventListener("click", () => go("mission", { missionID: el.dataset.mission })));
-    const launchpadEl = $("[data-launchpad]"); if (launchpadEl) launchpadEl.addEventListener("click", () => go("launchpad"));
+    const playbookEl = $("[data-playbook]"); if (playbookEl) playbookEl.addEventListener("click", () => go("playbook"));
     const builderEl = $("[data-builder]"); if (builderEl) builderEl.addEventListener("click", () => go("builder"));
 
     $("#search").addEventListener("input", (e) => {
@@ -210,6 +218,39 @@
         html += `<div class="step" data-toggle-proof="${esc(stepID)}"><div class="dot">${done ? IC.check : IC.circle}</div><div class="title">${esc(check)}</div></div>`;
       });
       html += `<p class="subtitle" style="margin-top:8px">Complete these in Roblox Studio, then check them off as evidence.</p>`;
+    }
+
+    // Supplementary material used to sit in parallel top-level menus, which
+    // meant a learner had to know it existed. It now appears in the unit that
+    // makes it make sense. Placement comes from data/unit_extras.json.
+    const extras = data.extrasFor(unit.id);
+    if (extras && !extras.isEmpty) {
+      if (extras.stations.length) {
+        html += `<h3 style="margin-top:30px">In Roblox Studio</h3>
+          <p class="subtitle" style="margin-top:-6px">Hands-on stations for this unit. Do them in a real place, not here.</p>`;
+        for (const st of extras.stations) {
+          html += `<details class="details-panel"><summary><strong>${esc(st.title)}</strong>
+            <div style="font-size:12px;color:var(--secondary);margin-top:2px">${esc(st.label || "")}</div></summary>
+            <div class="body"><p>${esc(st.body)}</p>
+            ${st.code ? `<pre><code>${highlight(st.code)}</code></pre>` : ""}
+            ${(st.checks || []).map((c) => `<p>${IC.check} ${esc(c)}</p>`).join("")}
+            ${(st.sources || []).map((s) => `<p><a href="${esc(s.url)}" target="_blank">${esc(s.label)}</a></p>`).join("")}
+            </div></details>`;
+        }
+      }
+      if (extras.deepDives.length) {
+        html += `<h3 style="margin-top:30px">Deep Dives</h3>
+          <p class="subtitle" style="margin-top:-6px">Answers to the questions the official docs leave out.</p>`;
+        for (const g of extras.deepDives) {
+          html += `<details class="details-panel"><summary><strong>${esc(g.title)}</strong>
+            <div style="font-size:12px;color:var(--secondary);margin-top:2px">${esc(g.why)}</div></summary>
+            <div class="body">${g.body.map(renderDeepDiveBlock).join("")}</div></details>`;
+        }
+      }
+      if (extras.serverAuthority) {
+        html += `<h3 style="margin-top:30px">${esc(extras.serverAuthority.title)}</h3>`;
+        html += playbookSectionHTML(extras.serverAuthority, true);
+      }
     }
 
     $("#main").innerHTML = html;
@@ -481,8 +522,12 @@
     $("#main").innerHTML = html;
   }
 
-  function playbookSectionHTML(playbook) {
-    let html = `<h2 style="margin-top:30px">${esc(playbook.title)}</h2><p class="subtitle">${esc(playbook.intro)}</p>`;
+  /* `headless` is used when the caller has already printed the heading, which
+   * happens where a supplement is embedded inside the unit it belongs to. */
+  function playbookSectionHTML(playbook, headless) {
+    let html = headless
+      ? `<p class="subtitle" style="margin-top:-6px">${esc(playbook.intro)}</p>`
+      : `<h2 style="margin-top:30px">${esc(playbook.title)}</h2><p class="subtitle">${esc(playbook.intro)}</p>`;
     for (const topic of playbook.topics) {
       html += `<details class="details-panel"><summary><strong>${esc(topic.title)}</strong><div style="font-size:12px;color:var(--secondary);margin-top:2px">${esc(topic.summary)}</div></summary>
         <div class="body"><ul>${topic.points.map((p) => `<li>${esc(p)}</li>`).join("")}</ul>`;
@@ -564,8 +609,6 @@
     let html = '<h1 class="pagetitle">More</h1><p class="subtitle">Docs, extra reading, and your stats.</p>';
     html += `<div class="chapter" data-go="reference"><div class="badge">${IC.grid}</div><div class="info">
       <div class="name">Reference</div><div class="skill">Look up syntax, functions, and Roblox APIs</div></div></div>`;
-    html += `<div class="chapter" data-go="playbook"><div class="badge">${IC.spark}</div><div class="info">
-      <div class="name">Extras</div><div class="skill">Game production practice and platform deep-dives</div></div></div>`;
     html += `<div class="chapter" data-go="you"><div class="badge">${IC.person}</div><div class="info">
       <div class="name">You</div><div class="skill">${journey.done} of ${journey.total} milestones · ${LuauProgress.streak}-day streak</div></div></div>`;
     $("#main").innerHTML = html;

@@ -11,17 +11,39 @@ window.LuauData = (function () {
   }
 
   async function load() {
-    const [textbook, learning, path, blueprints, launchpad, builderos, challenges, playbook, serverAuthority] =
+    const [textbook, learning, path, blueprints, launchpad, builderos, challenges, playbook, serverAuthority, unitExtras] =
       await Promise.all([
         loadJSON("textbook"), loadJSON("learning"), loadJSON("path"),
         loadJSON("blueprints"), loadJSON("launchpad"), loadJSON("builderos"),
         loadJSON("challenges"), loadJSON("playbook"), loadJSON("server_authority"),
+        loadJSON("unit_extras"),
       ]);
 
     const sectionsByID = new Map(textbook.sections.map((s) => [s.id, s]));
 
     store = {
-      textbook, learning, path, blueprints, launchpad, builderos, challenges, playbook, serverAuthority,
+      textbook, learning, path, blueprints, launchpad, builderos, challenges, playbook, serverAuthority, unitExtras,
+
+      /* Supplementary material now lives inside the unit it belongs to.
+       * unit_extras.json owns the placement so the ordering can be reviewed
+       * as data rather than being buried in view code. */
+      extrasFor(unitID) {
+        const e = unitExtras.units[String(unitID)];
+        if (!e) return null;
+        const dives = [];
+        for (const t of path.tracks)
+          for (const g of t.deepDives || [])
+            if ((e.deepDives || []).some((x) => x.id === g.id)) dives.push(g);
+        const stations = (e.launchpad || [])
+          .map((x) => launchpad.stations.find((s) => s.id === x.id))
+          .filter(Boolean);
+        return {
+          deepDives: dives,
+          stations,
+          serverAuthority: e.serverAuthority ? serverAuthority : null,
+          isEmpty: !dives.length && !stations.length && !e.serverAuthority,
+        };
+      },
 
       section(id) { return sectionsByID.get(id) || null; },
 
