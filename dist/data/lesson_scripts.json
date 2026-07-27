@@ -740,6 +740,613 @@
      "explain": "Loop to visit everything, reach for the key when you want one thing."
     }
    ]
+  },
+  "9": {
+   "beats": [
+    {
+     "say": "So far your scripts have run one instruction after another. A function lets you take a chunk of that work, give it a name, and run it whenever you want, as many times as you want."
+    },
+    {
+     "say": "Two words do the heavy lifting. Parameters are what the function takes in. Return values are what it hands back. A vending machine is a fair picture. You put something in, something specific comes out, and you do not need to know what happens inside to use it."
+    },
+    {
+     "say": "Here is the coin counter from earlier, with the logic given a name. Notice the last line. The result of the call is stored back into coins.",
+     "code": "local function awardCoins(currentCoins: number, pickupAmount: number): number\n    return currentCoins + pickupAmount\nend\n\nlocal coins = 25\ncoins = awardCoins(coins, 5)\nprint(\"Coins: \" .. coins)"
+    },
+    {
+     "say": "There is one habit worth building from your very first function. When a function needs to change something, prefer handing back the new value over quietly reaching out and modifying something far away."
+    },
+    {
+     "say": "A function that takes inputs and returns a result can be tested on its own, reused somewhere else, and later moved into a ModuleScript without dragging hidden dependencies along."
+    },
+    {
+     "say": "Now the mistake that catches everyone once. Here the function clearly runs, but coins still prints twenty five. The answer was produced and then dropped on the floor, because nothing caught it.",
+     "code": "local coins = 25\nawardCoins(coins, 5)\nprint(coins)"
+    },
+    {
+     "say": "Store what comes back. A return value only matters if something receives it."
+    },
+    {
+     "say": "One last thing about those type annotations you saw. They tell the type checker what you intend, which lets it warn you when something does not line up. They do not convert anything while the game runs. They are a note to your tools and to the next reader, not a safety net."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q9-1",
+     "concept": "parameters-and-returns",
+     "type": "choice",
+     "ask": "What are parameters and return values?",
+     "options": [
+      "Parameters go in, return values come back",
+      "Both are outputs",
+      "Parameters are names, return values are types",
+      "They are two words for the same thing"
+     ],
+     "answer": 0,
+     "explain": "Parameters are the inputs a function receives; the return value is the result it hands back."
+    },
+    {
+     "id": "q9-2",
+     "concept": "capture-the-return",
+     "type": "bug",
+     "ask": "The function runs, but coins still prints 25. What is wrong?",
+     "code": "local coins = 25\nawardCoins(coins, 5)\nprint(coins)",
+     "options": [
+      "awardCoins is spelled wrong",
+      "The returned value is never stored anywhere",
+      "coins should not be local",
+      "The function needs a third argument"
+     ],
+     "answer": 1,
+     "explain": "awardCoins hands a number back, but nothing catches it. Write coins = awardCoins(coins, 5)."
+    },
+    {
+     "id": "q9-3",
+     "concept": "parameters-are-local",
+     "type": "choice",
+     "ask": "You change a number parameter inside a function. What happens to the caller's variable?",
+     "options": [
+      "It changes too",
+      "Nothing, numbers are values and the parameter is its own name",
+      "It becomes nil",
+      "Luau reports an error"
+     ],
+     "answer": 1,
+     "explain": "Parameters are fresh local names for one call. That is exactly why returning the next value works so well."
+    },
+    {
+     "id": "q9-4",
+     "concept": "type-annotations",
+     "type": "choice",
+     "ask": "What do the type annotations actually do?",
+     "options": [
+      "Convert values while the game runs",
+      "Tell the type checker your intent so it can warn you",
+      "Make the function faster",
+      "Nothing at all"
+     ],
+     "answer": 1,
+     "explain": "They are a note to your tools and the next reader. They do not convert anything at runtime."
+    },
+    {
+     "id": "q9-5",
+     "concept": "return-vs-side-effect",
+     "type": "choice",
+     "ask": "Why prefer returning a new value over changing something distant?",
+     "options": [
+      "It runs faster",
+      "The change is visible on the line where it happens, and the function can be tested alone",
+      "Luau requires it",
+      "It uses less memory"
+     ],
+     "answer": 1,
+     "explain": "It makes the state change explicit instead of something you have to go hunting for."
+    }
+   ]
+  },
+  "10": {
+   "beats": [
+    {
+     "say": "A function written inside a scope can see the local variables around it. More than that, it keeps its connection to them even after the surrounding code has moved on."
+    },
+    {
+     "say": "A function bundled together with the outer variables it remembers is called a closure. That sounds abstract until you see what it buys you. A function with a memory."
+    },
+    {
+     "say": "Here is a counter that keeps its own running total between calls. You do not pass the total in each time. It remembers.",
+     "code": "local score = 0\n\nlocal function addScore(amount)\n    score += amount\n    return score\nend\n\nprint(addScore(10))\nprint(addScore(5))"
+    },
+    {
+     "say": "It is a sharp tool in both directions. It is genuinely good for small state that one piece of code clearly owns."
+    },
+    {
+     "say": "It is a poor choice for anything another part of the game needs to read, check or trust, because that state is now tucked away where nothing else can see it. Ask who needs to own the truth, and let that answer decide."
+    },
+    {
+     "say": "Here is what breaks it. score is now created fresh inside the function, so it starts at zero on every single call. There is nothing to remember, because the variable is born and dies within one call.",
+     "code": "local function addScore(amount)\n    local score = 0\n    score += amount\n    return score\nend"
+    },
+    {
+     "say": "Two honest fixes, depending on who should own the value. Move the state back out to the scope that owns it, or pass the current value in and return the next one, the way the previous section did. Choose the second whenever the value matters to anyone else."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q10-1",
+     "concept": "closure",
+     "type": "choice",
+     "ask": "What is a closure?",
+     "options": [
+      "A function that closes the program",
+      "A function together with the outer variables it remembers",
+      "A loop that ends itself",
+      "A table with named keys"
+     ],
+     "answer": 1,
+     "explain": "The function holds on to the outer binding, which is what gives it memory between calls."
+    },
+    {
+     "id": "q10-2",
+     "concept": "closure-reset-bug",
+     "type": "bug",
+     "ask": "Every call returns the same small number instead of a growing one. Why?",
+     "code": "local function addScore(amount)\n    local score = 0\n    score += amount\n    return score\nend",
+     "options": [
+      "amount is never used",
+      "score is created fresh inside, so it restarts at zero each call",
+      "The function needs a return",
+      "+= does not work on locals"
+     ],
+     "answer": 1,
+     "explain": "The variable is born and dies within one call, so there is nothing to remember."
+    },
+    {
+     "id": "q10-3",
+     "concept": "closure-tradeoff",
+     "type": "choice",
+     "ask": "When is a closure the wrong place to keep state?",
+     "options": [
+      "When the value is a number",
+      "When another part of the game needs to read or validate it",
+      "When the function is short",
+      "Closures are always correct"
+     ],
+     "answer": 1,
+     "explain": "Closure state is tucked away where nothing else can see it. Ask who needs to own the truth."
+    },
+    {
+     "id": "q10-4",
+     "concept": "closure-vs-explicit",
+     "type": "choice",
+     "ask": "A score must be checked by other systems. What is the better shape?",
+     "options": [
+      "Keep it in a closure",
+      "Pass the current score in and return the next one",
+      "Print it after every change",
+      "Store it inside the function with local"
+     ],
+     "answer": 1,
+     "explain": "Explicit state keeps the value visible to whoever needs to trust it."
+    }
+   ]
+  },
+  "11": {
+   "beats": [
+    {
+     "say": "When your code calls a function, the caller pauses and waits. The called function has to finish and return before the line underneath runs. Calls stack up and then unwind, like plates stacked and then taken off one at a time."
+    },
+    {
+     "say": "Recursion is a function that calls itself, each time with a smaller version of the same problem."
+    },
+    {
+     "say": "It needs a base case. A condition where it stops calling itself and simply returns. Without one, the calls never unwind.",
+     "code": "local function countdown(value)\n    if value <= 0 then\n        print(\"Go!\")\n        return\n    end\n\n    print(value)\n    countdown(value - 1)\nend\n\ncountdown(3)"
+    },
+    {
+     "say": "Be honest about when you need it. For most game scripting, repeating over a known collection, a plain loop is clearer, easier to read and easier to inspect when something goes wrong."
+    },
+    {
+     "say": "Reach for recursion when the structure itself nests, such as walking a tree of Instances, and when you can state the stopping condition out loud before you write it."
+    },
+    {
+     "say": "Here is the classic failure. Passing the same value straight back in poses the identical problem again. Nothing shrinks, so the base case is never reached.",
+     "code": "countdown(value)"
+    },
+    {
+     "say": "Every recursive call must make the problem measurably smaller. If you cannot say what gets smaller, that is a strong sign a loop was the right tool."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q11-1",
+     "concept": "base-case",
+     "type": "choice",
+     "ask": "What does a base case do?",
+     "options": [
+      "Starts the recursion",
+      "Stops it, by returning without calling again",
+      "Makes it faster",
+      "Counts the calls"
+     ],
+     "answer": 1,
+     "explain": "The base case returns without another call, which is what lets the whole stack unwind."
+    },
+    {
+     "id": "q11-2",
+     "concept": "recursion-must-shrink",
+     "type": "bug",
+     "ask": "This never reaches the end. What is missing?",
+     "code": "countdown(value)",
+     "options": [
+      "A print statement",
+      "The value passed in never gets smaller",
+      "An end keyword",
+      "A return type"
+     ],
+     "answer": 1,
+     "explain": "The same value poses the identical problem again, so the base case is never reached."
+    },
+    {
+     "id": "q11-3",
+     "concept": "loop-vs-recursion",
+     "type": "choice",
+     "ask": "You need to visit every item in a flat list. What fits best?",
+     "options": [
+      "Recursion",
+      "A loop",
+      "Either is equally clear",
+      "Neither"
+     ],
+     "answer": 1,
+     "explain": "For a flat structure a loop is clearer and easier to inspect. Recursion suits structures that nest."
+    },
+    {
+     "id": "q11-4",
+     "concept": "call-stack",
+     "type": "choice",
+     "ask": "What happens to the caller while a function it called is running?",
+     "options": [
+      "It keeps running alongside",
+      "It pauses until the call returns",
+      "It restarts",
+      "It is discarded"
+     ],
+     "answer": 1,
+     "explain": "Calls stack up and then unwind. The caller waits for the return."
+    }
+   ]
+  },
+  "12": {
+   "beats": [
+    {
+     "say": "Earlier you used a list without much said about what a list actually is. Here is the honest answer. Luau has one collection type, the table, and an array is simply a table used by a shared convention."
+    },
+    {
+     "say": "Values sit at numbered positions, counting up from one, with no gaps."
+    },
+    {
+     "say": "Two things trip people up early. The first is that positions start at one, not zero.",
+     "code": "local inventory = {\"Sword\", \"Potion\", \"Key\"}\ninventory[2] = \"Shield\"\ntable.insert(inventory, \"Map\")\n\nprint(inventory[2])\nprint(#inventory)"
+    },
+    {
+     "say": "The second is subtler and worth taking seriously. The length operator is dependable when the numbered positions are packed together with no holes. If positions are missing in the middle, it is not a trustworthy count, and you should not build logic on top of it."
+    },
+    {
+     "say": "So keep ordered collections packed. Add with table dot insert, remove with table dot remove, and do not leave holes behind by assigning nil into the middle."
+    },
+    {
+     "say": "Here is the position mistake in the flesh. There is nothing stored at position zero.",
+     "code": "print(inventory[0])"
+    },
+    {
+     "say": "If you have come from another language, this will catch you more than once. It is not a quirk to work around. Write your loops and lookups in terms of one, and the rest of the language lines up with you."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q12-1",
+     "concept": "array-starts-at-1",
+     "type": "bug",
+     "ask": "This returns nil. Why?",
+     "code": "print(inventory[0])",
+     "options": [
+      "inventory is empty",
+      "Array positions start at 1, so there is nothing at 0",
+      "print cannot show table entries",
+      "The table was never declared local"
+     ],
+     "answer": 1,
+     "explain": "The convention counts up from 1. The first item is at position 1."
+    },
+    {
+     "id": "q12-2",
+     "concept": "length-operator-trust",
+     "type": "choice",
+     "ask": "When is the length operator not a trustworthy count?",
+     "options": [
+      "When the table has more than ten items",
+      "When the numbered positions have gaps",
+      "When the values are text",
+      "It is always trustworthy"
+     ],
+     "answer": 1,
+     "explain": "It is dependable on packed positions. With holes in the middle, do not build logic on it."
+    },
+    {
+     "id": "q12-3",
+     "concept": "table-is-one-type",
+     "type": "choice",
+     "ask": "What makes a table behave like an array?",
+     "options": [
+      "A special array keyword",
+      "The keys you choose: consecutive numbers from 1",
+      "Declaring it with local",
+      "Its size"
+     ],
+     "answer": 1,
+     "explain": "There is one collection type. The array behaviour comes purely from the keys you use."
+    },
+    {
+     "id": "q12-4",
+     "concept": "keep-arrays-packed",
+     "type": "choice",
+     "ask": "How do you keep an ordered collection reliable?",
+     "options": [
+      "Assign nil into the middle to clear slots",
+      "Add and remove with the table helpers, leaving no holes",
+      "Always use exactly three items",
+      "Convert it to text first"
+     ],
+     "answer": 1,
+     "explain": "Packed positions keep indexing, insertion and length checks predictable."
+    }
+   ]
+  },
+  "13": {
+   "beats": [
+    {
+     "say": "Position is the right way to organise some things and the wrong way for most others. Nobody wants to remember that a player's coin count is the second item in a list."
+    },
+    {
+     "say": "The same table can use meaningful names as keys instead of numbers. Now you ask for coins and get the coin count.",
+     "code": "local playerState = {coins = 30, title = \"Rookie\"}\n\nprint(playerState.coins)\nprint(playerState.title)"
+    },
+    {
+     "say": "Compare asking for coins with asking for item number one. The first explains itself. The second forces every future reader, including you, to remember a convention that was never written down."
+    },
+    {
+     "say": "One behaviour to know before you rely on it. Asking for a key that was never set gives you nil rather than an error."
+    },
+    {
+     "say": "That is convenient and it is also a trap, because the problem does not surface until you try to use the missing value. Here joining text onto nothing stops the script.",
+     "code": "print(\"Title: \" .. playerState.rank)"
+    },
+    {
+     "say": "Two clean fixes. Check the value and supply a fallback, or make sure whatever creates the record always sets the key. The second is usually better, because then every record has the same shape and readers can rely on it."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q13-1",
+     "concept": "keyed-vs-list",
+     "type": "choice",
+     "ask": "You are storing a player's coins, level and title. Which shape fits?",
+     "options": [
+      "A list, using positions",
+      "A table with named keys",
+      "Three separate variables in different files",
+      "A loop"
+     ],
+     "answer": 1,
+     "explain": "Names carry the meaning. A position would force readers to remember an unwritten convention."
+    },
+    {
+     "id": "q13-2",
+     "concept": "missing-key-is-nil",
+     "type": "bug",
+     "ask": "This fails when joining the text. Why?",
+     "code": "print(\"Title: \" .. playerState.rank)",
+     "options": [
+      "rank was never set, so it is nil",
+      "playerState is not a table",
+      "Two dots cannot join text",
+      "print takes only one argument"
+     ],
+     "answer": 0,
+     "explain": "A key that was never set gives nil, and joining text onto nothing is not meaningful."
+    },
+    {
+     "id": "q13-3",
+     "concept": "missing-key-is-nil",
+     "type": "choice",
+     "ask": "What happens when you read a key a table does not have?",
+     "options": [
+      "Luau reports an error immediately",
+      "You get nil",
+      "You get an empty piece of text",
+      "The table creates the key"
+     ],
+     "answer": 1,
+     "explain": "It gives nil quietly, which is why optional data should be checked before use."
+    },
+    {
+     "id": "q13-4",
+     "concept": "record-shape",
+     "type": "choice",
+     "ask": "Which fix is usually better for a missing field?",
+     "options": [
+      "Check for nil at every place it is read",
+      "Make whatever creates the record always set the key",
+      "Ignore it and hope",
+      "Store it as text instead"
+     ],
+     "answer": 1,
+     "explain": "Then every record has the same shape and readers can rely on it."
+    }
+   ]
+  },
+  "14": {
+   "beats": [
+    {
+     "say": "Game values usually have edges. Health should not fall below zero. Volume belongs between zero and one. A reward should come from a stated range rather than anywhere at all."
+    },
+    {
+     "say": "You can enforce edges with a scatter of separate checks, and plenty of code does. The trouble is that the rule ends up spread across several places, so changing it later means finding all of them and hoping you did."
+    },
+    {
+     "say": "math dot clamp says the whole rule in one line. Here is a value, here is the lowest it may be, here is the highest. It hands back a value inside that range.",
+     "code": "local health = -15\nlocal maxHealth = 100\nhealth = math.clamp(health, 0, maxHealth)\nprint(\"Health: \" .. health)"
+    },
+    {
+     "say": "The rule lives at the point where the value actually changes, which is exactly where a reader will look for it. And the range includes both ends."
+    },
+    {
+     "say": "The arguments have an order, and getting it wrong is quiet rather than loud. The value you are constraining comes first, then the range you are constraining it to. State first, rule second.",
+     "code": "math.clamp(0, maxHealth, health)"
+    },
+    {
+     "say": "One caution worth taking seriously as you go further. Keep randomness well away from anything paid or fairness sensitive in a real game economy. That is a design and trust question long before it is a coding one."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q14-1",
+     "concept": "clamp-argument-order",
+     "type": "bug",
+     "ask": "This does not produce the number expected. What is wrong?",
+     "code": "math.clamp(0, maxHealth, health)",
+     "options": [
+      "clamp needs four arguments",
+      "The arguments are in the wrong order",
+      "maxHealth is not a number",
+      "clamp cannot handle negatives"
+     ],
+     "answer": 1,
+     "explain": "The value comes first, then the minimum, then the maximum. State first, rule second."
+    },
+    {
+     "id": "q14-2",
+     "concept": "clamp-purpose",
+     "type": "predict",
+     "ask": "health is -15 and maxHealth is 100. What does math.clamp(health, 0, maxHealth) give?",
+     "answer": "0",
+     "accept": [
+      "zero"
+     ],
+     "explain": "The value is below the minimum, so it comes back as the minimum. The range includes both ends."
+    },
+    {
+     "id": "q14-3",
+     "concept": "rule-in-one-place",
+     "type": "choice",
+     "ask": "Why is clamp better than several separate checks?",
+     "options": [
+      "It is shorter to type",
+      "The rule lives in one place, where the value actually changes",
+      "It is faster",
+      "It works on text too"
+     ],
+     "answer": 1,
+     "explain": "Scattered checks mean changing the rule later requires finding all of them."
+    },
+    {
+     "id": "q14-4",
+     "concept": "randomness-and-fairness",
+     "type": "choice",
+     "ask": "Where should randomness be kept away from?",
+     "options": [
+      "Anything paid or fairness sensitive",
+      "Loops",
+      "Text values",
+      "Nowhere, it is always fine"
+     ],
+     "answer": 0,
+     "explain": "That is a design and trust question long before it is a coding one."
+    }
+   ]
+  },
+  "15": {
+   "beats": [
+    {
+     "say": "The table library gives you operations that name what you are doing. Insert, remove, clear, clone. Using the one that matches your intent beats rebuilding a collection by hand and hoping the side effects work out."
+    },
+    {
+     "say": "When a collection holds game state, get into the habit of looking at it before and after a change. A removal that silently does nothing, or removes the wrong thing, is much easier to catch when you can see both sides of it."
+    },
+    {
+     "say": "Here an item is used and the removed value is kept. table dot remove does two jobs at once. It hands back the value it took out, and it closes the gap so the numbered positions stay packed.",
+     "code": "local inventory = {\"Potion\", \"Key\", \"Map\"}\nlocal usedItem = table.remove(inventory, 1)\n\nprint(\"Used: \" .. usedItem)\nprint(\"Remaining: \" .. #inventory)"
+    },
+    {
+     "say": "Catching that returned value is what turns a deletion into a transaction. The item is not just gone. It is in your hand and you can do something with it."
+    },
+    {
+     "say": "Now the behaviour that surprises people. Removing from the middle of a packed array does not leave a hole. Everything after it shifts down to close the gap.",
+     "code": "table.remove(inventory, 1)\nprint(inventory[2])"
+    },
+    {
+     "say": "So the positions you remembered are no longer pointing at the same things. Either re-read the collection after changing it, or, if a thing's identity matters more than where it sits, stop identifying it by position and give it a name instead."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q15-1",
+     "concept": "remove-returns-value",
+     "type": "choice",
+     "ask": "What does table.remove hand back?",
+     "options": [
+      "Nothing",
+      "The value it took out",
+      "The new length",
+      "The whole table"
+     ],
+     "answer": 1,
+     "explain": "Catching it turns a deletion into a transaction: the item is in your hand, not just gone."
+    },
+    {
+     "id": "q15-2",
+     "concept": "removal-shifts-positions",
+     "type": "bug",
+     "ask": "After removing the first item, position 2 holds something unexpected. Why?",
+     "code": "table.remove(inventory, 1)\nprint(inventory[2])",
+     "options": [
+      "The table was corrupted",
+      "A packed array closes gaps, so later items shifted down",
+      "remove deletes two items",
+      "Position 2 never existed"
+     ],
+     "answer": 1,
+     "explain": "Everything after the removed item moves down one, so remembered positions no longer match."
+    },
+    {
+     "id": "q15-3",
+     "concept": "identity-vs-position",
+     "type": "choice",
+     "ask": "A thing's identity matters more than where it sits. What should you do?",
+     "options": [
+      "Track it by position anyway",
+      "Give it a name and use a keyed table",
+      "Never remove anything",
+      "Copy the list first"
+     ],
+     "answer": 1,
+     "explain": "Positions shift. Names do not."
+    },
+    {
+     "id": "q15-4",
+     "concept": "verify-before-after",
+     "type": "choice",
+     "ask": "Why check a collection before and after changing it?",
+     "options": [
+      "Luau requires it",
+      "A removal that does nothing, or the wrong thing, is much easier to catch",
+      "It makes the code faster",
+      "To reset the length"
+     ],
+     "answer": 1,
+     "explain": "Seeing both sides makes the change observable instead of assumed."
+    }
+   ]
   }
  }
 }
