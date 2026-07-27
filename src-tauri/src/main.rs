@@ -61,6 +61,7 @@ fn main() {
             piper::piper_status,
             piper::piper_install,
             piper::piper_speak,
+            piper::piper_remove,
             whisper::whisper_status,
             whisper::whisper_install,
             whisper::whisper_transcribe

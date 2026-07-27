@@ -642,7 +642,10 @@
       } else if (busy) {
         right = `<span style="font-size:12px;color:var(--secondary)">Waiting</span>`;
       } else if (v.installed) {
-        right = `<button class="btn ghost" data-preview="${esc(v.id)}" style="font-size:12px;padding:4px 10px">Preview</button>`;
+        right = `<span style="display:flex;gap:6px">
+          <button class="btn ghost" data-preview="${esc(v.id)}" style="font-size:12px;padding:4px 10px">Preview</button>
+          <button class="btn ghost" data-drop="${esc(v.id)}" style="font-size:12px;padding:4px 10px;color:var(--red)">Remove</button>
+        </span>`;
       } else {
         right = `<button class="btn ghost" data-get="${esc(v.id)}" style="font-size:12px;padding:4px 10px">Download ${Math.round(v.bytes / 1e6)} MB</button>`;
       }
@@ -708,6 +711,20 @@
         if (S.isMuted()) S.setMuted(false);
         S.speak(VOICE_SAMPLE);
         if (!was || was.id !== el.dataset.preview) viewYou();
+      }));
+
+    $("#main").querySelectorAll("[data-drop]").forEach((el) =>
+      el.addEventListener("click", async () => {
+        const id = el.dataset.drop;
+        const v = S.voices().find((x) => x.id === id);
+        const size = v ? Math.round(v.bytes / 1e6) + " MB" : "the files";
+        if (!confirm(`Remove ${v ? v.label : id}? That frees ${size}. You can download it again later.`)) return;
+        try {
+          await S.remove(id);
+        } catch (e) {
+          alert("That voice could not be removed: " + e);
+        }
+        if (route.view === "you") viewYou();
       }));
 
     $("#main").querySelectorAll("[data-get]").forEach((el) =>

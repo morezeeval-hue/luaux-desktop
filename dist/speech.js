@@ -221,6 +221,15 @@ window.LuauSpeech = (function () {
       }
     },
 
+    /* Deletes a downloaded voice and moves off it if it was in use. */
+    async remove(id) {
+      if (!invoke) return;
+      await invoke("piper_remove", { id });
+      if (preferred === id) this.setVoice("");
+      lastError = "";
+      await refresh();
+    },
+
     /* Speaks a beat. Returns immediately; the lesson never waits on audio. */
     speak(text) {
       if (muted || !text) return;

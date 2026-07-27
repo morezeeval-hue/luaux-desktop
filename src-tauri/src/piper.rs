@@ -455,6 +455,29 @@ pub async fn piper_install(app: tauri::AppHandle, id: String) -> Result<(), Stri
     fetch_voice(&dir, v, &report).await
 }
 
+/// Deletes a downloaded voice. A voice is 60 to 120 MB, so being able to
+/// take one back off the disk matters on a small machine.
+#[tauri::command]
+pub fn piper_remove(app: tauri::AppHandle, id: String) -> Result<(), String> {
+    let v = voice(&id).ok_or_else(|| format!("unknown voice {id}"))?;
+    let (model, config) = model_paths(&app, v)?;
+
+    // Drop it from memory first, or the file goes and the loaded copy stays.
+    if let Ok(mut held) = LOADED.lock() {
+        if held.as_ref().map(|(loaded, _)| loaded == &id).unwrap_or(false) {
+            *held = None;
+        }
+    }
+
+    for path in [model, config] {
+        if path.exists() {
+            std::fs::remove_file(&path)
+                .map_err(|e| format!("cannot remove {}: {e}", path.display()))?;
+        }
+    }
+    Ok(())
+}
+
 /// Speaks `text` in `id`, returning a WAV the page can play. The voice must
 /// already be installed; the caller decides when to download.
 #[tauri::command]
