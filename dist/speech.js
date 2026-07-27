@@ -138,8 +138,11 @@ window.LuauSpeech = (function () {
 
   function chosen() {
     const list = all();
-    return list.find((v) => v.id === preferred)
-      || list.find((v) => v.id === DEFAULT_PIPER_VOICE && v.installed)
+    const selected = list.find((v) => v.id === preferred);
+    const defaultNeural = list.find((v) => v.id === DEFAULT_PIPER_VOICE && v.installed);
+    return (selected && selected.backend === "piper" && selected.installed ? selected : null)
+      || defaultNeural
+      || selected
       || list.find((v) => v.backend === "piper" && v.installed)
       || list.find((v) => v.backend === "system")
       || list[0]
