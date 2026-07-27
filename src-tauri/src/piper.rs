@@ -353,17 +353,65 @@ pub fn sentences(text: &str) -> Vec<String> {
     out
 }
 
+/// How long a pause at the end of a sentence should last, in milliseconds.
+///
+/// Adjustable because the right value is a matter of taste and can only be
+/// judged by ear, not derived.
+pub const SENTENCE_PAUSE_MS: usize = 300;
+
+/// A touch under one, so the tutor explains rather than announces.
+const PACE: f32 = 1.06;
+
+/// Trims the near-silent head and tail of one synthesized sentence, and
+/// fades the remaining edges.
+///
+/// Measuring the model's output showed it leaves almost no silence at a full
+/// stop: one 80 ms dip across four sentences. So the pause has to be made,
+/// not stretched, which means synthesizing sentence by sentence. The cost of
+/// that is a hard cut at each join, audible as a click; trimming to the
+/// actual speech and fading a few milliseconds removes it.
+fn trim_and_fade(samples: &[f32], rate: u32) -> &[f32] {
+    const SILENCE: f32 = 0.006;
+    let first = samples.iter().position(|s| s.abs() >= SILENCE).unwrap_or(0);
+    let last = samples
+        .iter()
+        .rposition(|s| s.abs() >= SILENCE)
+        .unwrap_or(samples.len().saturating_sub(1));
+    // Keep a little air either side so consonants are not clipped.
+    let air = rate as usize / 100; // 10 ms
+    let start = first.saturating_sub(air);
+    let end = (last + air).min(samples.len());
+    &samples[start..end]
+}
+
+fn fade_edges(buf: &mut [f32], rate: u32) {
+    let n = (rate as usize / 200).max(1); // 5 ms
+    let len = buf.len();
+    if len < n * 2 {
+        return;
+    }
+    for i in 0..n {
+        let g = i as f32 / n as f32;
+        buf[i] *= g;
+        buf[len - 1 - i] *= g;
+    }
+}
+
 /// Speaks `text` with an already-installed voice, reusing the loaded model
 /// when the voice has not changed.
-///
-/// Sentences are synthesized separately and joined with a pause, so the tutor
-/// lands its full stops instead of reading straight through them.
 pub fn synthesize(id: &str, model: &Path, config: &Path, text: &str) -> Result<Vec<u8>, String> {
-    /// Long enough to hear as the end of a thought, short enough not to drag.
-    const SENTENCE_PAUSE_MS: usize = 380;
-    /// A touch under one, so the tutor explains rather than announces.
-    const PACE: f32 = 1.06;
+    synthesize_with(id, model, config, text, SENTENCE_PAUSE_MS)
+}
 
+/// As `synthesize`, with the sentence pause given explicitly. Separate so the
+/// length can be compared by ear without rebuilding the app.
+pub fn synthesize_with(
+    id: &str,
+    model: &Path,
+    config: &Path,
+    text: &str,
+    pause_ms: usize,
+) -> Result<Vec<u8>, String> {
     let mut held = LOADED.lock().map_err(|_| "speech lock poisoned")?;
     let reload = held.as_ref().map(|(loaded, _)| loaded != id).unwrap_or(true);
     if reload {
@@ -382,9 +430,11 @@ pub fn synthesize(id: &str, model: &Path, config: &Path, text: &str) -> Result<V
             .create(piece, false, None, Some(PACE), None, None)
             .map_err(|e| format!("cannot speak that: {e}"))?;
         rate = r;
-        all.extend_from_slice(&samples);
-        if i + 1 < pieces.len() {
-            all.extend(std::iter::repeat(0.0).take(rate as usize * SENTENCE_PAUSE_MS / 1000));
+        let mut piece_audio = trim_and_fade(&samples, rate).to_vec();
+        fade_edges(&mut piece_audio, rate);
+        all.append(&mut piece_audio);
+        if i + 1 < pieces.len() && pause_ms > 0 {
+            all.extend(std::iter::repeat(0.0).take(rate as usize * pause_ms / 1000));
         }
     }
 
