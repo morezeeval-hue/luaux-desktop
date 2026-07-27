@@ -1,0 +1,745 @@
+{
+ "version": 1,
+ "note": "Guided lesson scripts. Beats restate what the section already teaches, in a register that reads aloud. Code is verbatim from textbook.json. Every question is answerable from the beats above it and carries a concept for drilling.",
+ "sections": {
+  "0": {
+   "beats": [
+    {
+     "say": "Welcome. By the end of this lesson you will have written a program and watched it answer you back. That is not a figure of speech, it is the actual thing."
+    },
+    {
+     "say": "A script is a list of instructions that you write and the computer follows, one at a time, from the top to the bottom. That is genuinely all it is. There is no hidden magic underneath."
+    },
+    {
+     "say": "Luau is the language Roblox uses for those instructions. When you write Luau, you are writing the rules of your game. What happens when a player touches something. What a button does. How a score goes up."
+    },
+    {
+     "say": "The first instruction you will meet is print. It takes something you give it and shows it to you. It is how you get the computer to tell you what it is thinking, which turns out to be the most useful thing you can do while learning."
+    },
+    {
+     "say": "Here is your first program. Two lines. The first line puts some text somewhere and gives it the name message. The second hands that name to print, which shows it to you.",
+     "code": "local message = \"LuauX online\"\nprint(message)"
+    },
+    {
+     "say": "One thing worth saying before you start. The Practice runner in this app is a sandbox. Nothing you type there can break your computer, your Roblox account, or a real game. Type things, run them, break them on purpose. That is what it is for."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q0-1",
+     "concept": "what-is-a-script",
+     "type": "choice",
+     "ask": "In what order does Luau follow the instructions in a script?",
+     "options": [
+      "Top to bottom, one at a time",
+      "All at once, together",
+      "Bottom to top",
+      "In whatever order is fastest"
+     ],
+     "answer": 0,
+     "explain": "Luau runs each instruction in order, finishing one before starting the next."
+    },
+    {
+     "id": "q0-2",
+     "concept": "print-purpose",
+     "type": "choice",
+     "ask": "What does print do?",
+     "options": [
+      "Sends the text to a printer",
+      "Shows a value so you can see it",
+      "Saves the value to a file",
+      "Deletes the value"
+     ],
+     "answer": 1,
+     "explain": "print makes an otherwise invisible value visible. In Roblox Studio it writes to the Output window."
+    },
+    {
+     "id": "q0-3",
+     "concept": "print-purpose",
+     "type": "predict",
+     "ask": "What does this program show?",
+     "code": "local greeting = \"Hello\"\nprint(greeting)",
+     "answer": "Hello",
+     "accept": [
+      "hello"
+     ],
+     "explain": "The name greeting holds the text Hello, and print shows what is in it."
+    },
+    {
+     "id": "q0-4",
+     "concept": "sandbox-safety",
+     "type": "choice",
+     "ask": "You are worried about typing something wrong in Practice. What can happen?",
+     "options": [
+      "It could break your Roblox account",
+      "It could damage your computer",
+      "Nothing. It is a sandbox, so experiment freely",
+      "It could delete your progress"
+     ],
+     "answer": 2,
+     "explain": "The runner is isolated. Getting it wrong is how you learn, and it costs nothing."
+    }
+   ]
+  },
+  "1": {
+   "beats": [
+    {
+     "say": "A line of code can look like one solid blob of symbols. It is not. Every line is made of a few kinds of piece, and once you can tell them apart, code stops looking like noise."
+    },
+    {
+     "say": "There are three kinds worth knowing now. Names are labels you invent, like playerName. They point at a value so you can refer to it later."
+    },
+    {
+     "say": "Text values sit inside quotation marks. The quotation marks are the fence. Everything inside is taken literally, exactly as written."
+    },
+    {
+     "say": "And punctuation, like brackets and the two dots, groups things together and says how they relate."
+    },
+    {
+     "say": "Look at this line. playerName is a name you invented. The words in quotation marks are text. The two dots join two pieces of text into one.",
+     "code": "local playerName = \"Ari\"\nprint(\"Welcome, \" .. playerName)"
+    },
+    {
+     "say": "Here is the practical payoff. When a first script goes wrong, it is almost never anything deep. It is a misspelled name, a missing quotation mark, or an unclosed bracket. You do not need to understand the language internals to find those."
+    },
+    {
+     "say": "One rule that catches everybody. Luau names are case sensitive. PlayerName with a capital P and playerName with a small p are two completely different names, in the same way that two people with similar names are still two people."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q1-1",
+     "concept": "text-vs-name",
+     "type": "choice",
+     "ask": "What tells Luau that something is text rather than a name?",
+     "options": [
+      "It is written in capitals",
+      "It sits inside quotation marks",
+      "It comes after print",
+      "It is longer than one word"
+     ],
+     "answer": 1,
+     "explain": "Quotation marks are the fence. Inside them, everything is taken literally."
+    },
+    {
+     "id": "q1-2",
+     "concept": "case-sensitivity",
+     "type": "choice",
+     "ask": "You created a name called playerName, then wrote PlayerName. What happens?",
+     "options": [
+      "It works, capitals are ignored",
+      "Luau cannot find PlayerName",
+      "Luau corrects it automatically",
+      "It creates a copy"
+     ],
+     "answer": 1,
+     "explain": "Names are case sensitive. PlayerName and playerName are two different names."
+    },
+    {
+     "id": "q1-3",
+     "concept": "case-sensitivity",
+     "type": "bug",
+     "ask": "This reports that a name cannot be found. Which line is wrong?",
+     "code": "local playerName = \"Ari\"\nprint(PlayerName)",
+     "options": [
+      "Line 1, the name is misspelled",
+      "Line 2, PlayerName does not match playerName",
+      "Neither, the code is fine"
+     ],
+     "answer": 1,
+     "explain": "Line 1 created playerName. Line 2 asks for PlayerName, which was never created."
+    },
+    {
+     "id": "q1-4",
+     "concept": "joining-text",
+     "type": "predict",
+     "ask": "What does this show?",
+     "code": "local name = \"Sam\"\nprint(\"Hi, \" .. name)",
+     "answer": "Hi, Sam",
+     "accept": [
+      "hi, sam",
+      "hi sam"
+     ],
+     "explain": "The two dots join the greeting and the name into one piece of text."
+    },
+    {
+     "id": "q1-5",
+     "concept": "debug-one-thing",
+     "type": "choice",
+     "ask": "Your script fails. What is the most useful next step?",
+     "options": [
+      "Change several things and run it once",
+      "Change one thing, run it, then repeat",
+      "Start the file again from scratch",
+      "Read the whole language grammar first"
+     ],
+     "answer": 1,
+     "explain": "Changing one thing at a time is how you learn which change mattered. It is how professionals debug, not a beginner crutch."
+    }
+   ]
+  },
+  "2": {
+   "beats": [
+    {
+     "say": "Almost every game needs to remember things. How many coins a player has. Whether a door is open. What round it is."
+    },
+    {
+     "say": "You remember something by giving it a name and putting a value in it. That pairing is called a variable."
+    },
+    {
+     "say": "The word local in front decides where that name exists. A name created with local lives inside the block it was declared in, and nowhere else."
+    },
+    {
+     "say": "That sounds like a restriction, and it is, deliberately. Keeping names contained means you can look at a piece of code and see everything it depends on, without hunting through the rest of the file."
+    },
+    {
+     "say": "Here is a complete, if small, piece of game logic. A player picks something up and a counter goes up. The plus equals means take what is already there and add to it.",
+     "code": "local coins = 25\nlocal pickupAmount = 5\n\ncoins += pickupAmount\nprint(\"Coins: \" .. coins)"
+    },
+    {
+     "say": "Now the trap. A name declared inside a block cannot escape it. In this example bonus is created inside the if block, so it only exists between then and end. Once the block finishes, the name is gone.",
+     "code": "if true then\n    local bonus = 10\n    print(bonus)\nend\n\nprint(bonus)"
+    },
+    {
+     "say": "The fix is to decide where the value actually needs to be visible, and declare it there. If code after the block needs it, create the name before the block and assign to it inside."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q2-1",
+     "concept": "local-scope",
+     "type": "choice",
+     "ask": "What does local decide about a name?",
+     "options": [
+      "How fast it runs",
+      "Where in the code it exists",
+      "Whether it can change",
+      "What type of value it holds"
+     ],
+     "answer": 1,
+     "explain": "local confines the name to the block it was declared in."
+    },
+    {
+     "id": "q2-2",
+     "concept": "local-scope",
+     "type": "bug",
+     "ask": "The second print fails. Why?",
+     "code": "if true then\n    local bonus = 10\n    print(bonus)\nend\n\nprint(bonus)",
+     "options": [
+      "bonus was never given a value",
+      "bonus only exists inside the if block",
+      "print cannot show numbers",
+      "The if block is missing an end"
+     ],
+     "answer": 1,
+     "explain": "bonus lives between then and end. After end, that name is gone."
+    },
+    {
+     "id": "q2-3",
+     "concept": "compound-assignment",
+     "type": "predict",
+     "ask": "What does this show?",
+     "code": "local coins = 10\ncoins += 5\nprint(coins)",
+     "answer": "15",
+     "explain": "Plus equals takes what is already in coins and adds to it."
+    },
+    {
+     "id": "q2-4",
+     "concept": "local-scope",
+     "type": "choice",
+     "ask": "Code after an if block needs a value that the block calculates. What should you do?",
+     "options": [
+      "Declare the name before the block, assign inside it",
+      "Declare it inside the block with local",
+      "Use print to carry the value out",
+      "Nothing, values escape blocks automatically"
+     ],
+     "answer": 0,
+     "explain": "Decide where the value needs to be visible, and declare it there."
+    }
+   ]
+  },
+  "3": {
+   "beats": [
+    {
+     "say": "When one line contains several operations, Luau does not simply work left to right. It follows a fixed order, the same one you were taught at school. Multiplication and division happen before addition and subtraction."
+    },
+    {
+     "say": "So two plus three times four is fourteen, not twenty. The multiplication goes first, regardless of where it sits in the line."
+    },
+    {
+     "say": "Brackets override that order. Anything inside brackets is worked out first, so with brackets around the two plus three, the answer becomes twenty."
+    },
+    {
+     "say": "This matters more than it sounds. Reward formulas, damage calculations and prices are exactly the kind of thing where a quietly wrong number is hard to notice and annoying to track down later.",
+     "code": "local baseReward = 20\nlocal multiplier = 2\nlocal bonus = 5\nlocal reward = (baseReward * multiplier) + bonus\nprint(\"Reward: \" .. reward)"
+    },
+    {
+     "say": "A habit worth building. When a calculation has more than two parts, add the brackets even when the default order already does what you want. You are writing for whoever reads this in a month, and that person is usually you."
+    },
+    {
+     "say": "One more trap. Text that looks like a number is still text. Twenty inside quotation marks is a piece of text that happens to contain digits, and adding text to a number is not a meaningful operation.",
+     "code": "local reward = \"20\" + 5"
+    }
+   ],
+   "questions": [
+    {
+     "id": "q3-1",
+     "concept": "operator-precedence",
+     "type": "predict",
+     "ask": "What is the value of this expression?",
+     "code": "print(2 + 3 * 4)",
+     "answer": "14",
+     "explain": "Multiplication happens before addition, so it is 2 plus 12."
+    },
+    {
+     "id": "q3-2",
+     "concept": "operator-precedence",
+     "type": "predict",
+     "ask": "And this one?",
+     "code": "print((2 + 3) * 4)",
+     "answer": "20",
+     "explain": "The brackets force the addition first, then multiply by four."
+    },
+    {
+     "id": "q3-3",
+     "concept": "text-is-not-number",
+     "type": "choice",
+     "ask": "Why does adding the text twenty to the number five fail?",
+     "options": [
+      "Twenty is spelled wrong",
+      "Text and numbers are different kinds of value",
+      "The numbers are too small",
+      "You need more brackets"
+     ],
+     "answer": 1,
+     "explain": "Quotation marks make it text. Adding text to a number is not meaningful, so Luau stops."
+    },
+    {
+     "id": "q3-4",
+     "concept": "operator-precedence",
+     "type": "choice",
+     "ask": "Your formula has four parts and the default order already gives the right answer. Should you add brackets?",
+     "options": [
+      "No, they are redundant",
+      "Yes, they state the intent for the next reader",
+      "Only if the answer is wrong",
+      "Only inside functions"
+     ],
+     "answer": 1,
+     "explain": "Brackets cost nothing and remove a whole category of quiet mistakes."
+    }
+   ]
+  },
+  "4": {
+   "beats": [
+    {
+     "say": "Alongside numbers and text there is a third kind of value with only two possibilities. True and false. It is called a boolean, and every decision in your game comes down to one."
+    },
+    {
+     "say": "Is the door powered. Does the player have the key. Is the round over. All booleans."
+    },
+    {
+     "say": "Two words combine them. And is true only when both sides are true. Or is true when at least one side is true."
+    },
+    {
+     "say": "Here is a door that needs both a key and power. Notice that the decision itself is stored in a name, canOpen, before it is used. The if below stays short and readable because the thinking already happened on its own line.",
+     "code": "local hasKey = false\nlocal isDoorPowered = true\nlocal canOpen = hasKey and isDoorPowered\n\nif canOpen then\n    print(\"Door opened\")\nelse\n    print(\"Find the key first\")\nend"
+    },
+    {
+     "say": "Naming the combination pays off immediately. A name like canOpen tells the next reader what the condition means. Repeating the raw condition in three places tells them nothing, and changing the rule later means finding all three."
+    },
+    {
+     "say": "One trap to know about. There is a compact pattern using and then or to pick between two values. It breaks when the middle value is itself false, because then the or branch takes over and the result is always true. Write the decision out properly instead.",
+     "code": "local isHidden = hasAccess and false or true"
+    }
+   ],
+   "questions": [
+    {
+     "id": "q4-1",
+     "concept": "and-or",
+     "type": "choice",
+     "ask": "hasKey is false and isDoorPowered is true. What is hasKey and isDoorPowered?",
+     "options": [
+      "true",
+      "false",
+      "It causes an error",
+      "It depends on the order"
+     ],
+     "answer": 1,
+     "explain": "and needs both sides to be true. One false makes the whole thing false."
+    },
+    {
+     "id": "q4-2",
+     "concept": "and-or",
+     "type": "choice",
+     "ask": "Same values, but now hasKey or isDoorPowered. What is the result?",
+     "options": [
+      "true",
+      "false",
+      "It causes an error",
+      "Nothing is returned"
+     ],
+     "answer": 0,
+     "explain": "or needs only one side to be true, and isDoorPowered is true."
+    },
+    {
+     "id": "q4-3",
+     "concept": "naming-conditions",
+     "type": "choice",
+     "ask": "Why store a combined condition in a name like canOpen?",
+     "options": [
+      "It runs faster",
+      "It says what the condition means, and the rule lives in one place",
+      "Luau requires it",
+      "It uses less memory"
+     ],
+     "answer": 1,
+     "explain": "The name carries the meaning, and changing the rule later means changing one line, not three."
+    },
+    {
+     "id": "q4-4",
+     "concept": "and-or-shortcut-trap",
+     "type": "choice",
+     "ask": "When does the compact and-or pattern for choosing a value go wrong?",
+     "options": [
+      "When the middle value is false",
+      "When both values are numbers",
+      "When it is inside a function",
+      "It never goes wrong"
+     ],
+     "answer": 0,
+     "explain": "A false middle value hands control to the or branch, so the result is always the second value."
+    }
+   ]
+  },
+  "5": {
+   "beats": [
+    {
+     "say": "Up to now every script has run straight through. Real games react differently to different situations, and that means branching."
+    },
+    {
+     "say": "The familiar shape is the if statement. When the condition holds, run this block of instructions, otherwise run that one. Use it when the two paths do different things."
+    },
+    {
+     "say": "Luau also has an if then else expression, which looks similar but is a different tool. Instead of running a block, it produces a single value that you can store in a name. Use it when both paths produce a value and the only question is which one."
+    },
+    {
+     "say": "Statements act. Expressions produce. Choosing the shape that matches your intent is most of what makes branching code readable.",
+     "code": "local health = 40\n\nlocal status = if health <= 0 then \"Respawning\" else \"Active\"\n\nif health <= 0 then\n    print(\"Disable player input\")\nelse\n    print(\"Keep playing\")\nend\n\nprint(\"Status: \" .. status)"
+    },
+    {
+     "say": "Now a trap that costs people real time. Written as two words, else if starts a brand new if statement nested inside the else, and that new statement needs its own end. The single word elseif continues the existing chain and needs no extra end.",
+     "code": "if health <= 0 then\n    print(\"Respawning\")\nelse if health < 20 then\n    print(\"Low health\")\nend"
+    },
+    {
+     "say": "When you want to test several conditions in sequence, elseif is almost always what you meant. It keeps the chain flat instead of nesting deeper with every condition."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q5-1",
+     "concept": "statement-vs-expression",
+     "type": "choice",
+     "ask": "You want to choose between two values and store the result. Which fits?",
+     "options": [
+      "An if statement",
+      "An if then else expression",
+      "A loop",
+      "A print"
+     ],
+     "answer": 1,
+     "explain": "The expression produces a value, so it can sit on the right of an assignment."
+    },
+    {
+     "id": "q5-2",
+     "concept": "elseif",
+     "type": "bug",
+     "ask": "This reports a missing end. Why?",
+     "code": "if health <= 0 then\n    print(\"Respawning\")\nelse if health < 20 then\n    print(\"Low health\")\nend",
+     "options": [
+      "The condition is wrong",
+      "else if as two words starts a new if that needs its own end",
+      "print cannot be used inside if",
+      "health was never defined"
+     ],
+     "answer": 1,
+     "explain": "Two words nests a fresh if statement. The single word elseif continues the chain and needs no extra end."
+    },
+    {
+     "id": "q5-3",
+     "concept": "statement-vs-expression",
+     "type": "choice",
+     "ask": "What is the difference between a statement and an expression here?",
+     "options": [
+      "Statements act, expressions produce a value",
+      "Statements are faster",
+      "Expressions cannot be nested",
+      "There is no difference"
+     ],
+     "answer": 0,
+     "explain": "An if statement runs a block. An if then else expression evaluates to one of two values."
+    },
+    {
+     "id": "q5-4",
+     "concept": "elseif",
+     "type": "predict",
+     "ask": "health is 10. What does this show?",
+     "code": "local health = 10\nif health <= 0 then\n    print(\"Down\")\nelseif health < 20 then\n    print(\"Low\")\nelse\n    print(\"Fine\")\nend",
+     "answer": "Low",
+     "accept": [
+      "low"
+     ],
+     "explain": "The first condition is false, the second is true, so exactly one branch runs."
+    }
+   ]
+  },
+  "6": {
+   "beats": [
+    {
+     "say": "If you need to spawn three rewards, you could write the same instruction three times. If you need three hundred, you cannot. A loop lets you write it once and say how many times to run it."
+    },
+    {
+     "say": "A numeric for loop counts. You give it a starting number and an ending number, and it runs the block once for each value, with the current number available inside under a name you choose.",
+     "code": "for rewardNumber = 1, 3 do\n    print(\"Spawn reward #\" .. rewardNumber)\nend"
+    },
+    {
+     "say": "A while loop is the other shape. It keeps going as long as its condition stays true. That makes it more flexible and more dangerous, because something inside the loop has to eventually make that condition false."
+    },
+    {
+     "say": "Here is what happens when nothing does. The condition checks count, but nothing inside ever changes it. It starts at zero and stays at zero, so the loop never ends.",
+     "code": "local count = 0\nwhile count < 3 do\n    print(count)\nend"
+    },
+    {
+     "say": "Whenever you write a while, immediately look at its condition and ask which line inside is going to make that false. If you cannot point at one, you have found the bug before it happened."
+    },
+    {
+     "say": "Reach for a for loop when you know how many times. Reach for while when you are waiting for a situation to change. The for loop manages its own counter, which is exactly why it cannot run away from you."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q6-1",
+     "concept": "for-vs-while",
+     "type": "choice",
+     "ask": "You need to do something exactly ten times. Which loop fits best?",
+     "options": [
+      "A numeric for loop",
+      "A while loop",
+      "Either, it makes no difference",
+      "Neither, write it ten times"
+     ],
+     "answer": 0,
+     "explain": "for manages its own counter, so it cannot run away from you."
+    },
+    {
+     "id": "q6-2",
+     "concept": "infinite-loop",
+     "type": "bug",
+     "ask": "This loop never finishes. What is missing?",
+     "code": "local count = 0\nwhile count < 3 do\n    print(count)\nend",
+     "options": [
+      "An end",
+      "A line inside that changes count",
+      "A print statement",
+      "A starting value for count"
+     ],
+     "answer": 1,
+     "explain": "The condition checks count, but nothing inside the loop ever changes it."
+    },
+    {
+     "id": "q6-3",
+     "concept": "for-loop-count",
+     "type": "predict",
+     "ask": "How many lines does this print?",
+     "code": "for i = 1, 4 do\n    print(i)\nend",
+     "answer": "4",
+     "accept": [
+      "four"
+     ],
+     "explain": "It runs once for each value from 1 to 4."
+    },
+    {
+     "id": "q6-4",
+     "concept": "infinite-loop",
+     "type": "choice",
+     "ask": "You have just written a while loop. What should you check immediately?",
+     "options": [
+      "That it prints something",
+      "Which line inside will make the condition false",
+      "That the condition uses a number",
+      "That it is inside a function"
+     ],
+     "answer": 1,
+     "explain": "If you cannot point at the line that ends the loop, it will not end."
+    }
+   ]
+  },
+  "7": {
+   "beats": [
+    {
+     "say": "So far each name has held a single value. A table lets one name hold many, which is how you represent the collections games are full of. The pickups in a level. The players in a round. The items in an inventory."
+    },
+    {
+     "say": "Written with curly brackets and commas, a list holds several values in order. Each one sits at a numbered position, starting at one."
+    },
+    {
+     "say": "To visit every item you use a for in loop. On each pass it hands you two things. The position, and the value at that position. You choose the names for both.",
+     "code": "local pickups = {\"Coin\", \"Gem\", \"Key\"}\n\nfor index, pickup in pickups do\n    print(index .. \": \" .. pickup)\nend"
+    },
+    {
+     "say": "Add a fourth item to that list and run it again. The loop needs no changes at all. That is the point of looping over a list. The code stops depending on how many items there are."
+    },
+    {
+     "say": "Here is a smaller trap. This version still receives both the position and the value, but only prints the first one. Nothing is broken. The value is simply not being used.",
+     "code": "for index, pickup in pickups do\n    print(index)\nend"
+    },
+    {
+     "say": "That is a good habit to build. When output is missing something, check what you asked for before assuming the data is wrong. Most surprising output is a question phrased differently than intended."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q7-1",
+     "concept": "array-starts-at-1",
+     "type": "choice",
+     "ask": "In a Luau list, what position does the first item sit at?",
+     "options": [
+      "0",
+      "1",
+      "It depends on the list",
+      "Lists have no positions"
+     ],
+     "answer": 1,
+     "explain": "The array convention counts up from 1, not 0."
+    },
+    {
+     "id": "q7-2",
+     "concept": "for-in-two-values",
+     "type": "choice",
+     "ask": "What two things does a for in loop over a list hand you on each pass?",
+     "options": [
+      "The position and the value",
+      "The first and last item",
+      "The name and the type",
+      "The value twice"
+     ],
+     "answer": 0,
+     "explain": "You choose the names for both, which is why they can be called index and pickup."
+    },
+    {
+     "id": "q7-3",
+     "concept": "loop-independence",
+     "type": "choice",
+     "ask": "You add a fourth item to the list. What has to change in the loop?",
+     "options": [
+      "The ending number",
+      "Nothing",
+      "The loop must run twice",
+      "You must add another print"
+     ],
+     "answer": 1,
+     "explain": "The loop asks the table how far it goes, so the code stops depending on the count."
+    },
+    {
+     "id": "q7-4",
+     "concept": "for-in-two-values",
+     "type": "predict",
+     "ask": "What does the first line of output look like?",
+     "code": "local items = {\"Coin\", \"Gem\"}\n\nfor index, item in items do\n    print(index .. \": \" .. item)\nend",
+     "answer": "1: Coin",
+     "accept": [
+      "1:coin",
+      "1 : coin"
+     ],
+     "explain": "The first pass gives position 1 and the value Coin, joined by the two dots."
+    }
+   ]
+  },
+  "8": {
+   "beats": [
+    {
+     "say": "A list is the right shape when order matters and position is meaningful. But a lot of game data is not like that. Settings, player stats and configuration are collections where each value has a name, not a position."
+    },
+    {
+     "say": "Nobody wants to remember that the volume is item number two."
+    },
+    {
+     "say": "A table can do this too. Instead of listing values, you write name equals value pairs. Now you fetch the volume by asking for volume, which is both harder to get wrong and much easier to read six months later.",
+     "code": "local settings = {music = true, volume = 0.7, difficulty = \"normal\"}\n\nfor key, value in settings do\n    print(key .. \": \" .. tostring(value))\nend"
+    },
+    {
+     "say": "The same for in loop walks these. The difference is what it hands you. Instead of a position and a value, you get the key and the value."
+    },
+    {
+     "say": "Unlike a list, these have no guaranteed order. Do not rely on them coming back in the order you wrote them. If order matters to you, that is a signal you wanted a list."
+    },
+    {
+     "say": "Notice tostring in that example. The values are not all text. One holds a true or false, another holds a number. tostring converts whatever it is given into text so it can be joined onto the key."
+    },
+    {
+     "say": "And when you already know which setting you want, you do not need a loop at all. A dot and the key fetches that one value directly. Loop when you want to visit everything, reach for the key when you want one specific thing.",
+     "code": "print(\"Volume: \" .. settings.volume)"
+    }
+   ],
+   "questions": [
+    {
+     "id": "q8-1",
+     "concept": "keyed-vs-list",
+     "type": "choice",
+     "ask": "You are storing a player's coins, level and title. Which shape fits?",
+     "options": [
+      "A list, using positions",
+      "A table with named keys",
+      "Three separate scripts",
+      "A loop"
+     ],
+     "answer": 1,
+     "explain": "Names carry the meaning. A position would force every reader to remember an unwritten convention."
+    },
+    {
+     "id": "q8-2",
+     "concept": "keyed-order",
+     "type": "choice",
+     "ask": "You loop over a table with named keys. What can you rely on about the order?",
+     "options": [
+      "It matches the order you wrote them",
+      "Alphabetical order",
+      "Nothing, the order is not guaranteed",
+      "Reverse order"
+     ],
+     "answer": 2,
+     "explain": "Keyed entries have no inherent order. If order matters, you wanted a list."
+    },
+    {
+     "id": "q8-3",
+     "concept": "tostring",
+     "type": "choice",
+     "ask": "Why is tostring needed when joining a number onto text?",
+     "options": [
+      "To make the number bigger",
+      "To convert it into text so it can be joined",
+      "To round it",
+      "It is not needed"
+     ],
+     "answer": 1,
+     "explain": "Joining works on text. tostring converts other kinds of value into text first."
+    },
+    {
+     "id": "q8-4",
+     "concept": "direct-key-access",
+     "type": "choice",
+     "ask": "You need one specific setting and you know its name. What is the better approach?",
+     "options": [
+      "Loop over everything and stop when you find it",
+      "Fetch it directly with a dot and the key",
+      "Convert the table to a list first",
+      "Print the whole table"
+     ],
+     "answer": 1,
+     "explain": "Loop to visit everything, reach for the key when you want one thing."
+    }
+   ]
+  }
+ }
+}

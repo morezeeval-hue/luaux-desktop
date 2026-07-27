@@ -427,3 +427,67 @@ strong { color: var(--text); }
   color: var(--text-faint);
 }
 @media (max-width: 620px) { .journey-nav { grid-template-columns: 1fr; } }
+
+/* ===== guided mode =====
+   One thing to read, one thing to do. The chrome stays out of the way. */
+.guided { max-width: 620px; margin: 0 auto; }
+.g-head { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+.g-exit, .g-mute {
+  background: none; border: 1px solid var(--line); border-radius: 8px;
+  color: var(--text-faint); font-family: var(--font); font-size: 11.5px;
+  padding: 5px 10px; cursor: pointer; flex: none;
+}
+.g-exit:hover, .g-mute:hover { color: var(--text); border-color: var(--line-2); }
+.g-meter { flex: 1; height: 6px; border-radius: 4px; background: var(--panel-2); overflow: hidden; }
+.g-meter i { display: block; height: 100%; background: var(--accent); transition: width .35s var(--ease); }
+.g-where { font-family: var(--font); font-size: 11px; color: var(--text-ghost); margin-bottom: 18px; }
+
+.g-card {
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: 14px; padding: 22px 24px; animation: itemin .3s var(--ease);
+}
+.g-say { font-size: 17px; line-height: 1.62; margin: 0; color: var(--text); }
+.g-ask { font-size: 16px; line-height: 1.55; margin: 0 0 16px; font-weight: 600; color: var(--text); }
+.g-code { margin-top: 16px; }
+
+.g-options { display: flex; flex-direction: column; gap: 8px; }
+.g-option {
+  text-align: left; padding: 13px 15px; border-radius: 10px; cursor: pointer;
+  background: var(--bg-0); border: 1px solid var(--line-2); color: var(--text);
+  font-size: 14.5px; font-family: var(--font-body); transition: border-color .15s var(--ease);
+}
+.g-option:hover:not(:disabled) { border-color: var(--accent); }
+.g-option.picked { border-color: var(--accent); background: color-mix(in oklab, var(--accent) 10%, var(--bg-0)); }
+.g-option.right { border-color: var(--green); background: color-mix(in oklab, var(--green) 14%, var(--bg-0)); }
+.g-option.wrong { border-color: var(--red); background: color-mix(in oklab, var(--red) 12%, var(--bg-0)); }
+.g-option:disabled { cursor: default; }
+
+.g-input {
+  width: 100%; padding: 13px 15px; border-radius: 10px;
+  background: var(--bg-0); border: 1px solid var(--line-2); color: var(--text);
+  font-family: var(--font); font-size: 15px;
+}
+.g-input:focus { outline: none; border-color: var(--accent); }
+
+.g-feedback { margin-top: 12px; padding: 14px 18px; border-radius: 12px; border: 1px solid var(--line); animation: itemin .25s var(--ease); }
+.g-feedback.ok { border-color: color-mix(in oklab, var(--green) 45%, transparent); background: color-mix(in oklab, var(--green) 8%, transparent); }
+.g-feedback.no { border-color: color-mix(in oklab, var(--red) 45%, transparent); background: color-mix(in oklab, var(--red) 8%, transparent); }
+.g-verdict { font-family: var(--font); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.g-feedback.ok .g-verdict { color: var(--green); }
+.g-feedback.no .g-verdict { color: var(--red); }
+.g-explain { font-size: 14px; line-height: 1.55; color: var(--text-dim); margin-top: 5px; }
+
+.g-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
+.g-primary, .g-secondary {
+  font-family: var(--font); font-size: 13.5px; font-weight: 600;
+  border-radius: 9px; padding: 11px 20px; cursor: pointer; border: 1px solid transparent;
+}
+.g-primary { background: var(--accent); color: #08120b; }
+.g-primary:hover { opacity: .9; }
+.g-secondary { background: transparent; color: var(--text-dim); border-color: var(--line-2); }
+.g-secondary:hover { color: var(--accent); border-color: var(--accent); }
+
+.g-summary { text-align: center; }
+.g-score { font-family: var(--font); font-size: 40px; font-weight: 800; color: var(--accent); letter-spacing: -.02em; }
+.g-summary .g-say { margin-top: 8px; font-size: 15.5px; color: var(--text-dim); }
+.g-missed { text-align: left; margin: 16px 0 0; padding-left: 20px; font-size: 13.5px; color: var(--text-faint); line-height: 1.6; }

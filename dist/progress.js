@@ -7,7 +7,7 @@ window.LuauProgress = (function () {
   let listeners = [];
 
   function blank() {
-    return { done: {}, exercises: {}, studioProofs: {}, missionSteps: {}, activity: {}, bookmarks: [] };
+    return { done: {}, exercises: {}, studioProofs: {}, missionSteps: {}, activity: {}, bookmarks: [], concepts: {}, guided: {} };
   }
 
   function load() {
@@ -214,6 +214,50 @@ window.LuauProgress = (function () {
     resetAll() {
       state = blank();
       persist();
+    },
+
+    /* ---- guided mode: per-concept strength, so practice can target what
+       is actually weak rather than replaying whole lessons. A concept needs
+       two correct answers in a row before it stops being due. ---- */
+    recordAnswer(concept, correct) {
+      if (!concept) return;
+      const c = state.concepts[concept] || { streak: 0, seen: 0, wrong: 0, due: 0 };
+      c.seen += 1;
+      if (correct) {
+        c.streak += 1;
+        // expanding interval: 10 minutes, then a day, then four, then ten
+        const steps = [10 * 60e3, 24 * 3600e3, 4 * 24 * 3600e3, 10 * 24 * 3600e3];
+        c.due = Date.now() + steps[Math.min(c.streak, steps.length) - 1];
+      } else {
+        c.streak = 0;
+        c.wrong += 1;
+        c.due = Date.now();          // straight back into the queue
+      }
+      state.concepts[concept] = c;
+      recordActivity();
+      persist();
+    },
+
+    conceptStrength(concept) {
+      const c = state.concepts[concept];
+      return c ? c.streak : 0;
+    },
+
+    /* Concepts that are due, weakest first. */
+    dueConcepts(now) {
+      now = now || Date.now();
+      return Object.entries(state.concepts)
+        .filter(([, c]) => c.streak < 2 || c.due <= now)
+        .sort((a, b) => (a[1].streak - b[1].streak) || (a[1].due - b[1].due))
+        .map(([k]) => k);
+    },
+
+    markGuidedDone(sectionID) {
+      state.guided[String(sectionID)] = { at: Date.now() };
+      persist();
+    },
+    isGuidedDone(sectionID) {
+      return !!state.guided[String(sectionID)];
     },
 
     syncOnSignIn,

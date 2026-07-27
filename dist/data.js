@@ -11,18 +11,18 @@ window.LuauData = (function () {
   }
 
   async function load() {
-    const [textbook, learning, path, blueprints, launchpad, builderos, challenges, playbook, serverAuthority, unitExtras] =
+    const [textbook, learning, path, blueprints, launchpad, builderos, challenges, playbook, serverAuthority, unitExtras, lessonScripts] =
       await Promise.all([
         loadJSON("textbook"), loadJSON("learning"), loadJSON("path"),
         loadJSON("blueprints"), loadJSON("launchpad"), loadJSON("builderos"),
         loadJSON("challenges"), loadJSON("playbook"), loadJSON("server_authority"),
-        loadJSON("unit_extras"),
+        loadJSON("unit_extras"), loadJSON("lesson_scripts"),
       ]);
 
     const sectionsByID = new Map(textbook.sections.map((s) => [s.id, s]));
 
     store = {
-      textbook, learning, path, blueprints, launchpad, builderos, challenges, playbook, serverAuthority, unitExtras,
+      textbook, learning, path, blueprints, launchpad, builderos, challenges, playbook, serverAuthority, unitExtras, lessonScripts,
 
       /* Supplementary material now lives inside the unit it belongs to.
        * unit_extras.json owns the placement so the ordering can be reviewed

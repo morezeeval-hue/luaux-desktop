@@ -64,6 +64,8 @@
     render();
   }
   window.LuauNav = { go };
+  // guided.js renders code too; share the one highlighter rather than a copy
+  window.LuauHighlight = highlight;
 
   function renderSidebar() {
     const el = $("#sidebar");
@@ -119,7 +121,14 @@
     }
 
     $("#main").innerHTML = html;
-    if (step) $("#continue-card").addEventListener("click", () => openStep(step));
+    if (step) $("#continue-card").addEventListener("click", () => {
+      // Reading is still available from inside the lesson; guided is the
+      // default way forward when a script exists for that section.
+      if (step.kind === "read" && LuauGuided.has(step.section.id)) {
+        if (LuauGuided.start(step.section.id)) return go("guided");
+      }
+      openStep(step);
+    });
     $("#main").querySelectorAll("[data-open-section]").forEach((el) =>
       el.addEventListener("click", () => go("lesson", { sectionID: Number(el.dataset.openSection) })));
   }
@@ -322,7 +331,10 @@
       </div></div>
       <div class="lesson-body" style="margin-top:14px">${section.html}</div>
       <div class="lesson-actions">
-        <button class="btn primary ${done ? "done" : ""}" id="complete-btn">${done ? IC.check + " Completed" : "Mark Complete"}</button>
+        ${LuauGuided.has(sectionID)
+          ? `<button class="btn primary" id="guided-btn">${IC.play} ${LuauProgress.isGuidedDone(sectionID) ? "Run the lesson again" : "Start the guided lesson"}</button>`
+          : ""}
+        <button class="btn ${LuauGuided.has(sectionID) ? "ghost" : "primary"} ${done ? "done" : ""}" id="complete-btn">${done ? IC.check + " Completed" : "Mark Complete"}</button>
       </div>
       ${journeyNavHTML("read", sectionID)}`;
     $("#main").innerHTML = html;
@@ -346,6 +358,8 @@
       viewLesson(sectionID);
     });
     const bpBtn = $("#blueprint-btn"); if (bpBtn) bpBtn.addEventListener("click", () => showBlueprint(bp));
+    const gBtn = $("#guided-btn");
+    if (gBtn) gBtn.addEventListener("click", () => { if (LuauGuided.start(sectionID)) go("guided"); });
     bindJourneyNav("read", sectionID);
   }
 
@@ -662,6 +676,30 @@
     });
   }
 
+  /* Guided mode owns the whole pane while it runs: one thing to read and
+     one thing to do, with the usual chrome out of the way. */
+  function viewGuided() {
+    const main = $("#main");
+    if (!LuauGuided.isActive()) return go("learn");
+    main.innerHTML = LuauGuided.render();
+    LuauGuided.bind(
+      () => viewGuided(),
+      (finishedSectionID) => {
+        if (finishedSectionID != null) {
+          const i = LuauData.current.journeyIndex("read", finishedSectionID);
+          const next = i >= 0 ? LuauData.current.neighbours(i).next : null;
+          if (next) {
+            const st = next.step;
+            if (st.kind === "read") return go("lesson", { sectionID: st.section.id });
+            if (st.kind === "exercise") return go("runner", { exerciseID: st.exercise.id });
+            return go("chapter", { unitID: st.unitID });
+          }
+        }
+        go("learn");
+      }
+    );
+  }
+
   function viewMore() {
     const journey = LuauProgress.journeyProgress();
     let html = '<h1 class="pagetitle">More</h1><p class="subtitle">Docs, extra reading, and your stats.</p>';
@@ -695,6 +733,7 @@
       case "playbook": viewExtras(); break;
       case "you": viewYou(); break;
       case "more": viewMore(); break;
+      case "guided": viewGuided(); break;
       default: viewHome();
     }
     main.scrollTop = 0;
