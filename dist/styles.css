@@ -487,6 +487,7 @@ strong { color: var(--text); }
 .g-order-picked { min-height: 22px; margin: 0 0 10px; padding: 10px 14px 10px 32px; border: 1px dashed var(--line); border-radius: 8px; color: var(--text); }
 .g-order-picked li { padding: 2px 0; }
 .g-order-reset { margin-top: 10px; border: 0; background: transparent; color: var(--text-faint); font: inherit; text-decoration: underline; cursor: pointer; }
+.g-speech-input { margin-top: 10px; border: 0; background: transparent; color: var(--text-dim); font: 12px var(--font); text-decoration: underline; cursor: pointer; }
 
 .g-feedback { margin-top: 12px; padding: 14px 18px; border-radius: 12px; border: 1px solid var(--line); animation: itemin .25s var(--ease); }
 .g-feedback.ok { border-color: color-mix(in oklab, var(--green) 45%, transparent); background: color-mix(in oklab, var(--green) 8%, transparent); }
