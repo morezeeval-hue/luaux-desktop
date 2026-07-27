@@ -782,6 +782,7 @@
   if (window.LuauSpeech) {
     window.LuauSpeech.onChange(() => {
       if (route.view === "you") viewYou();
+      else if (route.view === "guided" && LuauGuided.isActive()) viewGuided();
     });
   }
 

@@ -34,6 +34,32 @@ window.LuauGuided = (function () {
 
   /* ---------------------------------------------------------------- chrome */
 
+  /* The neural voice is worth having but it is a download, so it is offered
+     once, where the tutor actually starts talking, rather than fetched
+     behind the learner's back or buried in settings. */
+  const OFFER_KEY = "luaux.speech.offered";
+
+  function offerHTML() {
+    const S = window.LuauSpeech;
+    if (!S || typeof S.piperAvailable !== "function" || !S.piperAvailable()) return "";
+    if (localStorage.getItem(OFFER_KEY) === "1") return "";
+    const voices = S.voices().filter((v) => v.backend === "piper");
+    if (!voices.length || voices.some((v) => v.installed)) return "";
+
+    const busy = S.installing();
+    if (busy) {
+      const p = S.progress();
+      const pct = p && p.total ? Math.round((p.received / p.total) * 100) : 0;
+      return `<div class="g-offer"><span>Downloading the tutor voice, ${pct}%. The lesson carries on meanwhile.</span></div>`;
+    }
+    const first = voices[0];
+    return `<div class="g-offer">
+      <span>A real tutor voice is available, ${Math.round(first.bytes / 1e6)} MB once, then offline.</span>
+      <button class="g-offer-yes" id="g-voice-get">Download ${esc(first.label)}</button>
+      <button class="g-offer-no" id="g-voice-no">Not now</button>
+    </div>`;
+  }
+
   function shell(sectionID, bodyHTML, progressFraction) {
     const data = LuauData.current;
     const section = data.section(sectionID);
@@ -48,6 +74,7 @@ window.LuauGuided = (function () {
         </button>
       </header>
       <div class="g-where">${unit ? esc(unit.name) : ""} &middot; ${esc(section ? section.title : "")}</div>
+      ${offerHTML()}
       ${bodyHTML}
     </div>`;
   }
@@ -165,6 +192,22 @@ window.LuauGuided = (function () {
 
     const mute = $("#g-mute");
     if (mute) mute.addEventListener("click", () => { LuauSpeech.setMuted(!LuauSpeech.isMuted()); rerender(); });
+
+    const getVoice = $("#g-voice-get");
+    if (getVoice) getVoice.addEventListener("click", () => {
+      const first = LuauSpeech.voices().filter((v) => v.backend === "piper")[0];
+      if (!first) return;
+      LuauSpeech.install(first.id)
+        .then(() => { LuauSpeech.setVoice(first.id); localStorage.setItem(OFFER_KEY, "1"); })
+        .catch(() => {})
+        .then(() => rerender());
+      rerender();
+    });
+    const noVoice = $("#g-voice-no");
+    if (noVoice) noVoice.addEventListener("click", () => {
+      localStorage.setItem(OFFER_KEY, "1");
+      rerender();
+    });
 
     const s = script(state.sectionID);
 
