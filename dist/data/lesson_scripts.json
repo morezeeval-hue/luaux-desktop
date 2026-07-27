@@ -65,8 +65,8 @@
      ],
      "explain": "The name greeting holds the text Hello, and print shows what is in it."
     },
-    {
-     "id": "q0-4",
+      {
+        "id": "q0-4",
      "concept": "sandbox-safety",
      "type": "choice",
      "ask": "You are worried about typing something wrong in Practice. What can happen?",
@@ -76,9 +76,31 @@
       "Nothing. It is a sandbox, so experiment freely",
       "It could delete your progress"
      ],
-     "answer": 2,
-     "explain": "The runner is isolated. Getting it wrong is how you learn, and it costs nothing."
-    }
+        "answer": 2,
+        "explain": "The runner is isolated. Getting it wrong is how you learn, and it costs nothing."
+      },
+      {
+        "id": "q0-5",
+        "concept": "print-purpose",
+        "type": "blank",
+        "ask": "Fill in the missing word: print makes an otherwise invisible value ___.",
+        "answer": "visible",
+        "explain": "print is for making an invisible value visible. In Roblox Studio it writes to the Output window."
+      },
+      {
+        "id": "q0-6",
+        "concept": "script-order",
+        "type": "order",
+        "ask": "Put these events in the order Luau follows them.",
+        "code": "local greeting = \"Hello\"\nprint(greeting)",
+        "options": [
+          "Luau runs the local instruction and gives the text the name greeting.",
+          "Luau runs print with greeting.",
+          "The value Hello becomes visible in the output."
+        ],
+        "answer": [0, 1, 2],
+        "explain": "Luau follows instructions from top to bottom. The name exists before print uses it, and print then makes its value visible."
+      }
    ]
   },
   "1": {

@@ -111,9 +111,18 @@ window.LuauGuided = (function () {
         `<button class="g-option${state.picked === i ? " picked" : ""}${
           state.checked ? (i === q.answer ? " right" : (state.picked === i ? " wrong" : "")) : ""
         }" data-opt="${i}"${state.checked ? " disabled" : ""}>${esc(o)}</button>`).join("") + "</div>";
+    } else if (q.type === "order") {
+      const picked = Array.isArray(state.picked) ? state.picked : [];
+      const remaining = q.options.map((_, i) => i).filter((i) => !picked.includes(i));
+      input = `<p class="g-order-help">Choose each step in the intended order.</p>
+        <ol class="g-order-picked">${picked.map((i) => `<li>${esc(q.options[i])}</li>`).join("")}</ol>
+        <div class="g-options">${remaining.map((i) =>
+          `<button class="g-option" data-order="${i}"${state.checked ? " disabled" : ""}>${esc(q.options[i])}</button>`
+        ).join("")}</div>
+        ${state.checked ? "" : '<button class="g-order-reset" id="g-order-reset">Clear order</button>'}`;
     } else {
       input = `<input class="g-input" id="g-answer" autocomplete="off" spellcheck="false"
-        placeholder="Type your answer"${state.checked ? " disabled" : ""}
+        placeholder="${q.type === "blank" ? "Fill in the blank" : "Type your answer"}"${state.checked ? " disabled" : ""}
         value="${state.picked == null ? "" : esc(state.picked)}">`;
     }
 
@@ -145,6 +154,8 @@ window.LuauGuided = (function () {
      case and surrounding space never decide whether someone understood. */
   function isCorrect(q, given) {
     if (q.type === "choice" || q.type === "bug") return given === q.answer;
+    if (q.type === "order") return Array.isArray(q.answer) && Array.isArray(given) &&
+      given.length === q.answer.length && given.every((item, index) => item === q.answer[index]);
     const norm = (v) => String(v == null ? "" : v).trim().toLowerCase().replace(/\s+/g, " ");
     const want = [q.answer].concat(q.accept || []).map(norm);
     return want.includes(norm(given));
@@ -234,6 +245,15 @@ window.LuauGuided = (function () {
       const q = s.questions[state.q];
       document.querySelectorAll("[data-opt]").forEach((el) =>
         el.addEventListener("click", () => { state.picked = Number(el.dataset.opt); rerender(); }));
+      document.querySelectorAll("[data-order]").forEach((el) =>
+        el.addEventListener("click", () => {
+          const picked = Array.isArray(state.picked) ? state.picked : [];
+          picked.push(Number(el.dataset.order));
+          state.picked = picked;
+          rerender();
+        }));
+      const resetOrder = $("#g-order-reset");
+      if (resetOrder) resetOrder.addEventListener("click", () => { state.picked = []; rerender(); });
 
       const field = $("#g-answer");
       if (field) {
@@ -251,7 +271,7 @@ window.LuauGuided = (function () {
       if (cont) cont.addEventListener("click", () => {
         if (state.q < s.questions.length - 1) {
           state.q += 1;
-          state.picked = null;
+          state.picked = s.questions[state.q].type === "order" ? [] : null;
           state.checked = false;
           LuauSpeech.speak(s.questions[state.q].ask);
         } else {
@@ -265,7 +285,7 @@ window.LuauGuided = (function () {
 
       function check() {
         if (state.checked) return;
-        if (state.picked == null || state.picked === "") return;
+        if (state.picked == null || state.picked === "" || (Array.isArray(state.picked) && !state.picked.length)) return;
         state.checked = true;
         const ok = isCorrect(q, state.picked);
         state.answers[state.q] = ok;
