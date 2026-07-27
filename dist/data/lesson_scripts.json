@@ -1347,6 +1347,579 @@
      "explain": "Seeing both sides makes the change observable instead of assumed."
     }
    ]
+  },
+  "16": {
+   "beats": [
+    {
+     "say": "To understand how Luau handles text, picture a library where every book is carved into a permanent stone tablet."
+    },
+    {
+     "say": "Once a string is written, it can never be altered. If you want to change the word Cat to Cats, you cannot carve an s onto the end of the existing tablet. You must carve an entirely new tablet containing the word Cats. That property is called immutability."
+    },
+    {
+     "say": "The library has a strict rule to save space. Only one copy of any unique word is allowed to exist. Ask for the word Apple and the librarian checks a master index. If Apple has already been carved, they hand you a slip pointing at that existing tablet."
+    },
+    {
+     "say": "That has a useful consequence. Comparing two words to see whether they are identical is very fast, because the librarian does not read both tablets letter by letter. They just check whether both slips point at the same tablet. That is called interning."
+    },
+    {
+     "say": "For building sentences, string dot format is like playing Mad Libs. You provide a template with blanks, percent d for a number and percent s for a word, and hand over the list of items to write into them."
+    },
+    {
+     "say": "Luau also offers a shortcut. Wrap your text in backticks instead of double quotes, and you can write variables directly inside curly braces in the middle of the text. That is string interpolation."
+    },
+    {
+     "say": "Sometimes you do not need text to be readable by humans at all. You just want to pack numbers and letters tightly to send over a network or save to a file. String dot pack acts like a vacuum sealer, compressing them into a dense form."
+    },
+    {
+     "say": "Now the trap that costs real performance. Building a sentence one word at a time in a loop, by joining onto the same variable over and over, asks the librarian to copy every existing letter onto a brand new tablet each time, then throw the old one away."
+    },
+    {
+     "say": "Do that a thousand times and you have created and discarded nine hundred and ninety nine intermediate tablets. The fix is to collect your pieces in a table and join them all at once, in a single pass."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q16-1",
+     "concept": "string-immutability",
+     "type": "choice",
+     "ask": "You change the word Cat to Cats. What actually happens?",
+     "options": [
+      "The letter s is appended to the existing string",
+      "A brand new string is created",
+      "The string is edited in place to save memory",
+      "Nothing, strings cannot change at all"
+     ],
+     "answer": 1,
+     "explain": "Strings are immutable. Changing one always means building a new one."
+    },
+    {
+     "id": "q16-2",
+     "concept": "string-interning",
+     "type": "choice",
+     "ask": "Why is comparing two identical strings so fast in Luau?",
+     "options": [
+      "It compares letter by letter very quickly",
+      "Only one copy of a unique string exists, so it compares which tablet they point at",
+      "Strings are always short",
+      "It compares only the first letter"
+     ],
+     "answer": 1,
+     "explain": "Interning means identical text is stored once, so comparison checks identity rather than contents."
+    },
+    {
+     "id": "q16-3",
+     "concept": "concatenation-in-loops",
+     "type": "choice",
+     "ask": "You build a sentence by joining onto the same variable inside a loop that runs a thousand times. What is the cost?",
+     "options": [
+      "Nothing, it is the normal way",
+      "Around a thousand intermediate strings are created and thrown away",
+      "The loop runs a thousand times faster",
+      "The string becomes corrupted"
+     ],
+     "answer": 1,
+     "explain": "Each join copies everything so far into a new string and discards the old one."
+    },
+    {
+     "id": "q16-4",
+     "concept": "concatenation-in-loops",
+     "type": "choice",
+     "ask": "What is the fix for building a long string piece by piece?",
+     "options": [
+      "Use a shorter loop",
+      "Collect the pieces in a table and join them once at the end",
+      "Use numbers instead of text",
+      "Join backwards"
+     ],
+     "answer": 1,
+     "explain": "One join at the end means one new string instead of hundreds."
+    },
+    {
+     "id": "q16-5",
+     "concept": "string-interpolation",
+     "type": "choice",
+     "ask": "What do backticks let you do that double quotes do not?",
+     "options": [
+      "Write variables directly inside the text in curly braces",
+      "Make the text permanent",
+      "Compare strings faster",
+      "Store numbers"
+     ],
+     "answer": 0,
+     "explain": "That is string interpolation, a shorter alternative to string.format."
+    }
+   ]
+  },
+  "17": {
+   "beats": [
+    {
+     "say": "Picture yourself as a customs inspector in a busy shipping port. Thousands of cargo crates pass your station every day, and each crate is a piece of text. Your job is to check whether a crate contains something specific, like a passport with exactly five digits."
+    },
+    {
+     "say": "You could hire an expensive team to open and catalogue every single item. That is what heavy regular expression engines do, and it slows the port down."
+    },
+    {
+     "say": "Instead you work from a highly optimised checklist with shorthand codes. Rather than writing check for a, b, c and so on through z, you use a single code. Percent l means a lowercase letter. Percent d means a digit."
+    },
+    {
+     "say": "There is an inversion key. Capitalise the code and it means the opposite. Percent d finds a digit, percent capital D finds anything that is not a digit."
+    },
+    {
+     "say": "Then there is the question of appetite. A greedy inspector, marked with a star or a plus, is hungry to find the largest possible match. Ask them to find everything between angle brackets and hand them a full HTML line, and they will swallow the whole line from the first bracket to the last."
+    },
+    {
+     "say": "A polite inspector, marked with a minus, stops as soon as the minimum is satisfied. Given the same line, they stop at the very first closing bracket."
+    },
+    {
+     "say": "That difference is the single most common source of surprise in pattern matching. When a pattern matches far more than you expected, greed is usually why."
+    },
+    {
+     "say": "Luau's pattern matching is deliberately a fast, lightweight inspector working from a small portable clipboard, rather than a system that needs a warehouse of memory to do its job."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q17-1",
+     "concept": "character-classes",
+     "type": "choice",
+     "ask": "What does the shorthand code for a digit become when you capitalise it?",
+     "options": [
+      "It matches two digits",
+      "It matches anything that is not a digit",
+      "It matches faster",
+      "It stops matching"
+     ],
+     "answer": 1,
+     "explain": "Capitalising a class inverts it. That is the inversion key."
+    },
+    {
+     "id": "q17-2",
+     "concept": "greedy-vs-lazy",
+     "type": "choice",
+     "ask": "Your pattern swallowed far more text than expected. What is the likely cause?",
+     "options": [
+      "The pattern was too short",
+      "A greedy quantifier took the largest possible match",
+      "The text was too long",
+      "Pattern matching is random"
+     ],
+     "answer": 1,
+     "explain": "Greedy quantifiers reach for the largest match. The polite form stops at the minimum."
+    },
+    {
+     "id": "q17-3",
+     "concept": "greedy-vs-lazy",
+     "type": "choice",
+     "ask": "You want a match to stop at the first closing bracket, not the last. What do you need?",
+     "options": [
+      "A greedy quantifier",
+      "A polite, non-greedy quantifier",
+      "A longer pattern",
+      "An inverted class"
+     ],
+     "answer": 1,
+     "explain": "The polite form satisfies the minimum and stops."
+    },
+    {
+     "id": "q17-4",
+     "concept": "luau-patterns-are-light",
+     "type": "choice",
+     "ask": "How does Luau's pattern matching differ from a heavy regular expression engine?",
+     "options": [
+      "It is more powerful in every way",
+      "It is deliberately lightweight and fast rather than exhaustive",
+      "It cannot match digits",
+      "It is slower but more accurate"
+     ],
+     "answer": 1,
+     "explain": "It is designed as a small, fast inspector rather than a large general engine."
+    }
+   ]
+  },
+  "18": {
+   "beats": [
+    {
+     "say": "Under the hood, computer memory has strict rules, even though code often makes data feel flexible. There are two very different ways of writing information down."
+    },
+    {
+     "say": "Strings are like a printing press. To write the word CAT, your computer commissions a press to stamp those letters onto a strip of paper. Changing it means commissioning a whole new strip."
+    },
+    {
+     "say": "A buffer is like a pre-built plastic grid of dry-erase slots, where each slot is exactly large enough to hold a single number. You can wipe a slot and write a new value into it without replacing anything."
+    },
+    {
+     "say": "That is the whole point. With a buffer you allocate a fixed-size workspace once, then rapidly overwrite its slots over and over, without making your computer clean up a trail of discarded waste behind you."
+    },
+    {
+     "say": "So the choice is not about which is better in general. It is about whether you are writing something once, or rewriting the same slots many times in a hot path."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q18-1",
+     "concept": "buffer-vs-string",
+     "type": "choice",
+     "ask": "What is the key difference between a string and a buffer?",
+     "options": [
+      "Buffers hold text, strings hold numbers",
+      "A buffer's slots can be overwritten in place; a string must be recreated",
+      "Buffers are always larger",
+      "There is no real difference"
+     ],
+     "answer": 1,
+     "explain": "A buffer is a fixed workspace you rewrite. A string is stamped once and replaced when changed."
+    },
+    {
+     "id": "q18-2",
+     "concept": "buffer-purpose",
+     "type": "choice",
+     "ask": "When is a buffer the right tool?",
+     "options": [
+      "When writing a value once",
+      "When rewriting the same slots repeatedly without generating waste",
+      "When storing player names",
+      "Whenever you use numbers"
+     ],
+     "answer": 1,
+     "explain": "Allocate once, overwrite many times, without leaving discarded copies behind."
+    },
+    {
+     "id": "q18-3",
+     "concept": "buffer-fixed-size",
+     "type": "choice",
+     "ask": "What does allocating a buffer give you?",
+     "options": [
+      "A workspace that grows automatically",
+      "A fixed-size workspace allocated once",
+      "A copy of a string",
+      "A faster loop"
+     ],
+     "answer": 1,
+     "explain": "The size is fixed up front, which is exactly what avoids repeated allocation."
+    }
+   ]
+  },
+  "19": {
+   "beats": [
+    {
+     "say": "Picture a physical control board with a row of exactly thirty two light switches, numbered from left to right. Each switch is either on or off, one or zero."
+    },
+    {
+     "say": "Numbers in Luau are normally decimal values. When you use the bit thirty two library, the computer temporarily translates your number into this row of thirty two switches."
+    },
+    {
+     "say": "Now suppose you have two boards and want to combine them into a third. And turns a switch on only when that exact switch is on for both boards. If either is off, the result is off."
+    },
+    {
+     "say": "Or turns a switch on when at least one of the boards has it on."
+    },
+    {
+     "say": "Exclusive or checks whether the two boards disagree. If one switch is on and the other off, the result is on. If both are the same, the result is off."
+    },
+    {
+     "say": "Not takes a single board and flips every switch to its opposite."
+    },
+    {
+     "say": "Then there is sliding. Shift left slides all the switches to the left. The ones on the far left fall off the board and are lost. Shift right does the same in the other direction, filling the vacated left side with off switches."
+    },
+    {
+     "say": "Arithmetic shift right is the exception. Instead of always filling with off, it clones whatever state was in the leftmost position, which is how it preserves the sign of a negative number."
+    },
+    {
+     "say": "Rotate is different again. The switches that slide off one end run around and reappear at the other, so nothing is ever lost."
+    },
+    {
+     "say": "Finally, you can work on a small group rather than all thirty two. Extract is a magnifying glass over a specific window of switches, read as a smaller independent value. Replace overwrites a section of the board without disturbing the switches around it."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q19-1",
+     "concept": "bitwise-and-or",
+     "type": "choice",
+     "ask": "A switch is on in one board and off in the other. What does AND produce for it?",
+     "options": [
+      "On",
+      "Off",
+      "It depends on the position",
+      "An error"
+     ],
+     "answer": 1,
+     "explain": "AND turns a switch on only when both inputs have it on."
+    },
+    {
+     "id": "q19-2",
+     "concept": "bitwise-xor",
+     "type": "choice",
+     "ask": "What does exclusive OR actually test?",
+     "options": [
+      "Whether both switches are on",
+      "Whether the two switches disagree",
+      "Whether either is off",
+      "Whether the boards are the same length"
+     ],
+     "answer": 1,
+     "explain": "It turns the result on when the two inputs differ, and off when they match."
+    },
+    {
+     "id": "q19-3",
+     "concept": "shift-vs-rotate",
+     "type": "choice",
+     "ask": "What is the difference between a shift and a rotate?",
+     "options": [
+      "A shift loses the switches that fall off; a rotate wraps them round",
+      "They are the same",
+      "A rotate is faster",
+      "A shift only works on positive numbers"
+     ],
+     "answer": 0,
+     "explain": "Rotation preserves every switch by wrapping it to the other end."
+    },
+    {
+     "id": "q19-4",
+     "concept": "arithmetic-shift",
+     "type": "choice",
+     "ask": "How does arithmetic shift right differ from an ordinary shift right?",
+     "options": [
+      "It is faster",
+      "It clones the leftmost state instead of always filling with off",
+      "It shifts twice as far",
+      "It rotates instead"
+     ],
+     "answer": 1,
+     "explain": "That is what preserves the sign of a negative number."
+    }
+   ]
+  },
+  "20": {
+   "beats": [
+    {
+     "say": "Imagine you are a single chef cooking a complex dinner. You have three things to prepare: bread to bake, soup to simmer, and vegetables to chop. You have one set of hands, so you cannot physically do all three at the same instant."
+    },
+    {
+     "say": "So you work cooperatively. You mix the dough, put it in the oven, and pause your work on the bread while it bakes. That pause is called a yield."
+    },
+    {
+     "say": "While the bread bakes you switch to the soup, turn on the heat, and pause again to let it simmer. While the soup simmers you chop the vegetables. When the oven timer goes, you resume the bread exactly where you left off."
+    },
+    {
+     "say": "That is precisely what a coroutine is. Not true parallel work, which would be hiring three chefs, but one thread of execution smartly pausing a task, working on something else, and picking the original back up without losing its place."
+    },
+    {
+     "say": "Every coroutine moves through life stages. Suspended means the recipe is written down but not being worked on, either not started or paused mid way."
+    },
+    {
+     "say": "Running means you are actively working on it right now. Normal means this recipe is waiting on a sub recipe it asked for."
+    },
+    {
+     "say": "Dead means the dish is finished, or you dropped it on the floor with an error. Either way you cannot work on it any more."
+    },
+    {
+     "say": "You can also pass messages in both directions. Starting a recipe passes in the raw ingredients. Pausing it can hand back a status report. Resuming it can hand in new tools or ingredients to keep going."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q20-1",
+     "concept": "cooperative-multitasking",
+     "type": "choice",
+     "ask": "How does a coroutine differ from true parallel execution?",
+     "options": [
+      "It is faster",
+      "One thread pauses and resumes tasks rather than several running at once",
+      "It uses more CPUs",
+      "There is no difference"
+     ],
+     "answer": 1,
+     "explain": "One chef, switching between recipes, not three chefs cooking simultaneously."
+    },
+    {
+     "id": "q20-2",
+     "concept": "coroutine-yield",
+     "type": "choice",
+     "ask": "What does yielding do?",
+     "options": [
+      "Ends the task permanently",
+      "Pauses it so it can be resumed later from the same place",
+      "Restarts it",
+      "Copies it"
+     ],
+     "answer": 1,
+     "explain": "The pause keeps its place, which is what lets you pick it back up."
+    },
+    {
+     "id": "q20-3",
+     "concept": "coroutine-lifecycle",
+     "type": "choice",
+     "ask": "A coroutine has finished, or errored. What state is it in?",
+     "options": [
+      "Suspended",
+      "Normal",
+      "Dead",
+      "Running"
+     ],
+     "answer": 2,
+     "explain": "Dead means it cannot be worked on any more, whether it completed or failed."
+    },
+    {
+     "id": "q20-4",
+     "concept": "coroutine-lifecycle",
+     "type": "choice",
+     "ask": "What does the Normal state mean?",
+     "options": [
+      "It is paused and ready",
+      "It is waiting on a sub task it requested",
+      "It has never been started",
+      "It errored"
+     ],
+     "answer": 1,
+     "explain": "Normal is the state of a coroutine that is currently waiting on another one it called."
+    }
+   ]
+  },
+  "21": {
+   "beats": [
+    {
+     "say": "Imagine standard English text as a train where every cargo car is exactly one metre long. To find the fifth car you measure five metres down the track, and you land exactly at its start. That is how simple byte based text works."
+    },
+    {
+     "say": "Now picture international text, with emoji, Kanji or Arabic script, as a train where the cars have different lengths. A plain letter is still one metre, but a complex Chinese character might be three, and an emoji four."
+    },
+    {
+     "say": "Try to find the fifth character by measuring five metres and you may cut straight through the middle of a four metre car. You are left with corrupted scrap rather than a character."
+    },
+    {
+     "say": "The utf eight library is the smart train inspector. Instead of blindly measuring distance, it walks the train, identifies where each car actually begins and ends, and makes sure you never slice one in half."
+    },
+    {
+     "say": "The practical rule follows from that. The moment your text can contain anything beyond plain English, stop reasoning in bytes and start using the library that understands character boundaries."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q21-1",
+     "concept": "variable-length-encoding",
+     "type": "choice",
+     "ask": "Why can counting bytes go wrong with international text?",
+     "options": [
+      "Bytes are unreliable",
+      "Characters can take different numbers of bytes, so a byte offset may land mid-character",
+      "The text is too long",
+      "Emoji cannot be stored"
+     ],
+     "answer": 1,
+     "explain": "Cars have different lengths, so measuring distance can cut one in half."
+    },
+    {
+     "id": "q21-2",
+     "concept": "utf8-purpose",
+     "type": "choice",
+     "ask": "What does the utf8 library actually do for you?",
+     "options": [
+      "Makes text shorter",
+      "Finds where each character truly starts and ends",
+      "Translates languages",
+      "Removes emoji"
+     ],
+     "answer": 1,
+     "explain": "It walks the train rather than blindly measuring, so characters stay intact."
+    },
+    {
+     "id": "q21-3",
+     "concept": "when-to-use-utf8",
+     "type": "choice",
+     "ask": "When should you stop reasoning about text in bytes?",
+     "options": [
+      "Never, bytes are always fine",
+      "As soon as the text can contain anything beyond plain English",
+      "Only for very long text",
+      "Only when saving to a file"
+     ],
+     "answer": 1,
+     "explain": "Player-entered text in a real game routinely contains exactly that."
+    }
+   ]
+  },
+  "22": {
+   "beats": [
+    {
+     "say": "Picture your running code as a busy office building. Each time a function is called, a new floor is built on top. Inside that room, local variables are stored and work is done. If that function calls another, another floor goes up above it. That stack of floors is the call stack."
+    },
+    {
+     "say": "The debug library is a master detective with a clipboard and a stopwatch, who can inspect the building while it is still running."
+    },
+    {
+     "say": "The clipboard is debug dot info. It is like asking a worker on the third floor: what is your name, what file did you come from, how many parameters did you arrive with."
+    },
+    {
+     "say": "Debug dot traceback is the elevator ride from the top floor down to the lobby, writing down every floor you pass. That list is exactly how the code got to where it is now, which is usually the fastest way to understand an error."
+    },
+    {
+     "say": "The stopwatch is profile begin and profile end. You place a start sticker at the beginning of an expensive task and a stop sticker at the end, and the engine reports how long the work between them actually took."
+    },
+    {
+     "say": "That last point matters more than it sounds. Guessing which part of your game is slow is unreliable. Measuring it is not."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q22-1",
+     "concept": "call-stack-inspection",
+     "type": "choice",
+     "ask": "What does a traceback give you?",
+     "options": [
+      "The value of every variable",
+      "The list of calls that led to the current point",
+      "A faster program",
+      "The next line to run"
+     ],
+     "answer": 1,
+     "explain": "It is the ride from the top floor to the lobby, recording every floor passed."
+    },
+    {
+     "id": "q22-2",
+     "concept": "profiling",
+     "type": "choice",
+     "ask": "What do profilebegin and profileend let you do?",
+     "options": [
+      "Pause the game",
+      "Measure how long the work between them takes",
+      "Print variables",
+      "Restart a function"
+     ],
+     "answer": 1,
+     "explain": "Start and stop stickers around an expensive task, with the engine reporting the time."
+    },
+    {
+     "id": "q22-3",
+     "concept": "measure-do-not-guess",
+     "type": "choice",
+     "ask": "You think a part of your game is slow. What should you do first?",
+     "options": [
+      "Rewrite it immediately",
+      "Measure it, because guessing is unreliable",
+      "Remove features until it is fast",
+      "Add more comments"
+     ],
+     "answer": 1,
+     "explain": "Measuring turns a hunch into a fact before you spend effort on it."
+    },
+    {
+     "id": "q22-4",
+     "concept": "call-stack-inspection",
+     "type": "choice",
+     "ask": "In the office building picture, what is a new floor?",
+     "options": [
+      "A new script file",
+      "A function call, with its own local variables",
+      "A new player",
+      "A saved value"
+     ],
+     "answer": 1,
+     "explain": "Each call stacks a floor holding that call's own locals."
+    }
+   ]
   }
  }
 }
