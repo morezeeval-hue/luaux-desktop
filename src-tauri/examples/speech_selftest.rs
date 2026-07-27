@@ -1,0 +1,104 @@
+//! Exercises the speech path the app actually uses, without a window.
+//!
+//! The GUI cannot be driven from a headless run, so this drives the same
+//! functions the Tauri commands call: locate the bundled espeak data, fetch
+//! and verify a voice, synthesize, and check the audio is real.
+//!
+//!   cargo run --release --example speech_selftest -- <resource_dir> <voice_dir> [voice_id ...]
+
+#[path = "../src/piper.rs"]
+mod piper;
+
+use std::path::Path;
+
+fn rms(wav: &[u8]) -> (f64, i16, f64) {
+    let pcm = &wav[44..];
+    let samples: Vec<i16> = pcm
+        .chunks_exact(2)
+        .map(|b| i16::from_le_bytes([b[0], b[1]]))
+        .collect();
+    let sum: f64 = samples.iter().map(|s| (*s as f64) * (*s as f64)).sum();
+    let peak = samples.iter().map(|s| s.abs()).max().unwrap_or(0);
+    (
+        (sum / samples.len() as f64).sqrt(),
+        peak,
+        samples.len() as f64 / 22050.0,
+    )
+}
+
+#[tokio::main]
+async fn main() {
+    let args: Vec<String> = std::env::args().collect();
+    let resources = Path::new(&args[1]);
+    let voices = Path::new(&args[2]);
+    let wanted: Vec<&str> = if args.len() > 3 {
+        args[3..].iter().map(|s| s.as_str()).collect()
+    } else {
+        vec!["en_US-amy-medium"]
+    };
+
+    let dir = piper::resolve_espeak(resources).expect("espeak data");
+    println!("espeak data: {} ({} chars)", dir.display(), dir.as_os_str().len());
+
+    let mut failures = 0;
+    for id in wanted {
+        let v = piper::voice(id).expect("known voice");
+        let started = std::time::Instant::now();
+        let report = |received: u64, total: u64| {
+            if total > 1_000_000 && received % (16 * 1024 * 1024) < 65_536 {
+                println!("  {} MB of {} MB", received / 1_000_000, total / 1_000_000);
+            }
+        };
+        if let Err(e) = piper::fetch_voice(voices, v, &report).await {
+            println!("FAIL {id}: {e}");
+            failures += 1;
+            continue;
+        }
+        println!("{id}: fetched and verified in {:?}", started.elapsed());
+
+        let (model, config) = piper::files_in(voices, v);
+        let text = "Every property access crosses that boundary. It is fast, but it is not free.";
+        let t = std::time::Instant::now();
+        match piper::synthesize(id, &model, &config, text) {
+            Ok(wav) => {
+                let (level, peak, secs) = rms(&wav);
+                let _ = std::fs::write(voices.join(format!("{id}.sample.wav")), &wav);
+                let ok = wav.starts_with(b"RIFF") && level > 500.0 && secs > 2.0;
+                println!(
+                    "{id}: {} bytes, {secs:.2}s audio, rms {level:.0}, peak {peak}, synth {:?} -> {}",
+                    wav.len(),
+                    t.elapsed(),
+                    if ok { "ok" } else { "SUSPECT" }
+                );
+                if !ok {
+                    failures += 1;
+                }
+            }
+            Err(e) => {
+                println!("FAIL {id}: {e}");
+                failures += 1;
+            }
+        }
+    }
+
+    // A truncated file must be rejected rather than loaded.
+    let v = piper::voice("en_US-amy-medium").unwrap();
+    let (model, _) = piper::files_in(voices, v);
+    if model.exists() {
+        let broken = voices.join("broken");
+        std::fs::create_dir_all(&broken).unwrap();
+        let (bm, bc) = piper::files_in(&broken, v);
+        std::fs::write(&bm, b"not a model").unwrap();
+        std::fs::write(&bc, b"{}").unwrap();
+        if piper::is_installed(&broken, v) {
+            println!("FAIL: a truncated voice was treated as installed");
+            failures += 1;
+        } else {
+            println!("truncated voice correctly rejected");
+        }
+        let _ = std::fs::remove_dir_all(&broken);
+    }
+
+    println!("{}", if failures == 0 { "ALL OK" } else { "FAILURES" });
+    std::process::exit(if failures == 0 { 0 } else { 1 });
+}

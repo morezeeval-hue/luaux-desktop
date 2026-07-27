@@ -620,6 +620,103 @@
     $("#main").innerHTML = html;
   }
 
+  /* The tutor's voice. Piper voices are neural and run on this machine, but
+     each is a download, so the card is honest about size and state rather
+     than starting a 60 MB fetch because someone tapped a name. */
+  const VOICE_SAMPLE = "Every property access crosses that boundary. It is fast, but it is not free.";
+
+  function voiceCardHTML() {
+    const S = window.LuauSpeech;
+    if (!S || !S.isSupported()) return "";
+
+    const current = S.currentVoice();
+    const busy = S.installing();
+    const p = S.progress();
+
+    const rows = S.voices().filter((v) => v.backend === "piper").map((v) => {
+      const chosen = current && current.id === v.id;
+      let right;
+      if (busy === v.id) {
+        const pct = p && p.total ? Math.round((p.received / p.total) * 100) : 0;
+        right = `<span style="font-size:12px;color:var(--secondary)">Downloading ${pct}%</span>`;
+      } else if (busy) {
+        right = `<span style="font-size:12px;color:var(--secondary)">Waiting</span>`;
+      } else if (v.installed) {
+        right = `<button class="btn ghost" data-preview="${esc(v.id)}" style="font-size:12px;padding:4px 10px">Preview</button>`;
+      } else {
+        right = `<button class="btn ghost" data-get="${esc(v.id)}" style="font-size:12px;padding:4px 10px">Download ${Math.round(v.bytes / 1e6)} MB</button>`;
+      }
+      return `<div class="row" style="justify-content:space-between;align-items:center;margin-bottom:8px">
+        <label style="display:flex;align-items:center;gap:9px;cursor:pointer;flex:1">
+          <input type="radio" name="tutor-voice" value="${esc(v.id)}"${chosen ? " checked" : ""}${v.installed ? "" : " disabled"}>
+          <span>
+            <span style="font-weight:600;font-size:14px;color:var(--text)">${esc(v.label)}</span>
+            <span style="font-size:12px;color:var(--secondary)"> · ${esc(v.accent)} ${esc(v.gender)}</span>
+          </span>
+        </label>${right}
+      </div>`;
+    }).join("");
+
+    const sys = S.voices().find((v) => v.backend === "system");
+    const sysRow = sys ? `<div class="row" style="align-items:center;margin-bottom:8px">
+        <label style="display:flex;align-items:center;gap:9px;cursor:pointer">
+          <input type="radio" name="tutor-voice" value="${esc(sys.id)}"${current && current.id === sys.id ? " checked" : ""}>
+          <span><span style="font-weight:600;font-size:14px;color:var(--text)">System voice</span>
+          <span style="font-size:12px;color:var(--secondary)"> · no download, already on this computer</span></span>
+        </label>
+      </div>` : "";
+
+    const note = S.piperAvailable()
+      ? `<div style="font-size:12px;color:var(--secondary);margin-top:4px">Downloaded once, then it speaks offline. Nothing you read or answer leaves this machine.</div>`
+      : (S.piperReason()
+          ? `<div style="font-size:12px;color:var(--secondary);margin-top:4px">Neural voices are unavailable here: ${esc(S.piperReason())}</div>`
+          : "");
+
+    return `<div class="card" style="margin-bottom:14px">
+      <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div style="font-weight:600;font-size:14px;color:var(--text)">Tutor voice</div>
+        <label style="display:flex;align-items:center;gap:7px;font-size:13px;color:var(--secondary);cursor:pointer">
+          <input type="checkbox" id="voice-mute"${S.isMuted() ? " checked" : ""}> Mute
+        </label>
+      </div>
+      ${rows}${sysRow}${note}
+    </div>`;
+  }
+
+  function bindVoiceCard() {
+    const S = window.LuauSpeech;
+    if (!S || !$("#voice-mute")) return;
+
+    $("#voice-mute").addEventListener("change", (e) => {
+      S.setMuted(e.target.checked);
+      viewYou();
+    });
+
+    $("#main").querySelectorAll('input[name="tutor-voice"]').forEach((el) =>
+      el.addEventListener("change", () => { S.setVoice(el.value); viewYou(); }));
+
+    $("#main").querySelectorAll("[data-preview]").forEach((el) =>
+      el.addEventListener("click", () => {
+        const was = S.currentVoice();
+        S.setVoice(el.dataset.preview);
+        if (S.isMuted()) S.setMuted(false);
+        S.speak(VOICE_SAMPLE);
+        if (!was || was.id !== el.dataset.preview) viewYou();
+      }));
+
+    $("#main").querySelectorAll("[data-get]").forEach((el) =>
+      el.addEventListener("click", async () => {
+        const id = el.dataset.get;
+        try {
+          await S.install(id);
+          S.setVoice(id);
+        } catch (e) {
+          alert("That voice could not be downloaded: " + e);
+        }
+        if (route.view === "you") viewYou();
+      }));
+  }
+
   function viewYou() {
     const data = LuauData.current;
     const journey = LuauProgress.journeyProgress();
@@ -648,6 +745,8 @@
       </div>`;
     }
 
+    html += voiceCardHTML();
+
     html += `<div class="card">
       <div class="row" style="margin-bottom:10px"><span style="width:150px;color:var(--secondary);font-size:13px">Sections</span><span>${LuauProgress.completedSectionCount} / ${data.textbook.sections.length}</span></div>
       <div class="row" style="margin-bottom:10px"><span style="width:150px;color:var(--secondary);font-size:13px">VM exercises</span><span>${LuauProgress.completedExerciseCount} / ${Object.keys(data.learning.exercises).length}</span></div>
@@ -659,6 +758,8 @@
     html += `<button class="btn ghost" id="tour-btn" style="margin-top:10px">Show App Tour Again</button>`;
     html += `<button class="btn ghost" id="reset-btn" style="margin-top:10px;color:var(--red)">Reset All Progress</button>`;
     $("#main").innerHTML = html;
+
+    bindVoiceCard();
 
     const signinBtn = $("#signin-btn");
     if (signinBtn) signinBtn.addEventListener("click", () => window.LuauAuth.signIn());
@@ -672,6 +773,14 @@
 
   if (window.LuauAuth) {
     window.LuauAuth.onChange(() => {
+      if (route.view === "you") viewYou();
+    });
+  }
+
+  /* Download progress and the voice list both arrive after the first paint,
+     so the settings card redraws itself rather than showing a stale state. */
+  if (window.LuauSpeech) {
+    window.LuauSpeech.onChange(() => {
       if (route.view === "you") viewYou();
     });
   }

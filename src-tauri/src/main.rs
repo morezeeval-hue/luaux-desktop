@@ -1,6 +1,8 @@
 // LuauX Desktop — main process.
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod piper;
+
 use tauri::{Emitter, Manager, WebviewUrl, WebviewWindowBuilder};
 
 #[tauri::command]
@@ -53,7 +55,12 @@ fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_process::init())
-        .invoke_handler(tauri::generate_handler![open_discord_auth])
+        .invoke_handler(tauri::generate_handler![
+            open_discord_auth,
+            piper::piper_status,
+            piper::piper_install,
+            piper::piper_speak
+        ])
         .run(tauri::generate_context!())
         .expect("error while running LuauX Desktop");
 }
