@@ -1920,6 +1920,2987 @@
      "explain": "Each call stacks a floor holding that call's own locals."
     }
    ]
+  },
+  "23": {
+   "beats": [
+    {
+     "say": "Imagine running a factory that packs toy boxes. Before anything ships, you want to be sure every box contains exactly what the label says."
+    },
+    {
+     "say": "Luau's type checker is your quality control inspector, and you set how strict they are with a comment at the top of the script."
+    },
+    {
+     "say": "No check mode is the blindfolded inspector. They only confirm the box is sealed and not physically broken. That is a grammar check, nothing about the contents."
+    },
+    {
+     "say": "Non strict mode is the casual inspector, and it is the default. They do look inside, but they are relaxed about anything you have not clearly labelled."
+    },
+    {
+     "say": "Strict mode is the perfectionist. They hold exact blueprints for every item, and every single toy must match what the label promised."
+    },
+    {
+     "say": "The mode is a choice about how much help you want. Stricter means more mistakes caught before they ship, and more work stating your intent up front."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q23-1",
+     "concept": "type-modes",
+     "type": "choice",
+     "ask": "Which mode is the default?",
+     "options": [
+      "No check",
+      "Non strict",
+      "Strict",
+      "There is no default"
+     ],
+     "answer": 1,
+     "explain": "Non strict is the casual inspector: it looks inside but is relaxed about unlabelled things."
+    },
+    {
+     "id": "q23-2",
+     "concept": "type-modes",
+     "type": "choice",
+     "ask": "What does no check mode actually verify?",
+     "options": [
+      "Nothing at all",
+      "Only that the code is grammatically valid",
+      "Every type",
+      "Only numbers"
+     ],
+     "answer": 1,
+     "explain": "The blindfolded inspector confirms the box is sealed, which is the syntax check, not the contents."
+    },
+    {
+     "id": "q23-3",
+     "concept": "type-modes",
+     "type": "choice",
+     "ask": "You want the most mistakes caught before shipping. Which mode?",
+     "options": [
+      "No check",
+      "Non strict",
+      "Strict",
+      "It makes no difference"
+     ],
+     "answer": 2,
+     "explain": "The perfectionist holds exact blueprints, so everything must match its label."
+    }
+   ]
+  },
+  "24": {
+   "beats": [
+    {
+     "say": "Picture solving a logic puzzle. You do not guess each answer as you go. First you collect all the clues, then you sit down and see how they connect."
+    },
+    {
+     "say": "The red house belongs to the painter. The painter owns a dog. From those two clues together you suddenly know something neither clue said on its own."
+    },
+    {
+     "say": "Luau's type checker works exactly this way. Reading your code does not immediately check whether everything is correct. It collects clues, which are called constraints."
+    },
+    {
+     "say": "Only afterwards does it sit down and solve them together. That is why an error can point at a line that looks fine on its own. The contradiction only appears once several clues are combined."
+    },
+    {
+     "say": "It also explains why the checker often knows a type you never wrote down. It deduced it, the same way you deduce who owns the cat."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q24-1",
+     "concept": "constraint-solving",
+     "type": "choice",
+     "ask": "How does the type checker work through your code?",
+     "options": [
+      "It checks each line as it reads it",
+      "It collects constraints first, then solves them together",
+      "It runs the code",
+      "It asks you"
+     ],
+     "answer": 1,
+     "explain": "Clues are gathered first; the deduction happens once they can be combined."
+    },
+    {
+     "id": "q24-2",
+     "concept": "constraint-solving",
+     "type": "choice",
+     "ask": "Why can an error point at a line that looks fine alone?",
+     "options": [
+      "The checker is unreliable",
+      "The contradiction only appears once several constraints are combined",
+      "The line is secretly invalid",
+      "Errors are placed randomly"
+     ],
+     "answer": 1,
+     "explain": "A single clue is consistent; the conflict emerges from the combination."
+    },
+    {
+     "id": "q24-3",
+     "concept": "type-inference",
+     "type": "choice",
+     "ask": "You never wrote a type, yet the checker knows one. Why?",
+     "options": [
+      "It guessed",
+      "It deduced it from the constraints around it",
+      "It defaulted to number",
+      "It read a comment"
+     ],
+     "answer": 1,
+     "explain": "Same as deducing who owns the cat: the answer follows from the clues."
+    }
+   ]
+  },
+  "25": {
+   "beats": [
+    {
+     "say": "Have you ever tried to put a square peg in a round hole, or poured salt instead of sugar into a cake? Types exist to stop exactly that kind of mix up."
+    },
+    {
+     "say": "Think of every piece of information in your program as a toy. A type is the label you put on it saying what kind of toy it is."
+    },
+    {
+     "say": "Boolean is a light switch. It is either on or off, true or false. Number is a counting block, always a quantity. String is a name tag, always text."
+    },
+    {
+     "say": "When you need to group several toys together, that is a table. And a table's type describes its shape: which named parts it has, and what kind of toy each part holds."
+    },
+    {
+     "say": "Two toys match when their labels agree. A red square will not fit where a round one was promised, and the checker tells you before it becomes a bug at runtime."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q25-1",
+     "concept": "what-is-a-type",
+     "type": "choice",
+     "ask": "What is a type, in this picture?",
+     "options": [
+      "The size of a value",
+      "A label saying what kind of thing it is",
+      "How fast it runs",
+      "Where it is stored"
+     ],
+     "answer": 1,
+     "explain": "The label on the toy, so mismatches are caught before they cause trouble."
+    },
+    {
+     "id": "q25-2",
+     "concept": "primitive-types",
+     "type": "choice",
+     "ask": "Which describes a boolean?",
+     "options": [
+      "A counting block",
+      "A name tag",
+      "A light switch with two positions",
+      "A container of other toys"
+     ],
+     "answer": 2,
+     "explain": "True or false, on or off, nothing in between."
+    },
+    {
+     "id": "q25-3",
+     "concept": "table-types",
+     "type": "choice",
+     "ask": "What does the type of a table describe?",
+     "options": [
+      "Only its size",
+      "Its shape: which named parts it has and what each holds",
+      "Its position in memory",
+      "Nothing"
+     ],
+     "answer": 1,
+     "explain": "Grouping toys together means describing the group's shape."
+    }
+   ]
+  },
+  "26": {
+   "beats": [
+    {
+     "say": "Sometimes you need very specific rules about what is allowed where. There are three shapes of rule worth knowing."
+    },
+    {
+     "say": "A union is this or that. Picture a container that may hold a piece of fruit or a number. You can put an apple in it. You can put the number five in it. You cannot put a shoe in it."
+    },
+    {
+     "say": "That is also how something optional is described. A phone number you might provide is a union of a number and nothing at all."
+    },
+    {
+     "say": "An intersection is this and that at the same time. The thing must satisfy every part of the rule, not just one."
+    },
+    {
+     "say": "A singleton is exactly this. Not any string, but that one specific value. It is how you describe a setting that may only ever be one of a few named states."
+    },
+    {
+     "say": "The trap with unions is forgetting that you have one. Before you use the value as a number, you have to establish that it is a number in this branch, which is what the next section is about."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q26-1",
+     "concept": "union-types",
+     "type": "choice",
+     "ask": "A union of fruit or number: what can go in?",
+     "options": [
+      "Only fruit",
+      "Only numbers",
+      "Either a fruit or a number, but not a shoe",
+      "Anything at all"
+     ],
+     "answer": 2,
+     "explain": "This or that, and nothing outside the listed options."
+    },
+    {
+     "id": "q26-2",
+     "concept": "optional-values",
+     "type": "choice",
+     "ask": "How is an optional value described?",
+     "options": [
+      "As an intersection",
+      "As a union of the value and nothing",
+      "As a singleton",
+      "As a table"
+     ],
+     "answer": 1,
+     "explain": "A phone number you might provide is the number, or nothing at all."
+    },
+    {
+     "id": "q26-3",
+     "concept": "intersection-types",
+     "type": "choice",
+     "ask": "What does an intersection require?",
+     "options": [
+      "At least one part to hold",
+      "Every part to hold at once",
+      "Exactly one specific value",
+      "Nothing"
+     ],
+     "answer": 1,
+     "explain": "This and that, satisfied together."
+    },
+    {
+     "id": "q26-4",
+     "concept": "singleton-types",
+     "type": "choice",
+     "ask": "What is a singleton type for?",
+     "options": [
+      "Any string",
+      "One exact value, such as a named state",
+      "Any number",
+      "Empty tables"
+     ],
+     "answer": 1,
+     "explain": "Exactly this, which is how a small set of named states is described."
+    }
+   ]
+  },
+  "27": {
+   "beats": [
+    {
+     "say": "Imagine building a box specifically for apples, then a completely separate box for oranges, then another for pears. Three boxes, three sets of the same work."
+    },
+    {
+     "say": "A generic is one smart box instead. Put an apple in and it instantly knows it is an apple box. Put an orange in and it is an orange box, with no new code written."
+    },
+    {
+     "say": "The point is not saving typing. It is that the box keeps track of what went in, so what comes out is known too, rather than becoming a vague anything."
+    },
+    {
+     "say": "A type pack is the same idea applied to a whole group of values at once, rather than a single one, which is what makes it work for functions that take or return several things."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q27-1",
+     "concept": "generics",
+     "type": "choice",
+     "ask": "What does a generic container give you?",
+     "options": [
+      "A faster container",
+      "One container that adapts, remembering what went in",
+      "A smaller container",
+      "A container that holds anything with no type"
+     ],
+     "answer": 1,
+     "explain": "One smart box rather than one per kind, and it keeps track of the kind."
+    },
+    {
+     "id": "q27-2",
+     "concept": "generics",
+     "type": "choice",
+     "ask": "Why is remembering the type important?",
+     "options": [
+      "It saves memory",
+      "What comes out is known, rather than becoming a vague anything",
+      "It runs faster",
+      "It is not important"
+     ],
+     "answer": 1,
+     "explain": "Losing the type is exactly what a generic prevents."
+    },
+    {
+     "id": "q27-3",
+     "concept": "type-packs",
+     "type": "choice",
+     "ask": "What is a type pack for?",
+     "options": [
+      "A single value",
+      "A whole group of values at once",
+      "Only tables",
+      "Only numbers"
+     ],
+     "answer": 1,
+     "explain": "That is what makes it work for functions taking or returning several things."
+    }
+   ]
+  },
+  "28": {
+   "beats": [
+    {
+     "say": "Picture a container that might hold a fruit, might hold a vegetable, or might hold nothing at all. When you first receive it, you do not know which."
+    },
+    {
+     "say": "That uncertain state is the broad type. It is a union, and while the value is in that state you cannot safely do anything specific with it."
+    },
+    {
+     "say": "To peel a banana or chop a carrot you first need to know which one you have. Establishing that is called narrowing."
+    },
+    {
+     "say": "You narrow by checking. A scanner that tells you this is a banana is a type guard. Once it confirms, the checker also knows, and inside that branch it lets you treat the value as a banana."
+    },
+    {
+     "say": "This is why the checker sometimes refuses code that you are certain is fine. It is not doubting you. It is pointing out that nothing in the code has established which case you are in."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q28-1",
+     "concept": "narrowing",
+     "type": "choice",
+     "ask": "What is narrowing?",
+     "options": [
+      "Making a value smaller",
+      "Establishing which case of a union you actually have",
+      "Deleting a type",
+      "Converting a number to text"
+     ],
+     "answer": 1,
+     "explain": "From mystery item to known item, so specific actions become safe."
+    },
+    {
+     "id": "q28-2",
+     "concept": "type-guards",
+     "type": "choice",
+     "ask": "What is a type guard?",
+     "options": [
+      "A check that tells you which case you have",
+      "A kind of loop",
+      "A private variable",
+      "An error message"
+     ],
+     "answer": 0,
+     "explain": "The scanner that confirms it is a banana, which the checker then trusts inside that branch."
+    },
+    {
+     "id": "q28-3",
+     "concept": "narrowing",
+     "type": "choice",
+     "ask": "The checker rejects code you are sure is correct. What is it saying?",
+     "options": [
+      "The code is broken",
+      "Nothing in the code has established which case you are in",
+      "The value is nil",
+      "The type does not exist"
+     ],
+     "answer": 1,
+     "explain": "Your certainty is not visible to it. A guard makes it visible."
+    }
+   ]
+  },
+  "29": {
+   "beats": [
+    {
+     "say": "Picture a very organised digital helper that sorts everything it handles into categories. Numbers here, text there, true and false over there."
+    },
+    {
+     "say": "Sometimes the helper needs guidance from you. A type assertion, written with a double colon, is putting a specific label on a box. You are stating something you know that the helper could not work out."
+    },
+    {
+     "say": "That is a promise you are making, not a check being performed. If the promise is wrong, nothing catches it for you."
+    },
+    {
+     "say": "Sometimes the helper adjusts things on its own. Combine the phrase my result is with the number forty two, and it quietly turns the number into text so the join works. That automatic adjustment is coercion."
+    },
+    {
+     "say": "Coercion is convenient and it is also where surprises hide, because the conversion happens silently. The danger is assuming a check took place when all that happened was a quiet conversion."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q29-1",
+     "concept": "type-assertion",
+     "type": "choice",
+     "ask": "What does a type assertion actually do?",
+     "options": [
+      "Checks the value at runtime",
+      "States a promise you are making to the checker",
+      "Converts the value",
+      "Creates a new type"
+     ],
+     "answer": 1,
+     "explain": "It is a label you apply, not a verification. A wrong promise is not caught."
+    },
+    {
+     "id": "q29-2",
+     "concept": "type-coercion",
+     "type": "choice",
+     "ask": "You join text with a number and it works. What happened?",
+     "options": [
+      "The checker rejected it",
+      "The number was silently converted to text",
+      "The text became a number",
+      "Nothing, it failed"
+     ],
+     "answer": 1,
+     "explain": "That silent adjustment is coercion."
+    },
+    {
+     "id": "q29-3",
+     "concept": "type-assertion",
+     "type": "choice",
+     "ask": "Why are assertions risky?",
+     "options": [
+      "They are slow",
+      "If the promise is wrong, nothing catches it",
+      "They only work on numbers",
+      "They change the value"
+     ],
+     "answer": 1,
+     "explain": "You have overridden the checker, so the responsibility is yours."
+    }
+   ]
+  },
+  "30": {
+   "beats": [
+    {
+     "say": "Imagine a recipe written in plain English, full of natural language. To make sure a super efficient robot chef can follow it perfectly, someone has to translate it into precise machine steps first."
+    },
+    {
+     "say": "That is exactly what happens to your Luau code before it runs."
+    },
+    {
+     "say": "First the lexer reads it word by word, identifying each piece: chop, onion, two, cups. It does not understand meaning yet, only what the individual words are."
+    },
+    {
+     "say": "Then the parser takes those words and works out the grammar and structure, understanding that chop two cups of onion is one complete instruction rather than four unrelated words."
+    },
+    {
+     "say": "Then the optimiser reviews the whole thing before handing it over. If you wrote add one plus one teaspoon of salt, it quietly rewrites that as add two teaspoons, so the robot never has to do the arithmetic."
+    },
+    {
+     "say": "What the machine finally receives is bytecode: a compact list of exact instructions, with the human phrasing already resolved away."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q30-1",
+     "concept": "lexer",
+     "type": "choice",
+     "ask": "What does the lexer do?",
+     "options": [
+      "Understands the meaning",
+      "Identifies the individual words and symbols",
+      "Runs the code",
+      "Optimises it"
+     ],
+     "answer": 1,
+     "explain": "Word by word, without understanding the structure yet."
+    },
+    {
+     "id": "q30-2",
+     "concept": "parser",
+     "type": "choice",
+     "ask": "And the parser?",
+     "options": [
+      "Works out the grammar and structure",
+      "Reads letters",
+      "Frees memory",
+      "Speeds up loops"
+     ],
+     "answer": 0,
+     "explain": "It turns a list of words into an understood instruction."
+    },
+    {
+     "id": "q30-3",
+     "concept": "optimiser",
+     "type": "choice",
+     "ask": "You wrote one plus one as a constant. What does the optimiser do?",
+     "options": [
+      "Leaves it for runtime",
+      "Computes it ahead of time and stores two",
+      "Reports an error",
+      "Removes the line"
+     ],
+     "answer": 1,
+     "explain": "Work that can be settled before running does not need doing every time."
+    },
+    {
+     "id": "q30-4",
+     "concept": "bytecode",
+     "type": "choice",
+     "ask": "What does the virtual machine actually receive?",
+     "options": [
+      "Your original text",
+      "Bytecode, a compact list of exact instructions",
+      "A picture of the code",
+      "Nothing"
+     ],
+     "answer": 1,
+     "explain": "The human phrasing has already been resolved away by then."
+    }
+   ]
+  },
+  "31": {
+   "beats": [
+    {
+     "say": "Picture your computer as a busy office. Every time a function runs, it is a worker tackling a new task."
+    },
+    {
+     "say": "To work, the worker needs a desk. That temporary workspace belonging to one function is called the stack."
+    },
+    {
+     "say": "Luau is a very organised worker. Rather than piling everything onto the desk, it uses a set of specifically labelled bins arranged in front of it. Those are registers."
+    },
+    {
+     "say": "One bin always reminds the worker which task they are currently on. Others hold the materials handed to them, which are the inputs. Others hold things created during the task, which are the local variables and intermediate results."
+    },
+    {
+     "say": "The reason this matters to you is speed. Reaching into a labelled bin directly in front of you is far quicker than searching a cluttered desk, and it is why Luau can run as fast as it does."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q31-1",
+     "concept": "the-stack",
+     "type": "choice",
+     "ask": "What is the stack, in this picture?",
+     "options": [
+      "The whole office",
+      "One function's temporary workspace",
+      "A list of files",
+      "The output"
+     ],
+     "answer": 1,
+     "explain": "The desk belonging to the task currently being worked on."
+    },
+    {
+     "id": "q31-2",
+     "concept": "registers",
+     "type": "choice",
+     "ask": "What are registers?",
+     "options": [
+      "Labelled bins holding the values a function is working with",
+      "Saved files",
+      "Player records",
+      "Error logs"
+     ],
+     "answer": 0,
+     "explain": "Directly in front of the worker, rather than piled on the desk."
+    },
+    {
+     "id": "q31-3",
+     "concept": "registers",
+     "type": "choice",
+     "ask": "Why does this arrangement matter?",
+     "options": [
+      "It looks tidier",
+      "Reaching a labelled bin is far faster than searching",
+      "It saves disk space",
+      "It prevents errors"
+     ],
+     "answer": 1,
+     "explain": "Speed is the whole reason for the arrangement."
+    }
+   ]
+  },
+  "32": {
+   "beats": [
+    {
+     "say": "Picture a highly efficient robot chef that cannot read human recipes. It needs tiny, exact commands instead."
+    },
+    {
+     "say": "The Luau virtual machine is that chef. Its recipe book is the bytecode stream, a long list of tiny instructions called opcodes."
+    },
+    {
+     "say": "On the counter are small labelled containers, the registers, which the chef uses for whatever it is currently handling."
+    },
+    {
+     "say": "There is also a pantry of pre made ingredients that never change, things like fixed numbers and pieces of text. That is the constant table, and keeping them there means they are not rebuilt every time."
+    },
+    {
+     "say": "Occasionally an instruction is too complex to fit on one line of the recipe, so a separate note is attached carrying the extra detail. That is the auxiliary word."
+    },
+    {
+     "say": "Every opcode is deliberately compact. The chef reads one, acts, and moves to the next, thousands of times a second."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q32-1",
+     "concept": "opcodes",
+     "type": "choice",
+     "ask": "What is an opcode?",
+     "options": [
+      "A whole function",
+      "One tiny instruction for the virtual machine",
+      "A variable name",
+      "A type"
+     ],
+     "answer": 1,
+     "explain": "The chef reads one, acts, moves on."
+    },
+    {
+     "id": "q32-2",
+     "concept": "constant-table",
+     "type": "choice",
+     "ask": "What lives in the constant table?",
+     "options": [
+      "Values that never change, so they are not rebuilt each time",
+      "Player data",
+      "Error messages",
+      "Registers"
+     ],
+     "answer": 0,
+     "explain": "The pantry of pre made ingredients."
+    },
+    {
+     "id": "q32-3",
+     "concept": "aux-word",
+     "type": "choice",
+     "ask": "What is the auxiliary word for?",
+     "options": [
+      "Speeding up loops",
+      "Carrying extra detail when an instruction will not fit on one line",
+      "Naming variables",
+      "Storing text"
+     ],
+     "answer": 1,
+     "explain": "A note attached to an instruction that needs more room."
+    }
+   ]
+  },
+  "33": {
+   "beats": [
+    {
+     "say": "Picture Luau as a chef, and every piece of data as an ingredient. To keep the kitchen tidy, every ingredient goes into a multi purpose box of exactly the same size, whatever is inside."
+    },
+    {
+     "say": "Internally that box is called a TValue, short for type and value. Each one always has two parts: a tag saying what kind of ingredient this is, and the ingredient itself or a pointer to it."
+    },
+    {
+     "say": "Small, simple ingredients go directly into the box. A number, a true or false, a small coordinate. They fit, so they are stored right there."
+    },
+    {
+     "say": "Big or complex ingredients do not fit. Longer text, a table, a function. For those, the box holds a pointer to where the real thing lives, rather than the thing itself."
+    },
+    {
+     "say": "That uniform size is what makes the machine fast. Every slot is identical, so moving a value never requires asking how big it is first."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q33-1",
+     "concept": "tvalue",
+     "type": "choice",
+     "ask": "What are the two parts of every value box?",
+     "options": [
+      "A name and a size",
+      "A tag saying what kind, and the value or a pointer to it",
+      "Two numbers",
+      "A key and a table"
+     ],
+     "answer": 1,
+     "explain": "Type and value, which is what TValue stands for."
+    },
+    {
+     "id": "q33-2",
+     "concept": "boxed-vs-inline",
+     "type": "choice",
+     "ask": "Where does a table live?",
+     "options": [
+      "Directly inside the box",
+      "Elsewhere, with the box holding a pointer to it",
+      "In the constant table",
+      "On disk"
+     ],
+     "answer": 1,
+     "explain": "Complex ingredients are too big for the box, so the box points at them."
+    },
+    {
+     "id": "q33-3",
+     "concept": "uniform-size",
+     "type": "choice",
+     "ask": "Why is every box the same size?",
+     "options": [
+      "It looks neater",
+      "Moving a value never requires asking how big it is",
+      "It saves disk space",
+      "It is a coincidence"
+     ],
+     "answer": 1,
+     "explain": "Uniformity is what makes the machine fast."
+    }
+   ]
+  },
+  "34": {
+   "beats": [
+    {
+     "say": "Picture memory as a giant library, and every piece of data your program uses as a book. Your program constantly writes new books and stops using old ones."
+    },
+    {
+     "say": "If nobody ever cleaned up, the library would fill with books nobody reads, and eventually there would be no shelf space left. The garbage collector is the librarian who prevents that."
+    },
+    {
+     "say": "The first thing to know is that the librarian tidies in shifts. Closing the whole library for a day would mean your game freezing, so instead the work is done incrementally, a little at a time."
+    },
+    {
+     "say": "To decide what to keep, the librarian uses three colours. White books are candidates for removal: nobody has been seen using them."
+    },
+    {
+     "say": "Grey books have been noticed as in use, but the librarian has not finished checking what else they refer to."
+    },
+    {
+     "say": "Black books have been fully checked, along with everything they point at. They are staying."
+    },
+    {
+     "say": "The process starts from the shelves that definitely matter and works outward. Anything still white when the sweep finishes was genuinely unreachable, and only then is it cleared away."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q34-1",
+     "concept": "incremental-gc",
+     "type": "choice",
+     "ask": "Why does the collector work in shifts?",
+     "options": [
+      "It is slower that way",
+      "Doing it all at once would freeze the game",
+      "It cannot see everything",
+      "To save memory"
+     ],
+     "answer": 1,
+     "explain": "Closing the whole library at once is exactly the stall it avoids."
+    },
+    {
+     "id": "q34-2",
+     "concept": "tri-color",
+     "type": "choice",
+     "ask": "What does a grey book mean?",
+     "options": [
+      "It is unused",
+      "It is in use, but what it refers to has not been checked yet",
+      "It is being deleted",
+      "It is on disk"
+     ],
+     "answer": 1,
+     "explain": "Noticed as reachable, but its own references are still unexamined."
+    },
+    {
+     "id": "q34-3",
+     "concept": "tri-color",
+     "type": "choice",
+     "ask": "What happens to something still white at the end of a sweep?",
+     "options": [
+      "It is kept",
+      "It was unreachable, so it is cleared away",
+      "It turns grey",
+      "It is copied"
+     ],
+     "answer": 1,
+     "explain": "Nothing reachable was left white by the time the sweep finished."
+    },
+    {
+     "id": "q34-4",
+     "concept": "reachability",
+     "type": "choice",
+     "ask": "How does the collector decide something is still needed?",
+     "options": [
+      "By how recently it was made",
+      "By whether it can still be reached from what definitely matters",
+      "By its size",
+      "At random"
+     ],
+     "answer": 1,
+     "explain": "The sweep starts from the roots and works outward."
+    }
+   ]
+  },
+  "35": {
+   "beats": [
+    {
+     "say": "Memory is a library again, and the strings in your code are the books. If you kept a separate copy of every word you ever used, the shelves would fill with duplicates."
+    },
+    {
+     "say": "The string interning engine is the librarian who prevents that. For every unique word or phrase, exactly one master copy exists in the whole library."
+    },
+    {
+     "say": "Ask for a piece of text that already exists and the librarian simply points you at the copy already on the shelf. Ask for one that does not exist and a new master copy is made, then you are pointed at that."
+    },
+    {
+     "say": "Two things follow from that rule. Memory is not cluttered with duplicates, which saves space."
+    },
+    {
+     "say": "And comparing two pieces of text becomes very fast. The computer does not read them character by character. It checks whether both point at the same master copy, which is a single comparison however long the text is."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q35-1",
+     "concept": "interning-rule",
+     "type": "choice",
+     "ask": "How many copies of a unique piece of text exist?",
+     "options": [
+      "One per use",
+      "Exactly one master copy",
+      "Two, for safety",
+      "It varies"
+     ],
+     "answer": 1,
+     "explain": "That single rule is what interning means."
+    },
+    {
+     "id": "q35-2",
+     "concept": "interning-speed",
+     "type": "choice",
+     "ask": "Why does interning make comparison fast?",
+     "options": [
+      "Text is kept short",
+      "It compares which master copy each points at, not the characters",
+      "It compares only the first letter",
+      "It caches results"
+     ],
+     "answer": 1,
+     "explain": "One comparison, regardless of how long the text is."
+    },
+    {
+     "id": "q35-3",
+     "concept": "interning-memory",
+     "type": "choice",
+     "ask": "What is the other benefit?",
+     "options": [
+      "Faster loops",
+      "No duplicate copies filling memory",
+      "Shorter code",
+      "Better error messages"
+     ],
+     "answer": 1,
+     "explain": "One physical copy rather than one per use."
+    }
+   ]
+  },
+  "36": {
+   "beats": [
+    {
+     "say": "Picture your computer as a kitchen and your script as a recipe. Normally an assistant reads the recipe step by step and carries each step out as they go."
+    },
+    {
+     "say": "Native execution is super chef mode. Marking a script that way hands the recipe to a master chef who studies and internalises the whole thing before any cooking starts."
+    },
+    {
+     "say": "That distinction has a name. Just in time compilation would mean learning parts of the recipe as orders come in. Flexible, but not permitted on some platforms."
+    },
+    {
+     "say": "Ahead of time is what this is. The entire recipe is understood before the first dish, so nothing has to be worked out mid service."
+    },
+    {
+     "say": "The gain is that the chef acts directly instead of consulting instructions for every movement. The cost is that this preparation only pays off where the work is heavy enough to justify it, so it is a tool for measured hot paths, not something to sprinkle everywhere."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q36-1",
+     "concept": "aot-vs-jit",
+     "type": "choice",
+     "ask": "What does ahead of time compilation mean here?",
+     "options": [
+      "Learning the recipe as orders arrive",
+      "Understanding the whole recipe before any cooking begins",
+      "Cooking two dishes at once",
+      "Skipping steps"
+     ],
+     "answer": 1,
+     "explain": "Just in time is the other one, and it is not permitted on some platforms."
+    },
+    {
+     "id": "q36-2",
+     "concept": "native-tradeoff",
+     "type": "choice",
+     "ask": "Where should native execution be used?",
+     "options": [
+      "On every script",
+      "On measured hot paths where the work justifies it",
+      "Only on short scripts",
+      "Never"
+     ],
+     "answer": 1,
+     "explain": "The preparation has a cost, so it pays off only where the work is heavy."
+    },
+    {
+     "id": "q36-3",
+     "concept": "native-benefit",
+     "type": "choice",
+     "ask": "What is the actual gain?",
+     "options": [
+      "Smaller files",
+      "The machine acts directly rather than consulting instructions each step",
+      "Fewer errors",
+      "Better types"
+     ],
+     "answer": 1,
+     "explain": "That is the difference between the assistant and the master chef."
+    }
+   ]
+  },
+  "37": {
+   "beats": [
+    {
+     "say": "Imagine two friends who speak different languages. One speaks C plus plus, the other speaks Luau. They need to build something together."
+    },
+    {
+     "say": "So they use a shared workspace, a message board made of stacked sticky notes."
+    },
+    {
+     "say": "When the C plus plus side wants to pass something over, such as the number forty two or a piece of text, it writes a note and puts it on the board. That is pushing."
+    },
+    {
+     "say": "When the Luau side needs the information, it reads the notes and takes them off. That is popping."
+    },
+    {
+     "say": "The whole bridge between the engine and your script works through that discipline: everything crossing over is placed on the stack and taken off in a known order. There is no other channel."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q37-1",
+     "concept": "c-api-stack",
+     "type": "choice",
+     "ask": "How do the two sides exchange values?",
+     "options": [
+      "By calling each other directly",
+      "Through a shared stack, pushing and popping notes",
+      "By sharing variables",
+      "They cannot"
+     ],
+     "answer": 1,
+     "explain": "The message board is the only channel across the boundary."
+    },
+    {
+     "id": "q37-2",
+     "concept": "c-api-stack",
+     "type": "choice",
+     "ask": "What does pushing mean?",
+     "options": [
+      "Removing a value",
+      "Placing a value onto the shared stack",
+      "Running a function",
+      "Deleting a note"
+     ],
+     "answer": 1,
+     "explain": "Writing a note and putting it on the board."
+    }
+   ]
+  },
+  "38": {
+   "beats": [
+    {
+     "say": "Luau is the chef, and C plus plus is a factory producing special ingredients such as game objects and tools. The chef needs to use them without knowing how they were made."
+    },
+    {
+     "say": "Userdata is how the factory hands those ingredients over. It is a package the Luau side can hold and use."
+    },
+    {
+     "say": "With a full userdata, the factory sends a brand new complete toy. Luau now owns it, and when nobody needs it any more, Luau knows how to clean it up."
+    },
+    {
+     "say": "Each of these can arrive with its own instruction manual, so two objects of different kinds can respond differently to the same request."
+    },
+    {
+     "say": "That is what lets a Roblox object feel like an ordinary Luau value while actually living on the engine side."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q38-1",
+     "concept": "userdata",
+     "type": "choice",
+     "ask": "What is userdata?",
+     "options": [
+      "A kind of number",
+      "The way engine-side objects are handed to Luau",
+      "A table of settings",
+      "A text format"
+     ],
+     "answer": 1,
+     "explain": "The package the factory sends to the chef."
+    },
+    {
+     "id": "q38-2",
+     "concept": "userdata-ownership",
+     "type": "choice",
+     "ask": "Who cleans up a full userdata?",
+     "options": [
+      "Nobody",
+      "Luau, once nothing needs it any more",
+      "The player",
+      "It is never cleaned up"
+     ],
+     "answer": 1,
+     "explain": "Luau owns it, so its collector handles it."
+    },
+    {
+     "id": "q38-3",
+     "concept": "userdata-behaviour",
+     "type": "choice",
+     "ask": "Why can two engine objects behave differently to the same request?",
+     "options": [
+      "They are random",
+      "Each can carry its own instruction manual",
+      "They are different sizes",
+      "They cannot"
+     ],
+     "answer": 1,
+     "explain": "That per-object manual is what makes them feel like distinct kinds."
+    }
+   ]
+  },
+  "39": {
+   "beats": [
+    {
+     "say": "You speak Luau. The Roblox engine speaks C plus plus. For the two of you to understand each other, something has to translate."
+    },
+    {
+     "say": "That translator is the reflection engine, sitting between your script and the engine's inner workings."
+    },
+    {
+     "say": "It carries a huge dictionary, the reflection database, holding every important detail about every property and method the engine exposes."
+    },
+    {
+     "say": "When your script asks for a part's position, you are asking the translator a question. It looks up Position for a Part, works out where the real value lives, fetches it, and hands it back."
+    },
+    {
+     "say": "This is worth knowing because every property access crosses that boundary. It is fast, but it is not free, and that is exactly why doing it repeatedly inside a hot loop can cost more than the work itself."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q39-1",
+     "concept": "reflection",
+     "type": "choice",
+     "ask": "What does the reflection engine do?",
+     "options": [
+      "Runs your script",
+      "Translates between Luau and the engine's internals",
+      "Draws the screen",
+      "Stores player data"
+     ],
+     "answer": 1,
+     "explain": "It is the translator, with a dictionary of everything the engine exposes."
+    },
+    {
+     "id": "q39-2",
+     "concept": "reflection-cost",
+     "type": "choice",
+     "ask": "Why can repeated property access in a tight loop be costly?",
+     "options": [
+      "It is random",
+      "Each access crosses the translation boundary",
+      "Properties are large",
+      "It causes errors"
+     ],
+     "answer": 1,
+     "explain": "Fast is not free, which is why the crossing adds up in a hot path."
+    }
+   ]
+  },
+  "40": {
+   "beats": [
+    {
+     "say": "Picture a complex play on a stage. Many things must happen in a specific order, at exactly the right moment, for the performance to work."
+    },
+    {
+     "say": "The task scheduler is the stage manager. Everything in your game, from what you type to what is drawn, happens because it decided when."
+    },
+    {
+     "say": "Each frame is divided into phases, and where your work runs decides what it can safely see and change."
+    },
+    {
+     "say": "Some things belong before the camera shot, and only things tied to the camera's view belong there."
+    },
+    {
+     "say": "Some belong during the physics calculations, which is anything that must affect how objects physically move."
+    },
+    {
+     "say": "And some belong after everything else, which is where general gameplay logic and interface updates sit, because they can safely wait a moment longer."
+    },
+    {
+     "say": "Choosing the wrong phase is a common cause of movement that stutters or lags one frame behind."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q40-1",
+     "concept": "scheduler-phases",
+     "type": "choice",
+     "ask": "What is the task scheduler's job?",
+     "options": [
+      "Storing data",
+      "Deciding when each piece of work runs within a frame",
+      "Drawing graphics",
+      "Connecting players"
+     ],
+     "answer": 1,
+     "explain": "It is the stage manager for the whole frame."
+    },
+    {
+     "id": "q40-2",
+     "concept": "scheduler-phases",
+     "type": "choice",
+     "ask": "Where does camera-following work belong?",
+     "options": [
+      "After everything else",
+      "In the phase before the frame is drawn",
+      "During physics",
+      "It does not matter"
+     ],
+     "answer": 1,
+     "explain": "Only things tied to the camera's view belong there, and that is what keeps them from lagging a frame."
+    },
+    {
+     "id": "q40-3",
+     "concept": "scheduler-phases",
+     "type": "choice",
+     "ask": "What is a symptom of choosing the wrong phase?",
+     "options": [
+      "The game will not start",
+      "Movement stutters or lags a frame behind",
+      "Data is lost",
+      "Nothing"
+     ],
+     "answer": 1,
+     "explain": "The work happened, just at the wrong moment in the frame."
+    }
+   ]
+  },
+  "41": {
+   "beats": [
+    {
+     "say": "Your game is a busy chef running a restaurant, and a frame is one shift: a single complete pass of work."
+    },
+    {
+     "say": "Task spawn is the chef turning to an assistant and saying do this immediately. It starts right now, without waiting."
+    },
+    {
+     "say": "Task defer is saying do this at the end of the shift. It waits until the current work is finished, then runs."
+    },
+    {
+     "say": "Task delay is setting a timer. When it goes off, the work begins, and not before."
+    },
+    {
+     "say": "The distinction matters because reaching for the immediate one everywhere is how a single frame ends up carrying far more work than it should. Choosing deliberately is what keeps a frame from overflowing."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q41-1",
+     "concept": "task-spawn-defer",
+     "type": "choice",
+     "ask": "What does task.defer do?",
+     "options": [
+      "Runs immediately",
+      "Waits until the current work finishes, then runs",
+      "Cancels the task",
+      "Runs on another machine"
+     ],
+     "answer": 1,
+     "explain": "At the end of this shift, rather than right now."
+    },
+    {
+     "id": "q41-2",
+     "concept": "task-spawn-defer",
+     "type": "choice",
+     "ask": "And task.spawn?",
+     "options": [
+      "Starts it right now",
+      "Waits a frame",
+      "Waits a timer",
+      "Runs it twice"
+     ],
+     "answer": 0,
+     "explain": "Immediately, without waiting for anything."
+    },
+    {
+     "id": "q41-3",
+     "concept": "frame-budget",
+     "type": "choice",
+     "ask": "Why not always use the immediate one?",
+     "options": [
+      "It is slower",
+      "A single frame ends up carrying more work than it should",
+      "It is deprecated",
+      "It causes errors"
+     ],
+     "answer": 1,
+     "explain": "Deliberate choice is what keeps a frame from overflowing."
+    }
+   ]
+  },
+  "42": {
+   "beats": [
+    {
+     "say": "Picture your Roblox game as a giant magical toy box called the DataModel. Every single item in the game, a character, a block, a light, a script, is an object inside it."
+    },
+    {
+     "say": "Each of those objects is called an Instance."
+    },
+    {
+     "say": "Just as you organise toys in real life, instances nest inside one another. A big box holds smaller boxes, and a doll's hat sits on the doll."
+    },
+    {
+     "say": "That nesting is not decoration. Where a thing sits decides what it belongs to, what happens when its parent is removed, and often whether it runs at all."
+    },
+    {
+     "say": "So the tree is not just a way of finding things. It is the structure the whole engine reasons about."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q42-1",
+     "concept": "datamodel",
+     "type": "choice",
+     "ask": "What is the DataModel?",
+     "options": [
+      "A save file",
+      "The tree holding every object in the running game",
+      "A type",
+      "A script"
+     ],
+     "answer": 1,
+     "explain": "The giant toy box, with every instance inside it."
+    },
+    {
+     "id": "q42-2",
+     "concept": "instance-hierarchy",
+     "type": "choice",
+     "ask": "Why does an instance's position in the tree matter?",
+     "options": [
+      "It only affects tidiness",
+      "It decides ownership, what happens when the parent goes, and often whether it runs",
+      "It sets its colour",
+      "It does not matter"
+     ],
+     "answer": 1,
+     "explain": "The tree is the structure the engine itself reasons about."
+    }
+   ]
+  },
+  "43": {
+   "beats": [
+    {
+     "say": "Imagine sharing news in a busy office. A signal is the announcement board. Anyone with news posts it there, for example that a new player has joined."
+    },
+    {
+     "say": "A connection is a person subscribing to those announcements. You put your name down, and from then on you hear about every new post."
+    },
+    {
+     "say": "Now the problem. Suppose you only needed the news for a short task. You sign up, do the task, and walk away without taking your name off the list."
+    },
+    {
+     "say": "The board keeps your name, and keeps holding on to you. You are gone, but you cannot be cleaned up, because something still refers to you."
+    },
+    {
+     "say": "That is a memory leak, and it is the single most common one in Roblox code. The rule that prevents it is simple: whoever creates a connection is responsible for disconnecting it when it is no longer needed."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q43-1",
+     "concept": "signals-connections",
+     "type": "choice",
+     "ask": "What is a connection?",
+     "options": [
+      "A network link",
+      "A subscription to a signal's announcements",
+      "A saved value",
+      "A player"
+     ],
+     "answer": 1,
+     "explain": "Your name on the announcement list."
+    },
+    {
+     "id": "q43-2",
+     "concept": "connection-leak",
+     "type": "choice",
+     "ask": "What happens if you never disconnect?",
+     "options": [
+      "Nothing",
+      "The signal keeps a reference, so the object can never be cleaned up",
+      "The game crashes instantly",
+      "The connection expires by itself"
+     ],
+     "answer": 1,
+     "explain": "That lingering reference is the leak."
+    },
+    {
+     "id": "q43-3",
+     "concept": "connection-leak",
+     "type": "choice",
+     "ask": "What is the rule that prevents it?",
+     "options": [
+      "Never use signals",
+      "Whoever creates a connection disconnects it when done",
+      "Only connect once per game",
+      "Use fewer events"
+     ],
+     "answer": 1,
+     "explain": "Ownership of the connection is what makes cleanup reliable."
+    }
+   ]
+  },
+  "44": {
+   "beats": [
+    {
+     "say": "Everyone in a multiplayer game sees the same world, even though they are on different computers. Picture the world as a shared storybook."
+    },
+    {
+     "say": "The server is the author. It writes down everything that happens. When something changes, the author records it."
+    },
+    {
+     "say": "Every client is a reader holding a copy. The server constantly sends updates so each copy matches the original."
+    },
+    {
+     "say": "Now the crucial part. If you scribble in your own copy, nobody else sees it. The author does not know about it, so it is not part of the official story."
+    },
+    {
+     "say": "That is the whole client server model in one image. Changes on a client are local scribbles until the server accepts them. Only what the author writes is real."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q44-1",
+     "concept": "server-authority",
+     "type": "choice",
+     "ask": "Who decides what is actually true in the game world?",
+     "options": [
+      "Each client for itself",
+      "The server, as the author",
+      "Whoever acts first",
+      "The fastest connection"
+     ],
+     "answer": 1,
+     "explain": "Only what the author writes into the book is part of the story."
+    },
+    {
+     "id": "q44-2",
+     "concept": "client-changes-are-local",
+     "type": "choice",
+     "ask": "You change something on your own client. What happens?",
+     "options": [
+      "Everyone sees it",
+      "It is a local scribble until the server accepts it",
+      "The server is forced to accept it",
+      "The game errors"
+     ],
+     "answer": 1,
+     "explain": "Your copy changed, the original did not."
+    },
+    {
+     "id": "q44-3",
+     "concept": "replication-direction",
+     "type": "choice",
+     "ask": "Which way does the storybook flow automatically?",
+     "options": [
+      "Client to server",
+      "Server to clients",
+      "Both equally",
+      "Neither"
+     ],
+     "answer": 1,
+     "explain": "The author sends updates out to the readers."
+    }
+   ]
+  },
+  "45": {
+   "beats": [
+    {
+     "say": "Your client sometimes needs to talk to the server. That conversation happens through remote events."
+    },
+    {
+     "say": "There are two ways to send. The first is like posting an important letter. You want certainty that it arrives, and that letters arrive in the order you sent them."
+    },
+    {
+     "say": "That reliability has a cost. If the carrier loses a letter, they stop delivering new ones until the missing one is resolved, so everything behind it waits."
+    },
+    {
+     "say": "The second way is like shouting a quick update across a room. Faster, and you accept that the occasional shout is missed or arrives out of order."
+    },
+    {
+     "say": "The choice follows from what the message is. Something that must not be lost, such as a purchase, wants the letter. Something replaced constantly, such as a position update many times a second, is usually better shouted."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q45-1",
+     "concept": "reliable-vs-unreliable",
+     "type": "choice",
+     "ask": "What is the cost of the reliable, ordered channel?",
+     "options": [
+      "Nothing",
+      "A lost message holds up everything behind it",
+      "It uses more memory",
+      "It cannot carry numbers"
+     ],
+     "answer": 1,
+     "explain": "Order has to be preserved, so the queue waits for the missing item."
+    },
+    {
+     "id": "q45-2",
+     "concept": "reliable-vs-unreliable",
+     "type": "choice",
+     "ask": "Which fits a position update sent many times a second?",
+     "options": [
+      "The reliable letter",
+      "The fast unreliable shout",
+      "Neither",
+      "Both equally"
+     ],
+     "answer": 1,
+     "explain": "A missed update is immediately replaced by the next one."
+    },
+    {
+     "id": "q45-3",
+     "concept": "reliable-vs-unreliable",
+     "type": "choice",
+     "ask": "And a purchase confirmation?",
+     "options": [
+      "The fast unreliable shout",
+      "The reliable letter",
+      "Either",
+      "It should not be sent"
+     ],
+     "answer": 1,
+     "explain": "It must not be lost, so certainty is worth the cost."
+    }
+   ]
+  },
+  "46": {
+   "beats": [
+    {
+     "say": "Picture a drive through. You need something from the kitchen, and there are two ways to ask."
+    },
+    {
+     "say": "With a remote event you simply tell them. Make me a burger. Then you drive on to the window without waiting for an answer."
+    },
+    {
+     "say": "With a remote function you ask and wait. Do you have the special sauce? The person says hold on, let me check, and you sit at the speaker until they come back."
+    },
+    {
+     "say": "Here is the danger. If they never come back, you are stuck at the speaker forever. Your script is frozen, unable to do anything else, holding up everyone behind you."
+    },
+    {
+     "say": "That is the real difference. An event costs you nothing to send. A function ties your code's progress to somebody else answering, and if the other side stalls or errors, you inherit that stall."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q46-1",
+     "concept": "event-vs-function",
+     "type": "choice",
+     "ask": "What does a remote function do that an event does not?",
+     "options": [
+      "It is faster",
+      "It waits for a reply before continuing",
+      "It sends more data",
+      "It is more secure"
+     ],
+     "answer": 1,
+     "explain": "Ask and wait, rather than tell and drive on."
+    },
+    {
+     "id": "q46-2",
+     "concept": "remote-function-risk",
+     "type": "choice",
+     "ask": "What is the risk of waiting for a reply?",
+     "options": [
+      "The reply arrives twice",
+      "If the other side never answers, your script is stuck",
+      "The data is corrupted",
+      "Nothing"
+     ],
+     "answer": 1,
+     "explain": "You inherit the other side's stall, and hold up everything behind you."
+    },
+    {
+     "id": "q46-3",
+     "concept": "event-vs-function",
+     "type": "choice",
+     "ask": "You do not need an answer. What should you use?",
+     "options": [
+      "A remote function",
+      "A remote event",
+      "Either",
+      "Neither"
+     ],
+     "answer": 1,
+     "explain": "Tell them and drive on, with no waiting to inherit."
+    }
+   ]
+  },
+  "47": {
+   "beats": [
+    {
+     "say": "Picture building with advanced building blocks in a virtual world. How do they know how to fall, collide and move when connected?"
+    },
+    {
+     "say": "A diligent team of helpers, the physics solver, works that out. They do not know your intent. They only apply the rules to whatever they are given."
+    },
+    {
+     "say": "Some joints are super glue. They lock two parts together completely, so neither can move relative to the other. Glue two bricks side by side and they are stuck."
+    },
+    {
+     "say": "Other joints are special connectors, allowing movement but only in a controlled way, such as turning around one axis."
+    },
+    {
+     "say": "Choosing between them is really a question about what movement you want to permit, not about what looks right when it is standing still."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q47-1",
+     "concept": "rigid-joints",
+     "type": "choice",
+     "ask": "What does a rigid joint allow?",
+     "options": [
+      "Free movement",
+      "No relative movement between the parts",
+      "Rotation only",
+      "Sliding only"
+     ],
+     "answer": 1,
+     "explain": "Super glue: neither part can move relative to the other."
+    },
+    {
+     "id": "q47-2",
+     "concept": "constraints",
+     "type": "choice",
+     "ask": "What is a mechanical constraint for?",
+     "options": [
+      "Locking parts completely",
+      "Permitting movement, but only in a controlled way",
+      "Deleting parts",
+      "Colouring parts"
+     ],
+     "answer": 1,
+     "explain": "The specialised connector rather than the glue."
+    },
+    {
+     "id": "q47-3",
+     "concept": "physics-intent",
+     "type": "choice",
+     "ask": "How should you choose between them?",
+     "options": [
+      "By what looks right at rest",
+      "By what movement you want to permit",
+      "By colour",
+      "At random"
+     ],
+     "answer": 1,
+     "explain": "The solver applies rules, it does not infer intent."
+    }
+   ]
+  },
+  "48": {
+   "beats": [
+    {
+     "say": "In a virtual world you want things to interact realistically, but also intelligently. Not everything should bump into everything."
+    },
+    {
+     "say": "By default, everyone collides with everyone. A soccer player running into a basketball player collides with them."
+    },
+    {
+     "say": "Collision groups let you set special rules. Perhaps soccer players should never bump into basketball players, while both still collide with the ground."
+    },
+    {
+     "say": "You do that by labelling each object with its group, and the supervisor uses those labels to decide which pairs actually interact."
+    },
+    {
+     "say": "This is the tool to reach for when you find yourself trying to solve a collision problem with clever positioning. The rule belongs in the group setup, not in the movement code."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q48-1",
+     "concept": "collision-groups",
+     "type": "choice",
+     "ask": "What is the default collision behaviour?",
+     "options": [
+      "Nothing collides",
+      "Everything collides with everything",
+      "Only players collide",
+      "It is random"
+     ],
+     "answer": 1,
+     "explain": "Groups exist to carve exceptions out of that default."
+    },
+    {
+     "id": "q48-2",
+     "concept": "collision-groups",
+     "type": "choice",
+     "ask": "How do you stop two kinds of object colliding?",
+     "options": [
+      "Move them apart in code every frame",
+      "Label them into groups and set the rule between those groups",
+      "Delete one of them",
+      "Make them invisible"
+     ],
+     "answer": 1,
+     "explain": "The rule belongs in the group setup, not in movement code."
+    }
+   ]
+  },
+  "49": {
+   "beats": [
+    {
+     "say": "Imagine designing a poster with pictures and text boxes. When you place something, you can describe its size in two different ways."
+    },
+    {
+     "say": "Scale is a proportion. Fifty percent of the poster's width. Print the poster smaller and that picture shrinks with it."
+    },
+    {
+     "say": "Offset is an exact distance. Twenty pixels from the top edge, and it stays twenty pixels whatever size the poster becomes."
+    },
+    {
+     "say": "Almost every layout that breaks on a different screen is a case of using one where the other was meant. Scale adapts, offset does not, and both are correct in the right place."
+    },
+    {
+     "say": "There is also a rearrangement cost. Every time the contents change, the layout has to be worked out again."
+    },
+    {
+     "say": "A canvas group is the answer to that. It arranges everything inside once, then takes a single picture of the result, so the whole thing can be moved or faded as one image rather than recomputed piece by piece."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q49-1",
+     "concept": "scale-vs-offset",
+     "type": "choice",
+     "ask": "What is the difference between scale and offset?",
+     "options": [
+      "Scale is a proportion that adapts, offset is a fixed distance",
+      "Scale is faster",
+      "Offset is a colour",
+      "They are the same"
+     ],
+     "answer": 0,
+     "explain": "That difference is why one adapts to a different screen and the other does not."
+    },
+    {
+     "id": "q49-2",
+     "concept": "scale-vs-offset",
+     "type": "choice",
+     "ask": "Your layout breaks on a smaller screen. What is the likely cause?",
+     "options": [
+      "Too many images",
+      "A fixed offset used where a proportion was meant",
+      "The colours",
+      "Too little text"
+     ],
+     "answer": 1,
+     "explain": "An offset stays the same size while everything around it shrinks."
+    },
+    {
+     "id": "q49-3",
+     "concept": "canvasgroup",
+     "type": "choice",
+     "ask": "What does a canvas group do?",
+     "options": [
+      "Deletes unused elements",
+      "Arranges its contents once, then treats the result as one image",
+      "Adds colour",
+      "Sorts by size"
+     ],
+     "answer": 1,
+     "explain": "That is what makes moving or fading the whole group cheap."
+    }
+   ]
+  },
+  "50": {
+   "beats": [
+    {
+     "say": "Picture your Roblox server as a base camp in a forest. Most of the time it talks only to itself, to its own tents and people."
+    },
+    {
+     "say": "HttpService is the camp's radio, letting it send messages out to other websites and receive answers back."
+    },
+    {
+     "say": "Any such request needs three things. Which website to talk to, what you want to do there, and any special notes, such as a key that identifies you."
+    },
+    {
+     "say": "The important part is where this can happen. Reaching outside is a server side capability. A client asking the outside world directly would be a client you cannot trust."
+    },
+    {
+     "say": "And because the outside world can be slow or unavailable, every such call is something that might not answer. Code that assumes it always will is code that eventually freezes."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q50-1",
+     "concept": "httpservice",
+     "type": "choice",
+     "ask": "What does HttpService let a game do?",
+     "options": [
+      "Talk to other websites from the server",
+      "Speed up the client",
+      "Store player data locally",
+      "Draw the interface"
+     ],
+     "answer": 0,
+     "explain": "The camp's radio to the world outside."
+    },
+    {
+     "id": "q50-2",
+     "concept": "server-only-network",
+     "type": "choice",
+     "ask": "Why does this belong on the server?",
+     "options": [
+      "The client is slower",
+      "A client reaching outside directly is a client you cannot trust",
+      "Clients have no network",
+      "It is arbitrary"
+     ],
+     "answer": 1,
+     "explain": "Trust is the reason, not capability."
+    },
+    {
+     "id": "q50-3",
+     "concept": "network-can-fail",
+     "type": "choice",
+     "ask": "What must you assume about an outside call?",
+     "options": [
+      "It always succeeds",
+      "It might be slow or never answer",
+      "It is instant",
+      "It cannot fail"
+     ],
+     "answer": 1,
+     "explain": "Code that assumes an answer is code that eventually freezes."
+    }
+   ]
+  },
+  "51": {
+   "beats": [
+    {
+     "say": "Players want their progress to still be there tomorrow. A DataStore is the sturdy safe deposit box that makes that possible. Each player can have their own."
+    },
+    {
+     "say": "There are two ways to write to it, and the difference matters more than almost anything else in this section."
+    },
+    {
+     "say": "Set async takes everything out of the box and puts a completely new set of items in. It is fast, and it overwrites without looking at what was there."
+    },
+    {
+     "say": "Update async is the safe one. It asks the bank manager to check what is currently in the box, and then applies your change to that."
+    },
+    {
+     "say": "Why that matters: two servers can hold the same player at once. With the blind overwrite, whichever writes last wins and the other's change vanishes. With the checked update, the change is applied to what is actually there."
+    },
+    {
+     "say": "That is the difference between a player losing an hour of progress and not losing it."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q51-1",
+     "concept": "setasync-vs-updateasync",
+     "type": "choice",
+     "ask": "What does the blind overwrite do?",
+     "options": [
+      "Reads first, then writes",
+      "Replaces the contents without looking at what was there",
+      "Deletes the box",
+      "Locks the box"
+     ],
+     "answer": 1,
+     "explain": "Fast, but it cannot know what it is discarding."
+    },
+    {
+     "id": "q51-2",
+     "concept": "setasync-vs-updateasync",
+     "type": "choice",
+     "ask": "Two servers write for the same player at once. Which approach loses data?",
+     "options": [
+      "The checked update",
+      "The blind overwrite, because the last write wins",
+      "Both equally",
+      "Neither"
+     ],
+     "answer": 1,
+     "explain": "The other server's change is simply discarded."
+    },
+    {
+     "id": "q51-3",
+     "concept": "setasync-vs-updateasync",
+     "type": "choice",
+     "ask": "Why is the checked update safer?",
+     "options": [
+      "It is faster",
+      "It applies your change to what is actually in the box now",
+      "It saves twice",
+      "It compresses the data"
+     ],
+     "answer": 1,
+     "explain": "Reading before writing is what stops a change being thrown away."
+    }
+   ]
+  },
+  "52": {
+   "beats": [
+    {
+     "say": "Imagine building a giant castle out of blocks. With one person it takes a very long time. Parallel Luau is bringing in more builders."
+    },
+    {
+     "say": "Instead of the engine using one brain, it can use several cores at once."
+    },
+    {
+     "say": "Each Actor is a separate workstation, with its own bench and its own materials."
+    },
+    {
+     "say": "And here is the rule that defines everything else. A builder at one workstation cannot reach over and take bricks from another. Each has their own."
+    },
+    {
+     "say": "That independence is what makes parallel work safe, and it is also the constraint you have to design around. Work that constantly needs to touch shared state is not work that parallelises well."
+    },
+    {
+     "say": "So the honest advice is to profile first. Parallelising before you can measure is usually effort spent in the wrong place."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q52-1",
+     "concept": "actors",
+     "type": "choice",
+     "ask": "What is an Actor?",
+     "options": [
+      "A player character",
+      "A separate workstation with its own state",
+      "A kind of loop",
+      "A UI element"
+     ],
+     "answer": 1,
+     "explain": "Its own bench and its own materials."
+    },
+    {
+     "id": "q52-2",
+     "concept": "actor-isolation",
+     "type": "choice",
+     "ask": "Can one Actor reach directly into another's data?",
+     "options": [
+      "Yes, freely",
+      "No, each has its own",
+      "Only on the server",
+      "Only for numbers"
+     ],
+     "answer": 1,
+     "explain": "That isolation is what makes parallel work safe."
+    },
+    {
+     "id": "q52-3",
+     "concept": "when-to-parallelise",
+     "type": "choice",
+     "ask": "What kind of work parallelises badly?",
+     "options": [
+      "Work that is independent",
+      "Work that constantly needs shared state",
+      "Work with numbers",
+      "Long work"
+     ],
+     "answer": 1,
+     "explain": "The isolation that makes it safe is exactly what such work fights against."
+    }
+   ]
+  },
+  "53": {
+   "beats": [
+    {
+     "say": "If each worker has a private bench, how do they share something everyone needs, such as the player's gold or the score?"
+    },
+    {
+     "say": "A SharedTable is the treasure chest they can all reach, and it has a strict manager."
+    },
+    {
+     "say": "If a worker wants to put something in or take something out, the manager supervises it, so two workers cannot corrupt the contents by reaching in at the same moment."
+    },
+    {
+     "say": "When one worker tells another about the chest, they do not hand over a copy of everything inside. They hand over the map to it. Both are then looking at the same chest."
+    },
+    {
+     "say": "The chest is also picky about what it accepts. Simple, easily understood items only: numbers, true or false values, and simple text."
+    },
+    {
+     "say": "That restriction is not arbitrary. Anything more complex could not be safely shared between workers without the very tangles this design exists to prevent."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q53-1",
+     "concept": "sharedtable",
+     "type": "choice",
+     "ask": "What does the manager on the chest prevent?",
+     "options": [
+      "Slow access",
+      "Two workers corrupting the contents by reaching in at once",
+      "Wrong values",
+      "Duplicate keys"
+     ],
+     "answer": 1,
+     "explain": "Supervised access is what makes concurrent use safe."
+    },
+    {
+     "id": "q53-2",
+     "concept": "sharedtable-reference",
+     "type": "choice",
+     "ask": "One worker tells another about the chest. What is passed?",
+     "options": [
+      "A full copy of the contents",
+      "The map to the same chest",
+      "Nothing",
+      "Half the contents"
+     ],
+     "answer": 1,
+     "explain": "Both then look at the same chest, which is the point."
+    },
+    {
+     "id": "q53-3",
+     "concept": "sharedtable-limits",
+     "type": "choice",
+     "ask": "What can go into a SharedTable?",
+     "options": [
+      "Anything",
+      "Simple values such as numbers, booleans and text",
+      "Only numbers",
+      "Only tables"
+     ],
+     "answer": 1,
+     "explain": "Complex values could not be shared safely without the tangles this design avoids."
+    }
+   ]
+  },
+  "54": {
+   "beats": [
+    {
+     "say": "In a large online game, keeping things fair means knowing what each piece of running code is allowed to do."
+    },
+    {
+     "say": "Think of every script as carrying an identity card. Ordinary game scripts carry one kind of card, which permits ordinary game actions."
+    },
+    {
+     "say": "Other cards belong to the engine and to privileged internal code, and they permit things a game script must never be able to do."
+    },
+    {
+     "say": "There is a second layer too. For most things you create, you are free to write or change their instruction manual. For protected engine objects, that manual is locked."
+    },
+    {
+     "say": "Both mechanisms exist for the same reason. Without them, code running in a game could reach past the boundaries it was given and act as though it were the engine itself."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q54-1",
+     "concept": "security-identity",
+     "type": "choice",
+     "ask": "What does a script's security identity determine?",
+     "options": [
+      "How fast it runs",
+      "What it is permitted to do",
+      "Where it is stored",
+      "Who wrote it"
+     ],
+     "answer": 1,
+     "explain": "The card decides which actions are allowed."
+    },
+    {
+     "id": "q54-2",
+     "concept": "metatable-protection",
+     "type": "choice",
+     "ask": "Why are some objects' instruction manuals locked?",
+     "options": [
+      "To save memory",
+      "So game code cannot rewrite engine behaviour",
+      "To make them faster",
+      "For tidiness"
+     ],
+     "answer": 1,
+     "explain": "Otherwise code could act as though it were the engine itself."
+    }
+   ]
+  },
+  "55": {
+   "beats": [
+    {
+     "say": "Picture a board game where everyone has their own tablet showing the board, and you are the referee."
+    },
+    {
+     "say": "Because each player's tablet is their own, a player can change what their tablet shows. They can secretly alter how far their piece moves, teleport it across the board, or claim a power they do not have."
+    },
+    {
+     "say": "None of that is cheating yet. It only becomes cheating if the referee believes it."
+    },
+    {
+     "say": "So the whole of anti cheat comes down to a single rule. The referee does not accept what a tablet claims happened. The referee decides what happened."
+    },
+    {
+     "say": "A client says I would like to move here. The server decides whether that move was possible, and only then is it real."
+    },
+    {
+     "say": "Which is why validation belongs on the server, always, and why a client side check is a convenience for the honest player rather than a defence against the dishonest one."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q55-1",
+     "concept": "never-trust-the-client",
+     "type": "choice",
+     "ask": "A client reports that it collected 500 coins. What should the server do?",
+     "options": [
+      "Accept it",
+      "Decide for itself whether that was possible",
+      "Ask another client",
+      "Halve it"
+     ],
+     "answer": 1,
+     "explain": "The referee decides what happened; it does not accept the tablet's claim."
+    },
+    {
+     "id": "q55-2",
+     "concept": "client-side-checks",
+     "type": "choice",
+     "ask": "What is a client side check actually worth?",
+     "options": [
+      "It is a real defence",
+      "A convenience for honest players, not a defence against dishonest ones",
+      "Nothing at all",
+      "More than a server check"
+     ],
+     "answer": 1,
+     "explain": "Anyone able to cheat is able to remove it."
+    },
+    {
+     "id": "q55-3",
+     "concept": "never-trust-the-client",
+     "type": "choice",
+     "ask": "Where must validation live?",
+     "options": [
+      "On the client",
+      "On the server",
+      "On both equally",
+      "Wherever is faster"
+     ],
+     "answer": 1,
+     "explain": "Only the referee's decision is real."
+    }
+   ]
+  },
+  "56": {
+   "beats": [
+    {
+     "say": "Imagine your screen is a flat table. Building an interface is like stacking clear sheets of glass on top of it."
+    },
+    {
+     "say": "Before placing any glass, you need a tray to hold it, and there are three kinds."
+    },
+    {
+     "say": "A screen tray sits flat on your screen. Anything in it is drawn directly on the display, no matter where the player is standing."
+    },
+    {
+     "say": "A floating tray sits on a stick attached to a three dimensional object, so it hovers over that object as you walk around it. Name tags work this way."
+    },
+    {
+     "say": "A board tray is taped flat onto the face of a part. It moves and rotates exactly with that part, like a sign on a wall."
+    },
+    {
+     "say": "Choosing the tray is really choosing what the interface is attached to: the screen, an object in the world, or a surface."
+    },
+    {
+     "say": "Within a tray, the stacking order decides which sheet is on top. A higher number sits above a lower one, and that is usually the answer when something is mysteriously hidden."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q56-1",
+     "concept": "gui-containers",
+     "type": "choice",
+     "ask": "You want a health bar always visible in the corner. Which tray?",
+     "options": [
+      "A floating tray on the character",
+      "A screen tray",
+      "A board tray on a part",
+      "None"
+     ],
+     "answer": 1,
+     "explain": "It is attached to the screen, not to anything in the world."
+    },
+    {
+     "id": "q56-2",
+     "concept": "gui-containers",
+     "type": "choice",
+     "ask": "And a name tag hovering above a player?",
+     "options": [
+      "A screen tray",
+      "A floating tray on a stick above the object",
+      "A board tray",
+      "A folder"
+     ],
+     "answer": 1,
+     "explain": "It is attached to an object in the world, so it follows it."
+    },
+    {
+     "id": "q56-3",
+     "concept": "zindex",
+     "type": "choice",
+     "ask": "Part of your interface is hidden behind another. What decides which is on top?",
+     "options": [
+      "Its size",
+      "The stacking order number",
+      "Its colour",
+      "Creation time only"
+     ],
+     "answer": 1,
+     "explain": "Higher sits above lower, within the same tray."
+    }
+   ]
+  },
+  "57": {
+   "beats": [
+    {
+     "say": "Screens come in every size, from a phone to a television. So how do you say where something goes?"
+    },
+    {
+     "say": "Roblox gives you two measurements at once, and understanding the pair is most of interface work."
+    },
+    {
+     "say": "The first is like giving directions by landmark. Halfway across the field. Make the field bigger and halfway is still the middle. That is scale, a proportion from zero to one."
+    },
+    {
+     "say": "A frame with a scale size of one half always takes exactly half the space of its parent, on a tiny phone or a giant monitor."
+    },
+    {
+     "say": "The second is like a tape measure. Twenty pixels is twenty pixels, whatever the screen. That is offset, measured in the physical dots on the display."
+    },
+    {
+     "say": "Both are combined into a single value, so every position and size can carry a proportion plus a fixed nudge."
+    },
+    {
+     "say": "The practical rule that follows: use the proportion for anything that should adapt, and the tape measure only for things that genuinely should not change, such as a border width or a small gap."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q57-1",
+     "concept": "scale-vs-offset",
+     "type": "choice",
+     "ask": "What is scale measured in?",
+     "options": [
+      "Pixels",
+      "A proportion of the parent, from 0 to 1",
+      "Centimetres",
+      "Frames"
+     ],
+     "answer": 1,
+     "explain": "Halfway across the field stays halfway when the field grows."
+    },
+    {
+     "id": "q57-2",
+     "concept": "scale-vs-offset",
+     "type": "choice",
+     "ask": "Which should size a panel meant to fill half the screen on any device?",
+     "options": [
+      "Offset",
+      "Scale",
+      "Either",
+      "Neither"
+     ],
+     "answer": 1,
+     "explain": "A fixed pixel count would only be half on one particular screen."
+    },
+    {
+     "id": "q57-3",
+     "concept": "scale-vs-offset",
+     "type": "choice",
+     "ask": "What is offset good for?",
+     "options": [
+      "Anything that should adapt",
+      "Things that genuinely should not change, such as a border or small gap",
+      "Whole panels",
+      "Nothing"
+     ],
+     "answer": 1,
+     "explain": "Fixed is right when fixed is what you mean."
+    }
+   ]
+  },
+  "58": {
+   "beats": [
+    {
+     "say": "Imagine a closet full of clothes. If you had to measure and place every shirt exactly two inches apart by hand, it would take forever, and adding one more shirt would mean redoing all of it."
+    },
+    {
+     "say": "Layout managers are automatic shelf organisers that do that spacing for you."
+    },
+    {
+     "say": "A list layout arranges items in a line. Add a new item and it snaps to the end. Delete one and the rest slide up to fill the gap. You never position them yourself."
+    },
+    {
+     "say": "A grid layout does the same in rows and columns, for things such as an inventory of equal sized slots."
+    },
+    {
+     "say": "Alongside them are small styling helpers. Padding acts as bumper cushions, keeping items from pressing against the frame's outer edges."
+    },
+    {
+     "say": "The reason to reach for these is not tidiness. It is that hand positioned interfaces break the moment the content changes, and organised ones do not."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q58-1",
+     "concept": "ui-layouts",
+     "type": "choice",
+     "ask": "You add an item to a list layout. What happens?",
+     "options": [
+      "Nothing until you reposition everything",
+      "It snaps to the end automatically",
+      "It overlaps the last item",
+      "The list clears"
+     ],
+     "answer": 1,
+     "explain": "That automatic behaviour is the whole point of the organiser."
+    },
+    {
+     "id": "q58-2",
+     "concept": "ui-layouts",
+     "type": "choice",
+     "ask": "Why prefer a layout manager over positioning by hand?",
+     "options": [
+      "It looks nicer",
+      "Hand positioned interfaces break when the content changes",
+      "It uses less memory",
+      "It is required"
+     ],
+     "answer": 1,
+     "explain": "The organiser absorbs the change; hand placement does not."
+    },
+    {
+     "id": "q58-3",
+     "concept": "ui-padding",
+     "type": "choice",
+     "ask": "What does padding do?",
+     "options": [
+      "Adds items",
+      "Keeps items from pressing against the frame's outer edges",
+      "Changes colour",
+      "Sorts items"
+     ],
+     "answer": 1,
+     "explain": "Bumper cushions on the inside of the frame."
+    }
+   ]
+  },
+  "59": {
+   "beats": [
+    {
+     "say": "Think of a button as a physical doorbell. A player presses it, the bell rings, and a signal travels down a wire to your script, which is waiting at the other end."
+    },
+    {
+     "say": "You wire it by connecting a function to the button's click event. Despite the name mentioning a mouse, it fires for mouse clicks on a computer and finger taps on a phone alike."
+    },
+    {
+     "say": "Which brings up the rule that trips up most new interfaces. Fingers are much less precise than a cursor."
+    },
+    {
+     "say": "So keep clickable buttons reasonably large. The widely used standard is at least forty four by forty four pixels, and give them space so a player does not hit the wrong one."
+    },
+    {
+     "say": "There is one more behaviour worth knowing. An interface element can absorb a click so it does not reach anything behind it."
+    },
+    {
+     "say": "That is usually what you want for a panel, since a click meant for a menu should not also act on the world underneath."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q59-1",
+     "concept": "gui-events",
+     "type": "choice",
+     "ask": "Does the click event work on mobile?",
+     "options": [
+      "No, mouse only",
+      "Yes, it fires for taps as well",
+      "Only with extra code",
+      "Only on tablets"
+     ],
+     "answer": 1,
+     "explain": "The name mentions a mouse, but the behaviour covers both."
+    },
+    {
+     "id": "q59-2",
+     "concept": "touch-targets",
+     "type": "choice",
+     "ask": "What is the usual minimum size for a touch target?",
+     "options": [
+      "10 by 10 pixels",
+      "About 44 by 44 pixels",
+      "100 by 100 pixels",
+      "Any size"
+     ],
+     "answer": 1,
+     "explain": "Fingers are far less precise than a cursor."
+    },
+    {
+     "id": "q59-3",
+     "concept": "input-sinking",
+     "type": "choice",
+     "ask": "Why should a panel absorb clicks?",
+     "options": [
+      "To run faster",
+      "So a click meant for the menu does not also act on the world behind it",
+      "To save memory",
+      "It should not"
+     ],
+     "answer": 1,
+     "explain": "Otherwise one press does two things."
+    }
+   ]
+  },
+  "60": {
+   "beats": [
+    {
+     "say": "Picture a slideshow. Switching instantly from one slide to the next works, but it is abrupt. Sliding the new picture in smoothly feels considered."
+    },
+    {
+     "say": "Tweens are those smooth transitions. Rather than moving something pixel by pixel yourself, you describe the destination and let the engine work out every step in between."
+    },
+    {
+     "say": "You describe the movement with a few rules. How long it should take, for example half a second."
+    },
+    {
+     "say": "And how the speed behaves along the way. Linear is a steady speed, like a conveyor belt, which is honest but reads as mechanical."
+    },
+    {
+     "say": "The styles that start or end gently are what make motion feel physical, because almost nothing in the real world starts at full speed."
+    },
+    {
+     "say": "Which is the real lesson here. Animation is not decoration. It tells the player what just happened and where a thing came from."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q60-1",
+     "concept": "tweens",
+     "type": "choice",
+     "ask": "What does a tween do for you?",
+     "options": [
+      "Deletes the element",
+      "Works out every step between the current state and the destination",
+      "Saves data",
+      "Adds a button"
+     ],
+     "answer": 1,
+     "explain": "You describe the destination, not the intermediate frames."
+    },
+    {
+     "id": "q60-2",
+     "concept": "easing",
+     "type": "choice",
+     "ask": "Why does linear motion feel mechanical?",
+     "options": [
+      "It is too fast",
+      "Almost nothing in the real world starts at full speed",
+      "It is too slow",
+      "It skips frames"
+     ],
+     "answer": 1,
+     "explain": "Easing in and out is what makes motion read as physical."
+    }
+   ]
+  },
+  "61": {
+   "beats": [
+    {
+     "say": "Interfaces are usually flat drawings, but sometimes you want to show a rotating model of a sword inside a shop menu."
+    },
+    {
+     "say": "A viewport frame is a tiny television embedded in your flat screen. It is tuned to a private camera in a closed studio room."
+    },
+    {
+     "say": "You put the model into that studio room, place a virtual camera looking at it, and the little screen shows exactly what that camera sees."
+    },
+    {
+     "say": "Which is how a three dimensional item ends up sitting neatly inside a shop or an inventory slot, without being in the world at all."
+    },
+    {
+     "say": "The second idea in this section is about the edges of real devices. Phones have rounded corners, notches and system bars, and anything you place right at the edge risks being cut off."
+    },
+    {
+     "say": "So the safe area is the region you can actually rely on. Respecting it is the difference between an interface that works on one test device and one that works everywhere."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q61-1",
+     "concept": "viewportframe",
+     "type": "choice",
+     "ask": "What does a viewport frame show?",
+     "options": [
+      "The main game camera",
+      "Whatever its own private camera sees in its own studio",
+      "A saved image",
+      "Nothing"
+     ],
+     "answer": 1,
+     "explain": "A tiny television with its own camera, which is why the model need not be in the world."
+    },
+    {
+     "id": "q61-2",
+     "concept": "safe-area",
+     "type": "choice",
+     "ask": "Why respect the safe area?",
+     "options": [
+      "It is faster",
+      "Notches, rounded corners and system bars cut off anything at the edge",
+      "It saves memory",
+      "It is only for tablets"
+     ],
+     "answer": 1,
+     "explain": "It is the region you can actually rely on across devices."
+    }
+   ]
+  },
+  "62": {
+   "beats": [
+    {
+     "say": "Now let us put the whole unit together and build something real: a health display at the top, and a shop panel that slides in from the right."
+    },
+    {
+     "say": "The screen tray goes into the player's own interface folder, and is set to respect the device's safe insets, so nothing is clipped by a notch."
+    },
+    {
+     "say": "The shop panel is anchored by its right middle edge. That choice matters, because anchoring is what lets a single position value slide the panel cleanly on and off the screen."
+    },
+    {
+     "say": "It starts just past the right edge, out of view, ready to come in."
+    },
+    {
+     "say": "Opening it is then one tween to its visible position, and closing it is one tween back. No pixel arithmetic anywhere."
+    },
+    {
+     "say": "Notice what made that simple. Anchoring chosen deliberately, position expressed as a proportion, and animation describing a destination instead of a path."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q62-1",
+     "concept": "anchor-point",
+     "type": "choice",
+     "ask": "Why anchor the panel by its right middle edge?",
+     "options": [
+      "It looks better",
+      "So one position value can slide it cleanly on and off screen",
+      "It is required",
+      "To save memory"
+     ],
+     "answer": 1,
+     "explain": "The anchor decides which part of the panel the position refers to."
+    },
+    {
+     "id": "q62-2",
+     "concept": "safe-area",
+     "type": "choice",
+     "ask": "Why set the tray to respect device safe insets?",
+     "options": [
+      "To run faster",
+      "So the interface is not clipped by a notch or system bar",
+      "To enable tweens",
+      "It has no effect"
+     ],
+     "answer": 1,
+     "explain": "The same reason the safe area exists at all."
+    }
+   ]
+  },
+  "63": {
+   "beats": [
+    {
+     "say": "In a tycoon game each player buys buttons that build walls, droppers and weapons on their own plot of land. Every plot needs its own separate life."
+    },
+    {
+     "say": "If player A buys a wall, only player A's plot should build it, and only player A's money should go down."
+    },
+    {
+     "say": "So you write a blueprint for a plot once, and stamp out a living plot object for each player who joins."
+    },
+    {
+     "say": "Each stamped object carries its own private state: who owns it, its income rate, what has been bought. Nothing is shared by accident, because nothing is shared at all."
+    },
+    {
+     "say": "The second piece is cleanup. A plot creates parts, connections and running loops, and when the player leaves, all of it must go."
+    },
+    {
+     "say": "So the plot keeps a cleanup box. Every time it creates something that would need undoing, it drops the undo into the box. When the player leaves, you empty the box once."
+    },
+    {
+     "say": "That pattern is worth internalising, because it turns cleanup from something you must remember in ten places into something that happens in one."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q63-1",
+     "concept": "per-player-state",
+     "type": "choice",
+     "ask": "Why give each player their own plot object?",
+     "options": [
+      "It is faster",
+      "So one player's purchases and money cannot affect another's",
+      "It saves memory",
+      "It is required by Roblox"
+     ],
+     "answer": 1,
+     "explain": "Nothing is shared by accident because nothing is shared."
+    },
+    {
+     "id": "q63-2",
+     "concept": "janitor",
+     "type": "choice",
+     "ask": "What does the cleanup box pattern achieve?",
+     "options": [
+      "Faster loading",
+      "Cleanup happens in one place instead of ten",
+      "Smaller save files",
+      "Better graphics"
+     ],
+     "answer": 1,
+     "explain": "Each created thing registers its own undo as it is created."
+    },
+    {
+     "id": "q63-3",
+     "concept": "janitor",
+     "type": "choice",
+     "ask": "What belongs in the cleanup box?",
+     "options": [
+      "Only parts",
+      "Anything created that would later need undoing, including connections and loops",
+      "Only player data",
+      "Nothing"
+     ],
+     "answer": 1,
+     "explain": "Connections in particular, since those are the classic leak."
+    }
+   ]
+  },
+  "64": {
+   "beats": [
+    {
+     "say": "When a player leaves, they want their walls and purchases still there tomorrow. That means writing to a cloud file cabinet, looked up by a key unique to the player."
+    },
+    {
+     "say": "Two things make this harder than it looks, and both have to be handled."
+    },
+    {
+     "say": "The first is that a cloud call can fail. The network can be slow, the service can be busy, and a failure that is not caught takes your script down with it."
+    },
+    {
+     "say": "So every save and load is wrapped in a safety fuse, a protected call. If it blows, you find out and can react, rather than the whole thing stopping."
+    },
+    {
+     "say": "The second is what you are allowed to store. You cannot post a whole three dimensional object into the cloud, any more than you could post a wardrobe."
+    },
+    {
+     "say": "So you pack a suitcase: reduce the plot to a plain description, such as a list of item names and positions, save that, and rebuild the real objects from the description when the player returns."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q64-1",
+     "concept": "pcall",
+     "type": "choice",
+     "ask": "Why wrap a cloud save in a protected call?",
+     "options": [
+      "It is faster",
+      "So a failure is caught rather than taking the script down",
+      "It compresses the data",
+      "It is required syntax"
+     ],
+     "answer": 1,
+     "explain": "The safety fuse blows instead of the whole circuit."
+    },
+    {
+     "id": "q64-2",
+     "concept": "serialization",
+     "type": "choice",
+     "ask": "Why can you not just save the objects themselves?",
+     "options": [
+      "They are too colourful",
+      "Only plain descriptions can be stored, so you save a description and rebuild",
+      "It is too slow",
+      "You can"
+     ],
+     "answer": 1,
+     "explain": "Packing a suitcase rather than posting the wardrobe."
+    },
+    {
+     "id": "q64-3",
+     "concept": "pcall",
+     "type": "choice",
+     "ask": "What should you assume about every cloud call?",
+     "options": [
+      "It always succeeds",
+      "It might fail and you must handle that",
+      "It is instant",
+      "It never returns"
+     ],
+     "answer": 1,
+     "explain": "Handling failure is not optional at this layer."
+    }
+   ]
+  },
+  "65": {
+   "beats": [
+    {
+     "say": "Code running on the player's computer is entirely under their control. A determined player can change what it sends."
+    },
+    {
+     "say": "So the server has to behave like a strict bank teller. Someone slides a request across the counter, and the teller checks before doing anything."
+    },
+    {
+     "say": "First, who is this. The envelope is stamped with the sender by the system itself, and the player cannot fake that stamp. So the server always knows whose request it is."
+    },
+    {
+     "say": "Second, can they afford it. The teller looks at the bank's own record of the balance, never at the number written on the slip by the customer."
+    },
+    {
+     "say": "Third, does the request even make sense. Is the item actually for sale, and is the player close enough to the shop to be buying from it?"
+    },
+    {
+     "say": "Only if all three pass does anything happen. That is the whole discipline: identity from the system, values from the server's own record, and a sanity check on the rest."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q65-1",
+     "concept": "remote-identity",
+     "type": "choice",
+     "ask": "How does the server know who sent a request?",
+     "options": [
+      "The client tells it",
+      "The system stamps the sender and the player cannot fake it",
+      "It guesses",
+      "It does not"
+     ],
+     "answer": 1,
+     "explain": "That stamp is why identity never needs to be passed by the client."
+    },
+    {
+     "id": "q65-2",
+     "concept": "server-validation",
+     "type": "choice",
+     "ask": "Where does the server get the player's gold balance?",
+     "options": [
+      "From the client's message",
+      "From its own record",
+      "From the last save file the client sent",
+      "From another player"
+     ],
+     "answer": 1,
+     "explain": "The teller reads the bank's books, not the customer's slip."
+    },
+    {
+     "id": "q65-3",
+     "concept": "server-validation",
+     "type": "choice",
+     "ask": "What is the sanity check for?",
+     "options": [
+      "Speed",
+      "Checking the request is even possible, such as being near the shop",
+      "Formatting",
+      "Nothing"
+     ],
+     "answer": 1,
+     "explain": "A request can be authentic and affordable and still be nonsense."
+    }
+   ]
+  },
+  "66": {
+   "beats": [
+    {
+     "say": "Imagine building a car. You would not glue the engine directly to the speedometer dial. Swap the engine and you break the dial."
+    },
+    {
+     "say": "Instead you run a wire. The engine sends a signal down it, the speedometer reads the signal and moves its needle. The engine does not know a speedometer exists."
+    },
+    {
+     "say": "Interface code should work the same way. The part that changes the player's gold should not reach into the interface and set a label."
+    },
+    {
+     "say": "Instead, the value changes, and whatever is displaying it notices and updates itself."
+    },
+    {
+     "say": "The gain is that you can redesign the entire display, or add a second one, without touching the game logic at all. Neither side knows about the other."
+    },
+    {
+     "say": "For messages that stay on one machine, a local wire does the same job as a remote event does across the network: a way to announce something without knowing who is listening."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q66-1",
+     "concept": "decoupled-ui",
+     "type": "choice",
+     "ask": "What is wrong with game logic setting a label directly?",
+     "options": [
+      "It is slower",
+      "The two become glued together, so changing one breaks the other",
+      "It uses more memory",
+      "Nothing"
+     ],
+     "answer": 1,
+     "explain": "Engine glued to dial: swap one and the other breaks."
+    },
+    {
+     "id": "q66-2",
+     "concept": "decoupled-ui",
+     "type": "choice",
+     "ask": "What does the decoupled version let you do?",
+     "options": [
+      "Save data faster",
+      "Redesign or add displays without touching game logic",
+      "Skip validation",
+      "Use fewer scripts"
+     ],
+     "answer": 1,
+     "explain": "Neither side knows about the other, so either can change freely."
+    },
+    {
+     "id": "q66-3",
+     "concept": "bindable-events",
+     "type": "choice",
+     "ask": "What is a local wire for?",
+     "options": [
+      "Talking across the network",
+      "Announcing something on one machine without knowing who is listening",
+      "Saving to the cloud",
+      "Drawing graphics"
+     ],
+     "answer": 1,
+     "explain": "The same idea as a remote event, but within one machine."
+    }
+   ]
+  },
+  "67": {
+   "beats": [
+    {
+     "say": "Professional teams do not write their code inside the Studio editor. They treat Luau as an ordinary codebase, edited in a real editor and kept in version control."
+    },
+    {
+     "say": "The tool that makes that possible synchronises files on your disk into the live object tree inside Studio."
+    },
+    {
+     "say": "A project file describes the mapping: which folder becomes which part of the game. The file naming carries meaning too, marking a file as server code or client code."
+    },
+    {
+     "say": "And a file named as the folder's entry point becomes the module representing that folder, which is the standard way of packaging a directory as one importable unit."
+    },
+    {
+     "say": "Alongside it sits a package manager, so shared libraries are declared as dependencies with versions rather than copied by hand into the place file."
+    },
+    {
+     "say": "The point of the whole setup is not sophistication. It is that code review, history, branching and reproducible builds all become possible the moment the source lives in files."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q67-1",
+     "concept": "rojo",
+     "type": "choice",
+     "ask": "What does the sync tool do?",
+     "options": [
+      "Compiles Luau to C++",
+      "Synchronises files on disk into the live object tree in Studio",
+      "Uploads the game",
+      "Runs tests"
+     ],
+     "answer": 1,
+     "explain": "That is what lets a real editor and version control into the workflow."
+    },
+    {
+     "id": "q67-2",
+     "concept": "external-workflow",
+     "type": "choice",
+     "ask": "Why does this matter?",
+     "options": [
+      "It is faster to type",
+      "Review, history, branching and reproducible builds become possible",
+      "Studio is broken",
+      "It is required"
+     ],
+     "answer": 1,
+     "explain": "All of it follows from the source living in files."
+    },
+    {
+     "id": "q67-3",
+     "concept": "package-manager",
+     "type": "choice",
+     "ask": "What does the package manager replace?",
+     "options": [
+      "The editor",
+      "Copying shared libraries by hand into the place",
+      "The sync tool",
+      "Version control"
+     ],
+     "answer": 1,
+     "explain": "Dependencies become declared and versioned instead."
+    }
+   ]
+  },
+  "68": {
+   "beats": [
+    {
+     "say": "At scale, raw cloud storage and loose remote events start producing real failures: race conditions, replication lag and corrupted data."
+    },
+    {
+     "say": "So established codebases put a layer on top, and the two worth knowing solve two different problems."
+    },
+    {
+     "say": "The first is session locking. A player can be saving on server A while already joining server B, which is how progress gets lost or duplicated."
+    },
+    {
+     "say": "The fix is a lock. While one server holds a player's data, no other server can read or write it, and the lock is released only once that player's client has fully disconnected."
+    },
+    {
+     "say": "The second is structure. A framework that separates server side services from client side controllers, with a defined way for them to talk, so a growing project does not become a web of scripts reaching into each other."
+    },
+    {
+     "say": "Neither is magic. Both are the same instinct applied at scale: make ownership explicit, and make the boundaries something you declare rather than something you remember."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q68-1",
+     "concept": "session-locking",
+     "type": "choice",
+     "ask": "What problem does session locking solve?",
+     "options": [
+      "Slow loading",
+      "Two servers holding the same player's data, losing or duplicating progress",
+      "Large save files",
+      "Poor graphics"
+     ],
+     "answer": 1,
+     "explain": "A player can be leaving one server while joining another."
+    },
+    {
+     "id": "q68-2",
+     "concept": "session-locking",
+     "type": "choice",
+     "ask": "When is the lock released?",
+     "options": [
+      "Immediately after saving",
+      "Once the player's client has fully disconnected",
+      "After one minute",
+      "Never"
+     ],
+     "answer": 1,
+     "explain": "Releasing earlier reopens the exact gap the lock exists to close."
+    },
+    {
+     "id": "q68-3",
+     "concept": "frameworks",
+     "type": "choice",
+     "ask": "What does a service framework give you?",
+     "options": [
+      "Faster physics",
+      "Separated server services and client controllers with a defined way to talk",
+      "Free storage",
+      "Better art"
+     ],
+     "answer": 1,
+     "explain": "Boundaries you declare rather than remember."
+    }
+   ]
+  },
+  "69": {
+   "beats": [
+    {
+     "say": "Roblox is built as a set of services. Almost every capability, from physics to player management to cloud storage, is reached by asking for the service that owns it."
+    },
+    {
+     "say": "A handful of them are containers, sitting at the root of the game and holding things."
+    },
+    {
+     "say": "Workspace holds everything physically present in the three dimensional world, and it is where the camera, gravity and the spatial queries live."
+    },
+    {
+     "say": "Players holds the people currently connected, which is where you learn that someone joined or left."
+    },
+    {
+     "say": "Replicated storage holds what both the server and the clients need to see, which is where shared modules and remote events belong."
+    },
+    {
+     "say": "Learning the service list is less about memorising names and more about developing one instinct: when you need a capability, the first question is which service owns it."
+    },
+    {
+     "say": "And that is the end of the course. Everything from here is the same three habits repeated at larger scale. Know where your code runs, know who owns each piece of state, and clean up what you create."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q69-1",
+     "concept": "services",
+     "type": "choice",
+     "ask": "Where do shared modules and remote events belong?",
+     "options": [
+      "Workspace",
+      "Replicated storage, visible to both server and clients",
+      "Players",
+      "Server storage only"
+     ],
+     "answer": 1,
+     "explain": "It is the container for what both sides need to see."
+    },
+    {
+     "id": "q69-2",
+     "concept": "services",
+     "type": "choice",
+     "ask": "What lives in Workspace?",
+     "options": [
+      "Player accounts",
+      "Everything physically present in the 3D world",
+      "Saved data",
+      "Interface elements"
+     ],
+     "answer": 1,
+     "explain": "Which is also why the camera, gravity and spatial queries are found there."
+    },
+    {
+     "id": "q69-3",
+     "concept": "services",
+     "type": "choice",
+     "ask": "What is the useful instinct about services?",
+     "options": [
+      "Memorise every name",
+      "When you need a capability, ask which service owns it",
+      "Avoid services",
+      "Use only Workspace"
+     ],
+     "answer": 1,
+     "explain": "The ownership question gets you to the right place faster than recall."
+    }
+   ]
   }
  }
 }
