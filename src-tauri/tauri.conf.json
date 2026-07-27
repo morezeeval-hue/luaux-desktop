@@ -28,7 +28,8 @@
     "active": true,
     "createUpdaterArtifacts": true,
     "resources": {
-      "resources/espeak-ng-data": "espeak-ng-data"
+      "resources/espeak-ng-data": "espeak-ng-data",
+      "resources/whisper_input.py": "whisper_input.py"
     },
     "targets": [
       "nsis",

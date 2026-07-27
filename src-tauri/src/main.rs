@@ -2,6 +2,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod piper;
+mod whisper;
 
 use tauri::{Emitter, Manager, WebviewUrl, WebviewWindowBuilder};
 
@@ -59,7 +60,10 @@ fn main() {
             open_discord_auth,
             piper::piper_status,
             piper::piper_install,
-            piper::piper_speak
+            piper::piper_speak,
+            whisper::whisper_status,
+            whisper::whisper_install,
+            whisper::whisper_transcribe
         ])
         .run(tauri::generate_context!())
         .expect("error while running LuauX Desktop");

@@ -16,6 +16,7 @@ window.LuauGuided = (function () {
     .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
   let state = null;   // { sectionID, stage, beat, q, answers[], drilled[] }
+  let whisperObserverBound = false;
 
   function script(sectionID) {
     const all = LuauData.current.lessonScripts;
@@ -42,9 +43,9 @@ window.LuauGuided = (function () {
   function offerHTML() {
     const S = window.LuauSpeech;
     if (!S || typeof S.piperAvailable !== "function" || !S.piperAvailable()) return "";
-    if (localStorage.getItem(OFFER_KEY) === "1") return "";
     const voices = S.voices().filter((v) => v.backend === "piper");
-    if (!voices.length || voices.some((v) => v.installed)) return "";
+    const recommended = voices.find((v) => v.id === "en_US-ryan-high") || voices[0];
+    if (!recommended || recommended.installed || localStorage.getItem("luaux.speech.ryan-offered") === "1") return "";
 
     const busy = S.installing();
     if (busy) {
@@ -52,10 +53,9 @@ window.LuauGuided = (function () {
       const pct = p && p.total ? Math.round((p.received / p.total) * 100) : 0;
       return `<div class="g-offer"><span>Downloading the tutor voice, ${pct}%. The lesson carries on meanwhile.</span></div>`;
     }
-    const first = voices[0];
     return `<div class="g-offer">
-      <span>A real tutor voice is available, ${Math.round(first.bytes / 1e6)} MB once, then offline.</span>
-      <button class="g-offer-yes" id="g-voice-get">Download ${esc(first.label)}</button>
+      <span>A higher-quality tutor voice is available, ${Math.round(recommended.bytes / 1e6)} MB once, then offline.</span>
+      <button class="g-offer-yes" id="g-voice-get" data-voice="${esc(recommended.id)}">Download ${esc(recommended.label)} High</button>
       <button class="g-offer-no" id="g-voice-no">Not now</button>
     </div>`;
   }
@@ -123,7 +123,7 @@ window.LuauGuided = (function () {
     } else {
       input = `<input class="g-input" id="g-answer" autocomplete="off" spellcheck="false"
         placeholder="${q.type === "blank" ? "Fill in the blank" : "Type your answer"}"${state.checked ? " disabled" : ""}
-        value="${state.picked == null ? "" : esc(state.picked)}">`;
+        value="${state.picked == null ? "" : esc(state.picked)}">${state.checked || !window.LuauWhisper ? "" : window.LuauWhisper.controlHTML()}`;
     }
 
     let feedback = "";
@@ -206,10 +206,9 @@ window.LuauGuided = (function () {
 
     const getVoice = $("#g-voice-get");
     if (getVoice) getVoice.addEventListener("click", () => {
-      const first = LuauSpeech.voices().filter((v) => v.backend === "piper")[0];
-      if (!first) return;
-      LuauSpeech.install(first.id)
-        .then(() => { LuauSpeech.setVoice(first.id); localStorage.setItem(OFFER_KEY, "1"); })
+      const id = getVoice.dataset.voice || "en_US-ryan-high";
+      LuauSpeech.install(id)
+        .then(() => { LuauSpeech.setVoice(id); localStorage.setItem(OFFER_KEY, "1"); localStorage.setItem("luaux.speech.ryan-offered", "1"); })
         .catch(() => {})
         .then(() => rerender());
       rerender();
@@ -217,6 +216,7 @@ window.LuauGuided = (function () {
     const noVoice = $("#g-voice-no");
     if (noVoice) noVoice.addEventListener("click", () => {
       localStorage.setItem(OFFER_KEY, "1");
+      localStorage.setItem("luaux.speech.ryan-offered", "1");
       rerender();
     });
 
@@ -243,6 +243,10 @@ window.LuauGuided = (function () {
 
     if (state.stage === "question") {
       const q = s.questions[state.q];
+      if (!whisperObserverBound && window.LuauWhisper) {
+        whisperObserverBound = true;
+        window.LuauWhisper.onChange(() => { if (state) rerender(); });
+      }
       document.querySelectorAll("[data-opt]").forEach((el) =>
         el.addEventListener("click", () => { state.picked = Number(el.dataset.opt); rerender(); }));
       document.querySelectorAll("[data-order]").forEach((el) =>
@@ -262,6 +266,9 @@ window.LuauGuided = (function () {
           if (e.key === "Enter" && !state.checked) { state.picked = field.value; check(); }
         });
         if (!state.checked) field.focus();
+      }
+      if (field && window.LuauWhisper) {
+        window.LuauWhisper.bind((text) => { state.picked = text; rerender(); });
       }
       const checkBtn = $("#g-check");
       if (checkBtn) checkBtn.addEventListener("click", check);

@@ -16,6 +16,7 @@ window.LuauSpeech = (function () {
 
   const MUTE_KEY = "luaux.speech.muted";
   const VOICE_KEY = "luaux.speech.voice";
+  const DEFAULT_PIPER_VOICE = "en_US-ryan-high";
 
   let muted = localStorage.getItem(MUTE_KEY) === "1";
   let preferred = localStorage.getItem(VOICE_KEY) || "";
@@ -138,6 +139,7 @@ window.LuauSpeech = (function () {
   function chosen() {
     const list = all();
     return list.find((v) => v.id === preferred)
+      || list.find((v) => v.id === DEFAULT_PIPER_VOICE && v.installed)
       || list.find((v) => v.backend === "piper" && v.installed)
       || list.find((v) => v.backend === "system")
       || list[0]
