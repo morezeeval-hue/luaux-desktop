@@ -37,10 +37,33 @@ async fn main() {
         vec!["en_US-amy-medium"]
     };
 
+    let mut failures = 0;
+
+    // Sentence splitting decides where the tutor breathes, so check the
+    // cases that would sound wrong before touching any audio.
+    let split_cases: &[(&str, usize)] = &[
+        ("One thing. Two things.", 2),
+        ("Only one thing here.", 1),
+        ("It takes 1.5 seconds to load. Then it stops.", 2),
+        ("Ask yourself: is it fast? It is. But it is not free.", 3),
+        ("A trailing thought with no full stop", 1),
+        ("", 1),
+        // A following lowercase word means an abbreviation far more often
+        // than a new sentence, so these stay joined on purpose.
+        ("Fine. e.g. this stays joined.", 1),
+        ("Use it, e.g. for a part. Then move on.", 2),
+    ];
+    for (input, want) in split_cases {
+        let got = piper::sentences(input).len();
+        if got != *want {
+            println!("FAIL split {input:?}: wanted {want} pieces, got {got} -> {:?}", piper::sentences(input));
+            failures += 1;
+        }
+    }
+    println!("sentence splitting: {} cases checked", split_cases.len());
+
     let dir = piper::resolve_espeak(resources).expect("espeak data");
     println!("espeak data: {} ({} chars)", dir.display(), dir.as_os_str().len());
-
-    let mut failures = 0;
     for id in wanted {
         let v = piper::voice(id).expect("known voice");
         let started = std::time::Instant::now();
@@ -57,7 +80,10 @@ async fn main() {
         println!("{id}: fetched and verified in {:?}", started.elapsed());
 
         let (model, config) = piper::files_in(voices, v);
-        let text = "Every property access crosses that boundary. It is fast, but it is not free.";
+        let default_text =
+            "Every property access crosses that boundary. It is fast, but it is not free.";
+        let owned = std::env::var("LUAUX_TEXT").unwrap_or_else(|_| default_text.to_string());
+        let text = owned.as_str();
         let t = std::time::Instant::now();
         match piper::synthesize(id, &model, &config, text) {
             Ok(wav) => {

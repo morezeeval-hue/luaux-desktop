@@ -25,12 +25,43 @@ window.LuauGuided = (function () {
 
   function has(sectionID) { return !!script(sectionID); }
 
+  /* A tutor says hello before launching into the material. Dropping straight
+     into the first analogy is what makes the app feel like a text-to-speech
+     toy rather than someone teaching you, so the opening is spoken as its
+     own beat: warm the first time, brief afterwards, and never in the way. */
+  const GREETED_KEY = "luaux.guided.greeted";
+
+  function openingBeat(sectionID) {
+    const data = LuauData.current;
+    const section = data.section(sectionID);
+    const unit = data.unitForSection(sectionID);
+    const title = section ? String(section.title).replace(/^Section \d+:\s*/, "") : "this section";
+    const where = unit ? unit.name : "the course";
+
+    if (localStorage.getItem(GREETED_KEY) !== "1") {
+      localStorage.setItem(GREETED_KEY, "1");
+      return { say:
+        "Hello, and welcome. I am going to walk you through this course one idea at a time. " +
+        "I will explain something, then ask you about it, and you answer in your own words. " +
+        "Getting one wrong is useful, it just means we come back to it later. " +
+        "Let us start with " + title + "." };
+    }
+    return { say: "Good to see you again. This one is " + title + ", from " + where + "." };
+  }
+
   function start(sectionID) {
     const s = script(sectionID);
     if (!s) return false;
-    state = { sectionID, stage: "beat", beat: 0, q: 0, answers: [], picked: null, checked: false };
-    LuauSpeech.speak(s.beats[0].say);
+    const beats = [openingBeat(sectionID)].concat(s.beats);
+    state = { sectionID, stage: "beat", beat: 0, q: 0, answers: [], picked: null, checked: false, beats };
+    LuauSpeech.speak(beats[0].say);
     return true;
+  }
+
+  /* Beats come from the script plus the spoken opening, so everything that
+     walks them goes through here rather than reaching into the script. */
+  function beatsOf() {
+    return (state && state.beats) || [];
   }
 
   /* ---------------------------------------------------------------- chrome */
@@ -83,8 +114,8 @@ window.LuauGuided = (function () {
 
   function renderBeat() {
     const s = script(state.sectionID);
-    const beat = s.beats[state.beat];
-    const total = s.beats.length + s.questions.length;
+    const beat = beatsOf()[state.beat];
+    const total = beatsOf().length + s.questions.length;
     const body = `
       <div class="g-card g-beat">
         <p class="g-say">${esc(beat.say)}</p>
@@ -92,7 +123,7 @@ window.LuauGuided = (function () {
       </div>
       <div class="g-actions">
         <button class="g-secondary" id="g-again">Say it again</button>
-        <button class="g-primary" id="g-next">${state.beat < s.beats.length - 1 ? "Next" : "Start the questions"}</button>
+        <button class="g-primary" id="g-next">${state.beat < beatsOf().length - 1 ? "Next" : "Start the questions"}</button>
       </div>`;
     return shell(state.sectionID, body, state.beat / total);
   }
@@ -102,8 +133,8 @@ window.LuauGuided = (function () {
   function renderQuestion() {
     const s = script(state.sectionID);
     const q = s.questions[state.q];
-    const total = s.beats.length + s.questions.length;
-    const done = s.beats.length + state.q;
+    const total = beatsOf().length + s.questions.length;
+    const done = beatsOf().length + state.q;
 
     let input = "";
     if (q.type === "choice" || q.type === "bug") {
@@ -224,12 +255,12 @@ window.LuauGuided = (function () {
 
     if (state.stage === "beat") {
       const again = $("#g-again");
-      if (again) again.addEventListener("click", () => LuauSpeech.speak(s.beats[state.beat].say));
+      if (again) again.addEventListener("click", () => LuauSpeech.speak(beatsOf()[state.beat].say));
       const next = $("#g-next");
       if (next) next.addEventListener("click", () => {
-        if (state.beat < s.beats.length - 1) {
+        if (state.beat < beatsOf().length - 1) {
           state.beat += 1;
-          LuauSpeech.speak(s.beats[state.beat].say);
+          LuauSpeech.speak(beatsOf()[state.beat].say);
         } else {
           state.stage = "question";
           state.picked = null;

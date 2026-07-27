@@ -297,9 +297,73 @@ pub async fn fetch_voice(
 
 /* ------------------------------------------------------------- synthesis */
 
+/// Splits a beat into the units a person would pause between.
+///
+/// Handed a whole paragraph, the model runs the sentences together: the full
+/// stops are audible as barely a breath, which is what makes a long beat
+/// exhausting to listen to. Synthesizing sentence by sentence and inserting
+/// real silence is what turns reading into speaking.
+///
+/// The split is deliberately dumb, because the course prose is plain: a full
+/// stop, question mark or exclamation mark followed by a space. Decimals and
+/// the few abbreviations are protected by requiring the next character to
+/// look like the start of a sentence.
+pub fn sentences(text: &str) -> Vec<String> {
+    let chars: Vec<char> = text.chars().collect();
+    let mut out = Vec::new();
+    let mut start = 0usize;
+
+    for i in 0..chars.len() {
+        if !matches!(chars[i], '.' | '!' | '?') {
+            continue;
+        }
+        // Must be followed by a space, then something that opens a sentence.
+        let Some(&next) = chars.get(i + 1) else { continue };
+        if next != ' ' {
+            continue;
+        }
+        match chars.get(i + 2) {
+            Some(c) if c.is_uppercase() || c.is_numeric() => {}
+            _ => continue,
+        }
+        // "1. The" or "e.g. this" would split badly; require a real word before.
+        let ends_word = chars[start..i]
+            .iter()
+            .rev()
+            .take_while(|c| c.is_alphanumeric())
+            .count();
+        if ends_word < 2 {
+            continue;
+        }
+        let piece: String = chars[start..=i].iter().collect();
+        out.push(piece.trim().to_string());
+        start = i + 2;
+    }
+
+    if start < chars.len() {
+        let rest: String = chars[start..].iter().collect();
+        let rest = rest.trim();
+        if !rest.is_empty() {
+            out.push(rest.to_string());
+        }
+    }
+    if out.is_empty() {
+        out.push(text.trim().to_string());
+    }
+    out
+}
+
 /// Speaks `text` with an already-installed voice, reusing the loaded model
 /// when the voice has not changed.
+///
+/// Sentences are synthesized separately and joined with a pause, so the tutor
+/// lands its full stops instead of reading straight through them.
 pub fn synthesize(id: &str, model: &Path, config: &Path, text: &str) -> Result<Vec<u8>, String> {
+    /// Long enough to hear as the end of a thought, short enough not to drag.
+    const SENTENCE_PAUSE_MS: usize = 380;
+    /// A touch under one, so the tutor explains rather than announces.
+    const PACE: f32 = 1.06;
+
     let mut held = LOADED.lock().map_err(|_| "speech lock poisoned")?;
     let reload = held.as_ref().map(|(loaded, _)| loaded != id).unwrap_or(true);
     if reload {
@@ -308,10 +372,23 @@ pub fn synthesize(id: &str, model: &Path, config: &Path, text: &str) -> Result<V
         *held = Some((id.to_string(), piper));
     }
     let (_, piper) = held.as_mut().ok_or("no voice loaded")?;
-    let (samples, rate) = piper
-        .create(text, false, None, None, None, None)
-        .map_err(|e| format!("cannot speak that: {e}"))?;
-    Ok(wav(&samples, rate))
+
+    let pieces = sentences(text);
+    let mut all: Vec<f32> = Vec::new();
+    let mut rate = 22_050u32;
+
+    for (i, piece) in pieces.iter().enumerate() {
+        let (samples, r) = piper
+            .create(piece, false, None, Some(PACE), None, None)
+            .map_err(|e| format!("cannot speak that: {e}"))?;
+        rate = r;
+        all.extend_from_slice(&samples);
+        if i + 1 < pieces.len() {
+            all.extend(std::iter::repeat(0.0).take(rate as usize * SENTENCE_PAUSE_MS / 1000));
+        }
+    }
+
+    Ok(wav(&all, rate))
 }
 
 fn wav(samples: &[f32], rate: u32) -> Vec<u8> {

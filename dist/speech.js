@@ -37,10 +37,18 @@ window.LuauSpeech = (function () {
      played over the top of the current one. */
   let token = 0;
   let audio = null;
+  let lastError = "";        // why the neural voice last fell back, if it did
 
   function notify() { listeners.forEach((fn) => fn()); }
 
   /* ------------------------------------------------------------- system */
+
+  /* macOS ships a pile of novelty voices (Albert, Boing, Bubbles, Bells,
+     Zarvox…) and lists them ahead of the real ones alphabetically. Taking
+     the first English voice therefore lands on a cartoon robot, which is
+     exactly what a learner hears if the neural voice ever falls back.
+     These are never spoken with and never offered. */
+  const NOVELTY = /^(albert|bad news|bahh|bells|boing|bubbles|cellos|good news|jester|organ|superstar|trinoids|whisper|wobble|zarvox|grandma|grandpa|junior|kathy|princess|ralph|fred|rocko|shelley|sandy|eddy|flo|reed|rishi|grandpa|deranged|hysterical|bruce|agnes|victoria)\b/i;
 
   /* System voices arrive asynchronously in some engines, so ask again on
      the change event rather than caching an empty list at startup. */
@@ -48,6 +56,7 @@ window.LuauSpeech = (function () {
     if (!systemSupported) return [];
     return window.speechSynthesis.getVoices()
       .filter((v) => /^en(-|_)/i.test(v.lang))
+      .filter((v) => !NOVELTY.test(v.name))
       .map((v) => ({
         id: "system:" + v.voiceURI,
         label: v.name,
@@ -56,6 +65,17 @@ window.LuauSpeech = (function () {
         installed: true,
         _v: v,
       }));
+  }
+
+  /* Which system voice to speak with when nothing better is available. The
+     engine's own default is the right answer where it is marked; list order
+     is not, it is alphabetical. */
+  function bestSystemVoice() {
+    const list = systemVoices();
+    return list.find((v) => v._v && v._v.default)
+      || list.find((v) => /samantha|alex\b|daniel|karen|moira|tessa|serena/i.test(v.label))
+      || list[0]
+      || null;
   }
 
   if (systemSupported && typeof window.speechSynthesis.onvoiceschanged !== "undefined") {
@@ -67,7 +87,7 @@ window.LuauSpeech = (function () {
     try {
       window.speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
-      const v = systemVoices().find((x) => x.id === preferred) || systemVoices()[0];
+      const v = systemVoices().find((x) => x.id === preferred) || bestSystemVoice();
       if (v && v._v) { u.voice = v._v; u.lang = v._v.lang; }
       u.rate = 1.0;
       u.pitch = 1.0;
@@ -120,9 +140,13 @@ window.LuauSpeech = (function () {
         audio.onended = () => { if (audio) URL.revokeObjectURL(audio.src); };
         audio.play().catch(() => {});
       })
-      .catch(() => {
-        // A voice that will not load should not silence the lesson.
+      .catch((e) => {
+        /* A voice that will not load should not silence the lesson, but a
+           silent fallback is how "why does it sound robotic" goes
+           undiagnosed. Keep the reason and let the settings card show it. */
+        lastError = String(e && e.message ? e.message : e);
         if (mine === token && !muted) speakSystem(text);
+        notify();
       });
   }
 
@@ -172,6 +196,10 @@ window.LuauSpeech = (function () {
     /* What the settings screen needs to explain the state of things. */
     piperAvailable() { return !!(piper && piper.available); },
     piperReason() { return piper ? piper.reason : ""; },
+    /* Non-empty once the neural voice has failed and the system voice took
+       over, so the learner is told rather than left wondering. */
+    lastError() { return lastError; },
+    speakingBackend() { const v = chosen(); return v ? v.backend : "none"; },
     installing() { return installing; },
     progress() { return progress; },
     refresh,

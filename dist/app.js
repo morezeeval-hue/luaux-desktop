@@ -672,6 +672,12 @@
           ? `<div style="font-size:12px;color:var(--secondary);margin-top:4px">Neural voices are unavailable here: ${esc(S.piperReason())}</div>`
           : "");
 
+    /* If the neural voice quietly failed, say so here. Otherwise the only
+       symptom is that the tutor sounds wrong, with nothing to act on. */
+    const failure = typeof S.lastError === "function" && S.lastError()
+      ? `<div style="font-size:12px;color:var(--red);margin-top:8px">The neural voice failed and the system voice is speaking instead: ${esc(S.lastError())}</div>`
+      : "";
+
     return `<div class="card" style="margin-bottom:14px">
       <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:12px">
         <div style="font-weight:600;font-size:14px;color:var(--text)">Tutor voice</div>
@@ -679,7 +685,7 @@
           <input type="checkbox" id="voice-mute"${S.isMuted() ? " checked" : ""}> Mute
         </label>
       </div>
-      ${rows}${sysRow}${note}
+      ${rows}${sysRow}${note}${failure}
     </div>`;
   }
 
@@ -912,6 +918,7 @@
    * window; the app simply reappears on the new version. */
   function showUpdateBanner(update) {
     const bar = document.createElement("div");
+    bar.id = "update-bar";
     bar.className = "update-banner update-banner-anim";
 
     const title = (t) => `<div class="ub-title">${t}</div>`;
@@ -987,8 +994,12 @@
     document.body.appendChild(bar);
   }
 
+  let lastUpdateCheck = 0;
+
   async function checkForUpdate() {
     if (!window.__TAURI__ || !window.__TAURI__.updater) return;
+    if (document.getElementById("update-bar")) return;   // already offering one
+    lastUpdateCheck = Date.now();
     try {
       const update = await window.__TAURI__.updater.check();
       if (update) showUpdateBanner(update);
@@ -996,6 +1007,13 @@
       // Offline or update server unreachable: fail silently, the app works fully offline.
     }
   }
+
+  /* Checking only at startup means an app left open for days never learns
+     that a release happened. Look again when the window is picked back up,
+     at most twice an hour so it stays quiet. */
+  window.addEventListener("focus", () => {
+    if (Date.now() - lastUpdateCheck > 30 * 60 * 1000) checkForUpdate();
+  });
 
   function typeLine(el, text, speed) {
     return new Promise((resolve) => {
