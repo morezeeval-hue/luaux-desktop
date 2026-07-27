@@ -51,7 +51,7 @@
 
   const NAV = [
     { id: "home", label: "Home", ic: IC.home },
-    { id: "learn", label: "Journey", ic: IC.journey },
+    { id: "learn", label: "Browse", ic: IC.journey },
     { id: "practice", label: "Practice", ic: IC.play },
     { id: "more", label: "More", ic: IC.grid },
   ];
