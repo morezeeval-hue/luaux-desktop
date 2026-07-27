@@ -17,12 +17,6 @@ window.LuauGuided = (function () {
 
   let state = null;   // { sectionID, stage, beat, q, answers[], drilled[] }
 
-  function speechInputAvailable() { return !!(window.SpeechRecognition || window.webkitSpeechRecognition); }
-  const SPEECH_INPUT_NOTICE = "luaux.speech-input.notice";
-  function speechInputButton() {
-    return speechInputAvailable() ? '<button class="g-speech-input" id="g-speak-answer" type="button">Speak an answer</button>' : "";
-  }
-
   function script(sectionID) {
     const all = LuauData.current.lessonScripts;
     return all && all.sections ? all.sections[String(sectionID)] : null;
@@ -129,7 +123,7 @@ window.LuauGuided = (function () {
     } else {
       input = `<input class="g-input" id="g-answer" autocomplete="off" spellcheck="false"
         placeholder="${q.type === "blank" ? "Fill in the blank" : "Type your answer"}"${state.checked ? " disabled" : ""}
-        value="${state.picked == null ? "" : esc(state.picked)}">${state.checked ? "" : speechInputButton()}`;
+        value="${state.picked == null ? "" : esc(state.picked)}">`;
     }
 
     let feedback = "";
@@ -269,26 +263,6 @@ window.LuauGuided = (function () {
         });
         if (!state.checked) field.focus();
       }
-      const speak = $("#g-speak-answer");
-      if (speak) speak.addEventListener("click", () => {
-        if (!localStorage.getItem(SPEECH_INPUT_NOTICE)) {
-          const ok = window.confirm("Browser speech recognition is optional and may send audio to your browser provider. Typing always stays available. Continue?");
-          if (!ok) return;
-          localStorage.setItem(SPEECH_INPUT_NOTICE, "1");
-        }
-        const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const recognition = new Recognition();
-        recognition.lang = "en-US";
-        recognition.interimResults = false;
-        recognition.maxAlternatives = 1;
-        speak.disabled = true;
-        speak.textContent = "Listening…";
-        recognition.onresult = (event) => { state.picked = event.results[0][0].transcript; rerender(); };
-        recognition.onerror = () => { speak.disabled = false; speak.textContent = "Speech unavailable. Type your answer."; };
-        recognition.onend = () => { if (document.body.contains(speak) && !state.checked) { speak.disabled = false; speak.textContent = "Speak an answer"; } };
-        recognition.start();
-      });
-
       const checkBtn = $("#g-check");
       if (checkBtn) checkBtn.addEventListener("click", check);
 
