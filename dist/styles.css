@@ -574,24 +574,18 @@ strong { color: var(--text); }
 .g-summary .g-say { margin-top: 8px; font-size: 15.5px; color: var(--text-dim); }
 .g-missed { text-align: left; margin: 16px 0 0; padding-left: 20px; font-size: 13.5px; color: var(--text-faint); line-height: 1.6; }
 
-/* Pilot, the mascot. Colours come from the accent already in use, so the
-   drawing never competes with the interface around it. */
-.mascot { display: block; overflow: visible; }
-.mascot .m-head { fill: var(--accent); }
-.mascot .m-crest { fill: var(--accent-2); opacity: .85; }
-.mascot .m-tail { fill: var(--accent); }
-.mascot .m-eye { fill: #0d1117; }
-.mascot .m-pupil { fill: var(--accent-2); }
-.mascot .m-glint { fill: #fff; }
-.mascot .m-cheek { fill: var(--accent-2); opacity: .28; }
-.mascot .m-line { fill: none; stroke: #0d1117; stroke-width: 2.4; stroke-linecap: round; }
-.mascot .m-brow { fill: none; stroke: #0d1117; stroke-width: 2.6; stroke-linecap: round; }
-.mascot .m-mouth-fill { fill: #0d1117; }
-.mascot-cross .m-head { fill: #f7a072; }
-.mascot-cross .m-crest { fill: #e5806a; }
-.mascot-cross .m-tail { fill: #f7a072; }
-.mascot-sleep .m-head { fill: var(--text-faint); }
-.mascot-sleep .m-crest { fill: var(--text-ghost); }
-.mascot-sleep .m-tail { fill: var(--text-faint); }
+/* Pilot, the mascot. The artwork carries its own colour, so the only job
+   here is to keep it from being dragged out of the window or smoothed into
+   mush when it is scaled down. */
+.mascot { display: block; user-select: none; -webkit-user-drag: none; object-fit: contain; }
+.mascot-cross { animation: pilot-shake 2.6s var(--ease) infinite; }
+@keyframes pilot-shake {
+  0%, 88%, 100% { transform: none; }
+  91% { transform: translateX(-2px) rotate(-1.5deg); }
+  94% { transform: translateX(2px) rotate(1.5deg); }
+  97% { transform: translateX(-1px) rotate(-0.5deg); }
+}
+@media (prefers-reduced-motion: reduce) { .mascot-cross { animation: none; } }
+
 .pilot-card { gap: 16px; align-items: center; }
 .brand-pilot { margin-right: 2px; }
