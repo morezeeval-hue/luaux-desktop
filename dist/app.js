@@ -70,7 +70,8 @@
   function renderSidebar() {
     const el = $("#sidebar");
     el.innerHTML =
-      '<div class="brand"><span class="windots"><i></i><i></i><i></i></span>LuauX</div>' +
+      '<div class="brand"><span class="windots"><i></i><i></i><i></i></span>' +
+      LuauMascot.svg(pilotMood(), 20, 'brand-pilot') + 'LuauX</div>' +
       NAV.map((n) => `<button class="navbtn ${(route.view === n.id || (n.id === "more" && MORE_VIEWS.includes(route.view))) ? "active" : ""}" data-nav="${n.id}"><span class="ic">${n.ic}</span>${n.label}</button>`).join("") +
       '<div class="spacer"></div>' +
       `<div class="streak">🔥 ${LuauProgress.streak}-day streak</div>`;
@@ -91,13 +92,33 @@
 
   // ---------- Views ----------
 
+  /* Pilot reacts to the progress document rather than to whichever screen is
+     open, so the mascot can never contradict the numbers next to it. */
+  function pilotState() {
+    const journey = LuauProgress.journeyProgress();
+    return {
+      streak: LuauProgress.streak,
+      todayActive: LuauProgress.todayActive,
+      everStarted: journey.done > 0,
+    };
+  }
+
+  function pilotMood() {
+    return LuauMascot.moodFromProgress(pilotState());
+  }
+
   function viewHome() {
     const data = LuauData.current;
     const journey = LuauProgress.journeyProgress();
     const step = LuauProgress.nextStep();
     const unit = step ? (step.kind === "read" ? data.unitForSection(step.section.id) : step.kind === "exercise" ? data.unit(step.exercise.unitId) : data.unit(step.unitID)) : null;
 
+    const mood = pilotMood();
     let html = '<h1 class="pagetitle">LuauX</h1><p class="subtitle">Offline course. No account, no server.</p>';
+    html += `<div class="card row pilot-card">
+      ${LuauMascot.svg(mood, 62)}
+      <div><div style="font-weight:600;font-size:15px">${esc(LuauMascot.line(mood, pilotState()))}</div>
+      <div style="font-size:12px;color:var(--secondary)">Pilot</div></div></div>`;
     html += `<div class="card row">${ring(journey.total ? journey.done / journey.total : 0)}
       <div><div style="font-weight:600;font-size:15px">${journey.done} of ${journey.total} milestones</div>
       <div style="font-size:12px;color:var(--secondary)">🔥 ${LuauProgress.streak}-day streak</div></div></div>`;
@@ -315,6 +336,31 @@
     const n = $('[data-jn="next"]'); if (n && next) n.addEventListener("click", () => open(next));
   }
 
+  /* Every section opens with its own <h1>, directly under the page title it
+     restates. Read on screen that is the same line twice, and it also carries
+     the section number a second time.
+
+     Where the heading says nothing new it goes. Where it says more — most do,
+     "String Library" against "The String Library (string)" — it stays, minus
+     the repeated "Section N:" prefix. */
+  function lessonBodyHTML(section) {
+    const key = (s) => String(s).toLowerCase()
+      .replace(/section\s*\d+\s*:?/g, "")
+      .replace(/\(optional\)/g, "")
+      .replace(/\bthe\b/g, "")
+      .replace(/[^a-z0-9]+/g, " ").trim();
+    const title = key(section.title);
+
+    return String(section.html).replace(/^(\s*<h1[^>]*>)([\s\S]*?)(<\/h1>)/i, (whole, open, inner, close) => {
+      const text = inner.replace(/<[^>]+>/g, "");
+      const heading = key(text);
+      if (!heading || !title) return whole;
+      if (heading === title) return "";
+      const trimmed = inner.replace(/^\s*Section\s*\d+\s*:\s*/i, "");
+      return open + trimmed + close;
+    });
+  }
+
   function viewLesson(sectionID) {
     const data = LuauData.current, section = data.section(sectionID);
     if (!section) return go("learn");
@@ -329,7 +375,7 @@
         <button class="btn ghost" id="bookmark-btn">${bookmarked ? IC.spark : IC.link} ${bookmarked ? "Bookmarked" : "Bookmark"}</button>
         ${bp ? '<button class="btn ghost" id="blueprint-btn">'+IC.clipboard+' Blueprint</button>' : ""}
       </div></div>
-      <div class="lesson-body" style="margin-top:14px">${section.html}</div>
+      <div class="lesson-body" style="margin-top:14px">${lessonBodyHTML(section)}</div>
       <div class="lesson-actions">
         ${LuauGuided.has(sectionID)
           ? `<button class="btn primary" id="guided-btn">${IC.play} ${LuauProgress.isGuidedDone(sectionID) ? "Run the lesson again" : "Start the guided lesson"}</button>`

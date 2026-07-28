@@ -168,6 +168,13 @@ window.LuauProgress = (function () {
       return p.total > 0 && p.done === p.total;
     },
 
+    /* Whether anything was done today. The streak alone cannot answer this:
+       it still counts yesterday's run on a day nothing has happened yet,
+       which is exactly the day the mascot should be nagging. */
+    get todayActive() {
+      return !!state.activity[dayKey(new Date())];
+    },
+
     get streak() {
       let count = 0;
       let day = new Date();

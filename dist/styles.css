@@ -204,6 +204,68 @@ h1.pagetitle { font-family: var(--font); font-size: 25px; font-weight: 700; lett
 .steplist .step .kind { font-size: 11px; color: var(--text-faint); }
 
 /* Lesson reader */
+/* The body of a section.
+ *
+ * Only 16 of the 70 sections carry the hand-built `lesson-*` classes below;
+ * the other 54 are plain HTML — headings, lists, code, emphasis — and had no
+ * rules at all, so they rendered at browser defaults: cramped, undifferentiated
+ * and, in the later units where the structure is deepest, unreadable. These
+ * rules style the elements the content actually uses, nothing more.
+ */
+.lesson-body { line-height: 1.7; color: var(--text-dim); font-size: 15px; }
+
+/* Sections carry their own h1, which would otherwise compete with the page
+   title above it. Demoted rather than hidden: it still opens a section. */
+.lesson-body h1 { font-family: var(--font); font-size: 19px; font-weight: 700; letter-spacing: -.01em; color: var(--text); margin: 34px 0 10px; }
+.lesson-body h2 { font-family: var(--font); font-size: 17px; font-weight: 700; letter-spacing: -.01em; color: var(--text); margin: 30px 0 8px; }
+.lesson-body h3 { font-family: var(--font); font-size: 14.5px; font-weight: 700; color: var(--accent); margin: 26px 0 6px; }
+.lesson-body h4 { font-family: var(--font); font-size: 12.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--text-faint); margin: 22px 0 5px; }
+.lesson-body > :first-child { margin-top: 0; }
+
+.lesson-body p { margin: 0 0 14px; }
+.lesson-body strong, .lesson-body b { color: var(--text); font-weight: 650; }
+.lesson-body em { color: var(--text); font-style: italic; }
+
+.lesson-body ul, .lesson-body ol { margin: 0 0 16px; padding-left: 22px; }
+.lesson-body li { margin-bottom: 7px; }
+.lesson-body li::marker { color: var(--text-ghost); }
+.lesson-body ul ul, .lesson-body ol ol, .lesson-body ul ol, .lesson-body ol ul { margin: 7px 0 0; }
+
+/* Inline code sits inside sentences, so it must not change the line height. */
+.lesson-body code {
+  font-family: var(--font); font-size: 0.88em; color: var(--accent-2);
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: 5px; padding: 1px 5px; white-space: nowrap;
+}
+.lesson-body pre {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+  padding: 14px 16px; margin: 0 0 18px; overflow-x: auto;
+  font-size: 12.8px; line-height: 1.6;
+}
+.lesson-body pre code {
+  background: none; border: 0; padding: 0; white-space: pre;
+  color: var(--text); font-size: inherit;
+}
+
+.lesson-body a { color: var(--accent-2); }
+.lesson-body hr { border: 0; border-top: 1px solid var(--line); margin: 26px 0; }
+.lesson-body blockquote {
+  margin: 0 0 16px; padding: 2px 0 2px 14px;
+  border-left: 2px solid var(--line-2); color: var(--text-faint);
+}
+
+/* Reference sections build real tables. They must scroll rather than push
+   the page sideways. */
+.lesson-body table { width: 100%; border-collapse: collapse; margin: 0 0 18px; font-size: 13.5px; display: block; overflow-x: auto; }
+.lesson-body th, .lesson-body td { border: 1px solid var(--line); padding: 8px 11px; text-align: left; vertical-align: top; }
+.lesson-body th { background: var(--panel); font-family: var(--font); font-size: 12px; font-weight: 700; color: var(--text-faint); text-transform: uppercase; letter-spacing: .05em; }
+
+/* The later units wrap groups in <section>/<article>, which without rules
+   collapsed into the surrounding prose. */
+.lesson-body section, .lesson-body article { margin: 0 0 8px; }
+.lesson-body header { margin-bottom: 10px; }
+.lesson-body footer { margin-top: 18px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 13px; color: var(--text-faint); }
+
 .lesson-architecture { line-height: 1.65; color: var(--text); }
 .lesson-mission { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px; margin-bottom: 18px; }
 .lesson-kicker { display: block; font-family: var(--font); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: var(--accent); text-transform: uppercase; margin-bottom: 4px; }
@@ -511,3 +573,25 @@ strong { color: var(--text); }
 .g-score { font-family: var(--font); font-size: 40px; font-weight: 800; color: var(--accent); letter-spacing: -.02em; }
 .g-summary .g-say { margin-top: 8px; font-size: 15.5px; color: var(--text-dim); }
 .g-missed { text-align: left; margin: 16px 0 0; padding-left: 20px; font-size: 13.5px; color: var(--text-faint); line-height: 1.6; }
+
+/* Pilot, the mascot. Colours come from the accent already in use, so the
+   drawing never competes with the interface around it. */
+.mascot { display: block; overflow: visible; }
+.mascot .m-head { fill: var(--accent); }
+.mascot .m-crest { fill: var(--accent-2); opacity: .85; }
+.mascot .m-tail { fill: var(--accent); }
+.mascot .m-eye { fill: #0d1117; }
+.mascot .m-pupil { fill: var(--accent-2); }
+.mascot .m-glint { fill: #fff; }
+.mascot .m-cheek { fill: var(--accent-2); opacity: .28; }
+.mascot .m-line { fill: none; stroke: #0d1117; stroke-width: 2.4; stroke-linecap: round; }
+.mascot .m-brow { fill: none; stroke: #0d1117; stroke-width: 2.6; stroke-linecap: round; }
+.mascot .m-mouth-fill { fill: #0d1117; }
+.mascot-cross .m-head { fill: #f7a072; }
+.mascot-cross .m-crest { fill: #e5806a; }
+.mascot-cross .m-tail { fill: #f7a072; }
+.mascot-sleep .m-head { fill: var(--text-faint); }
+.mascot-sleep .m-crest { fill: var(--text-ghost); }
+.mascot-sleep .m-tail { fill: var(--text-faint); }
+.pilot-card { gap: 16px; align-items: center; }
+.brand-pilot { margin-right: 2px; }
