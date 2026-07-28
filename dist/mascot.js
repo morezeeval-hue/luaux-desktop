@@ -15,9 +15,13 @@ window.LuauMascot = (function () {
 
   const MOODS = ["calm", "happy", "cheer", "cross", "think", "sleep"];
 
-  /* Small renders use the 128px frame: at 20 or 28 pixels the 512 costs
-     bandwidth and memory for detail nobody can see. */
+  /* Below this the full body stops being a character and becomes a smudge,
+     so small placements get a head crop instead. This is the same reason app
+     icons of full-body mascots are always cropped to the face. */
+  const HEAD_BELOW = 46;
+
   function src(mood, size) {
+    if (size < HEAD_BELOW) return "mascot/pilot-" + mood + "-head.png";
     return "mascot/pilot-" + mood + (size <= 160 ? "@128" : "") + ".png";
   }
 
