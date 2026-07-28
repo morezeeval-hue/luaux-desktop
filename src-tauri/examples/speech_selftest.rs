@@ -62,8 +62,24 @@ async fn main() {
     }
     println!("sentence splitting: {} cases checked", split_cases.len());
 
-    let dir = piper::resolve_espeak(resources).expect("espeak data");
+    // The working copy must live outside the app bundle. An update replaces
+    // the bundle wholesale, and espeak-ng opens its data lazily, so a copy
+    // inside the bundle disappears under a running app and every later
+    // sentence fails permanently. Resolve into a scratch root and check the
+    // data was really taken out of the bundle.
+    let stable = std::env::temp_dir().join("luaux-espeak-check");
+    let _ = std::fs::remove_dir_all(&stable);
+    let dir = piper::resolve_espeak_into(resources, Some(&stable)).expect("espeak data");
     println!("espeak data: {} ({} chars)", dir.display(), dir.as_os_str().len());
+    if dir.starts_with(resources) {
+        println!("FAIL: speech data was left inside the app bundle");
+        failures += 1;
+    } else if !dir.join("espeak-ng-data").join("phontab").is_file() {
+        println!("FAIL: the copied speech data is incomplete");
+        failures += 1;
+    } else {
+        println!("speech data copied out of the bundle, survives an update");
+    }
     for id in wanted {
         let v = piper::voice(id).expect("known voice");
         let started = std::time::Instant::now();
@@ -103,6 +119,35 @@ async fn main() {
             Err(e) => {
                 println!("FAIL {id}: {e}");
                 failures += 1;
+            }
+        }
+    }
+
+    // The failure this guards against: an update replaces the app bundle
+    // while the app runs, and every later sentence dies with "Failed to
+    // initialize eSpeak-ng", for the life of the process. Reproduce it by
+    // deleting the bundle between two sentences in one process.
+    //
+    // Only ever run against a stand-in under the temp directory; pointing it
+    // at a real installation would delete it.
+    if std::env::var("LUAUX_SIMULATE_UPDATE").is_ok() {
+        if !resources.starts_with(std::env::temp_dir()) {
+            println!("refusing to simulate an update against {}", resources.display());
+            failures += 1;
+        } else {
+            std::fs::remove_dir_all(resources).expect("remove the stand-in bundle");
+            let v = piper::voice("en_US-ryan-high").unwrap();
+            let (model, config) = piper::files_in(voices, v);
+            match piper::synthesize("en_US-ryan-high", &model, &config, "The bundle is gone now.") {
+                Ok(wav) if wav.len() > 44 => println!("still speaks after the bundle was replaced"),
+                Ok(_) => {
+                    println!("FAIL: produced no audio after the bundle was replaced");
+                    failures += 1;
+                }
+                Err(e) => {
+                    println!("FAIL: speech died after the bundle was replaced: {e}");
+                    failures += 1;
+                }
             }
         }
     }

@@ -133,6 +133,10 @@ pub struct VoiceInfo {
 pub struct Status {
     available: bool,
     reason: String,
+    /// Where the speech engine is reading its data from. Shown when speech
+    /// fails, because the machine that breaks is usually not the machine
+    /// the fix is written on.
+    data_dir: String,
     voices: Vec<VoiceInfo>,
 }
 
@@ -161,36 +165,74 @@ fn espeak_dir(app: &tauri::AppHandle) -> Result<PathBuf, String> {
         .path()
         .resource_dir()
         .map_err(|e| format!("no resource directory: {e}"))?;
-    resolve_espeak(&bundled)
+    // Keep the working copy outside the bundle: an update replaces the whole
+    // bundle, and a running app that then reaches for its speech data finds
+    // the files gone. See `resolve_espeak`.
+    let stable = app.path().app_data_dir().ok();
+    resolve_espeak_into(&bundled, stable.as_deref())
 }
 
-/// Settles on a directory holding `espeak-ng-data` whose path is short
-/// enough for espeak-ng to accept. Copies the bundled data somewhere
-/// shorter if the install location is long, and gives up rather than
-/// letting espeak-ng abort the process.
+/// Convenience for tests and tools: resolve using only the bundled copy.
 pub fn resolve_espeak(bundled: &Path) -> Result<PathBuf, String> {
+    resolve_espeak_into(bundled, None)
+}
+
+/// Settles on a directory holding `espeak-ng-data` that espeak-ng can still
+/// read at any point in the app's life.
+///
+/// Two constraints, both learned the hard way:
+///
+///   * espeak-ng keeps its data path in a fixed 160 byte buffer and aborts
+///     the process on overflow, so the path is measured before use.
+///   * espeak-ng opens its data lazily, at the first phonemization, not when
+///     the path is set. Pointing it inside the app bundle therefore breaks as
+///     soon as an update replaces that bundle underneath a running app: the
+///     first thing spoken afterwards fails with "Failed to initialize
+///     eSpeak-ng", permanently, because the engine only initializes once per
+///     process. So the working copy lives outside the bundle, in app data,
+///     and the bundled copy is only ever the source to refresh it from.
+pub fn resolve_espeak_into(bundled: &Path, stable_root: Option<&Path>) -> Result<PathBuf, String> {
+    // A cached path is only good while its data is still readable.
     if let Some(dir) = ESPEAK_DIR.lock().map_err(|_| "speech lock poisoned")?.clone() {
-        return Ok(dir);
+        if dir.join("espeak-ng-data").join("phontab").is_file() {
+            return Ok(dir);
+        }
     }
 
-    let bundled = bundled.to_path_buf();
     let source = bundled.join("espeak-ng-data");
     if !source.is_dir() {
         return Err("the speech data is missing from this build".into());
     }
 
-    let chosen = if bundled.as_os_str().len() <= MAX_ESPEAK_DIR {
-        bundled
-    } else {
-        let short = std::env::temp_dir().join("luaux-speech");
-        if short.as_os_str().len() > MAX_ESPEAK_DIR {
-            return Err("the install path is too long for the speech engine".into());
+    // Candidates in order of preference: app data, a short temp path, and
+    // failing both, the bundle itself.
+    let mut candidates: Vec<PathBuf> = Vec::new();
+    if let Some(root) = stable_root {
+        candidates.push(root.to_path_buf());
+    }
+    candidates.push(std::env::temp_dir().join("luaux-speech"));
+
+    let mut chosen: Option<PathBuf> = None;
+    for candidate in candidates {
+        if candidate.as_os_str().len() > MAX_ESPEAK_DIR {
+            continue;
         }
-        let target = short.join("espeak-ng-data");
+        let target = candidate.join("espeak-ng-data");
         if !target.join("phontab").is_file() {
-            copy_tree(&source, &target)?;
+            if copy_tree(&source, &target).is_err() {
+                continue;
+            }
         }
-        short
+        chosen = Some(candidate);
+        break;
+    }
+
+    let chosen = match chosen {
+        Some(dir) => dir,
+        // Nowhere writable and short enough. The bundle still works until the
+        // app is updated, which beats not speaking at all.
+        None if bundled.as_os_str().len() <= MAX_ESPEAK_DIR => bundled.to_path_buf(),
+        None => return Err("the install path is too long for the speech engine".into()),
     };
 
     // espeak-rs reads this once, on first use, so it must be set first.
@@ -466,13 +508,14 @@ fn wav(samples: &[f32], rate: u32) -> Vec<u8> {
 
 #[tauri::command]
 pub fn piper_status(app: tauri::AppHandle) -> Status {
-    let reason = match espeak_dir(&app) {
-        Ok(_) => String::new(),
-        Err(e) => e,
+    let (reason, data_dir) = match espeak_dir(&app) {
+        Ok(dir) => (String::new(), dir.display().to_string()),
+        Err(e) => (e, String::new()),
     };
     Status {
         available: reason.is_empty(),
         reason,
+        data_dir,
         voices: VOICES
             .iter()
             .map(|v| VoiceInfo {

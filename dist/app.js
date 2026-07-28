@@ -677,8 +677,19 @@
 
     /* If the neural voice quietly failed, say so here. Otherwise the only
        symptom is that the tutor sounds wrong, with nothing to act on. */
-    const failure = typeof S.lastError === "function" && S.lastError()
-      ? `<div style="font-size:12px;color:var(--red);margin-top:8px">The neural voice failed and the system voice is speaking instead: ${esc(S.lastError())}</div>`
+    /* The speech engine only initialises once per process, so a failure
+       there lasts until the app is restarted. Saying that is the difference
+       between a fixable problem and a mysterious one. */
+    const err = typeof S.lastError === "function" ? S.lastError() : "";
+    const needsRestart = /initialize|eSpeak/i.test(err);
+    const failure = err
+      ? `<div style="font-size:12px;color:var(--red);margin-top:8px">
+           The neural voice failed and the system voice is speaking instead.
+           ${needsRestart ? "Restart the app and it will fix itself." : ""}
+           <span style="color:var(--secondary)">${esc(err)}</span>
+           ${typeof S.dataDir === "function" && S.dataDir()
+             ? `<div style="color:var(--secondary);margin-top:4px">Speech data: ${esc(S.dataDir())}</div>` : ""}
+         </div>`
       : "";
 
     return `<div class="card" style="margin-bottom:14px">

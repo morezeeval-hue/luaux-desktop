@@ -199,6 +199,9 @@ window.LuauSpeech = (function () {
     /* Non-empty once the neural voice has failed and the system voice took
        over, so the learner is told rather than left wondering. */
     lastError() { return lastError; },
+    /* Where the engine reads its data from, so a failure on someone else's
+       machine can be reported rather than guessed at. */
+    dataDir() { return piper ? piper.data_dir || "" : ""; },
     speakingBackend() { const v = chosen(); return v ? v.backend : "none"; },
     installing() { return installing; },
     progress() { return progress; },
