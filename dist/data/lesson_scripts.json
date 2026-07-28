@@ -5620,6 +5620,327 @@
      "explain": "The ownership question gets you to the right place faster than recall."
     }
    ]
+  },
+  "70": {
+   "beats": [
+    {
+     "say": "Before anything else about a game is decided, one question settles more of its fate than any other: is the idea itself clickable."
+    },
+    {
+     "say": "Not the art, not the mechanics yet. Just the idea, stated in one sentence."
+    },
+    {
+     "say": "A useful test: imagine a child lying awake, inventing scenarios because their imagination will not switch off. A monster in the closet. A hidden world behind a door."
+    },
+    {
+     "say": "A strong game idea reads like one of those scenarios, handed to a player as something they now get to live inside."
+    },
+    {
+     "say": "A hospital, except it is run by animals. A whole city, run by animals. What if the toys in your room were secretly alive. What if tiny characters lived inside your own mind, steering your feelings."
+    },
+    {
+     "say": "None of those are technically complicated. All of them are instantly picturable, which is exactly the point."
+    },
+    {
+     "say": "The test is not whether an idea sounds clever to another developer. It is whether a stranger, seeing only a title and a thumbnail, cannot help but wonder what is inside."
+    },
+    {
+     "say": "That reaction is what actually drives a click on a home page, before a single mechanic has been judged."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q70-1",
+     "concept": "core-fantasy",
+     "type": "choice",
+     "ask": "What is being tested when someone asks whether a game idea is clickable?",
+     "options": [
+      "Whether the art style is polished",
+      "Whether the one-sentence idea makes a stranger want to know more",
+      "Whether the code is well organised",
+      "Whether the game has a tutorial"
+     ],
+     "answer": 1,
+     "explain": "It is a test of the idea itself, stated in one sentence, before anything else is judged."
+    },
+    {
+     "id": "q70-2",
+     "concept": "core-fantasy",
+     "type": "choice",
+     "ask": "Why does the child-falling-asleep image work as a test for a game idea?",
+     "options": [
+      "It shows how long a tutorial should be",
+      "It captures the kind of instantly picturable scenario a strong fantasy has",
+      "It measures how complicated the mechanics are",
+      "It explains how to price the game"
+     ],
+     "answer": 1,
+     "explain": "A strong fantasy is simple to picture, not simple to build."
+    },
+    {
+     "id": "q70-3",
+     "concept": "core-fantasy",
+     "type": "blank",
+     "ask": "Fill in the missing word: a core fantasy needs mass ___, not just personal appeal.",
+     "answer": "appeal",
+     "explain": "A niche you personally love is not automatically a market."
+    }
+   ]
+  },
+  "71": {
+   "beats": [
+    {
+     "say": "Onboarding is usually treated as a checklist: tell the player to click this, buy that, place the other thing, and call it done."
+    },
+    {
+     "say": "That produces a tutorial a player can finish without ever caring about the game underneath it."
+    },
+    {
+     "say": "The distinction that matters is between explaining a mechanic and giving a player a reason to want it."
+    },
+    {
+     "say": "Give this survivor medicine is a chore. Show that survivors are sick and in danger first, and the same instruction becomes protecting something you already care about."
+    },
+    {
+     "say": "That emotional groundwork is worth laying in the first ninety seconds, often through a short opening scene."
+    },
+    {
+     "say": "The second habit is introducing exactly one mechanic at a time, in the order a player will feel its stakes."
+    },
+    {
+     "say": "Show a pet get stolen before teaching defence, and the defence lesson lands as protecting something the player already cares about, not an arbitrary task."
+    },
+    {
+     "say": "A high tutorial completion rate is not proof any of this worked. A player can finish every step and still feel nothing."
+    },
+    {
+     "say": "The number worth watching is new-user first-session retention: how many new players are still there after thirty seconds, one minute, five minutes."
+    },
+    {
+     "say": "And it has to be checked on every device the game is actually played on. A mechanic that is slightly clunky to tap on a phone costs players before the core idea gets a fair test."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q71-1",
+     "concept": "onboarding-depth",
+     "type": "choice",
+     "ask": "What is the actual difference between explaining a mechanic and onboarding someone into it well?",
+     "options": [
+      "How many buttons the tutorial has",
+      "Whether the player is given a reason to care before being told what to do",
+      "How fast the tutorial can be completed",
+      "Whether the tutorial has voice acting"
+     ],
+     "answer": 1,
+     "explain": "Telling a player what to do is not the same as giving them a reason to want to do it."
+    },
+    {
+     "id": "q71-2",
+     "concept": "onboarding-metric",
+     "type": "choice",
+     "ask": "Why is tutorial completion rate a weak measure of good onboarding on its own?",
+     "options": [
+      "It is too hard to track",
+      "A player can finish every step and still feel nothing about the game",
+      "It only works on mobile",
+      "It cannot be shown as a percentage"
+     ],
+     "answer": 1,
+     "explain": "Finishing steps is not the same as being emotionally invested; first-session retention is the better signal."
+    },
+    {
+     "id": "q71-3",
+     "concept": "onboarding-sequence",
+     "type": "order",
+     "ask": "Put these onboarding steps in the order that actually builds investment, from what happens first to last.",
+     "options": [
+      "Show the pet get stolen",
+      "Teach the player to build a defence",
+      "Player protects the base they now care about"
+     ],
+     "answer": [
+      0,
+      1,
+      2
+     ],
+     "explain": "The threat is felt before the mechanic is taught, so the mechanic lands as protecting something already cared about."
+    }
+   ]
+  },
+  "72": {
+   "beats": [
+    {
+     "say": "A game can be a well-built incremental or tycoon and still fail to spread, if there is no reason to play it with anyone else."
+    },
+    {
+     "say": "The gap is not a missing feature so much as a missing multiplier: a game meaningfully more fun with friends creates its own distribution."
+    },
+    {
+     "say": "One player shows a friend. That friend invites another. The chain continues without anything being spent on it."
+    },
+    {
+     "say": "It works because the product genuinely improves with more people in it, not because anyone was asked to share it."
+    },
+    {
+     "say": "Which means the decision belongs at the start of a game's design, not bolted on afterward."
+    },
+    {
+     "say": "Interaction with other players works best as part of the core loop itself, so playing socially is the natural way to play, not an optional side mode."
+    },
+    {
+     "say": "Leaderboards are a smaller version of the same idea. A visible ranking turns other players into a reason to keep improving."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q72-1",
+     "concept": "social-multiplier",
+     "type": "choice",
+     "ask": "What actually drives a game spreading through friends, according to this section?",
+     "options": [
+      "Paid advertising",
+      "The game being genuinely more fun to play with friends than alone",
+      "A referral reward system",
+      "A large marketing budget"
+     ],
+     "answer": 1,
+     "explain": "The spread happens because the experience improves with more people, not because sharing was incentivised."
+    },
+    {
+     "id": "q72-2",
+     "concept": "social-design-timing",
+     "type": "choice",
+     "ask": "When should interaction with other players be decided, if it is going to work?",
+     "options": [
+      "After launch, based on player feedback",
+      "At the start of the game's design, as part of the core loop",
+      "Only once the game already has an audience",
+      "It does not need to be designed at all"
+     ],
+     "answer": 1,
+     "explain": "Bolted-on social features rarely produce the same effect as social interaction built into the core loop from the start."
+    }
+   ]
+  },
+  "73": {
+   "beats": [
+    {
+     "say": "A common assumption is that a game needs many systems to hold a player's attention."
+    },
+    {
+     "say": "A more reliable pattern is the opposite: one simple mechanic, understood in seconds, with far more room inside it than it first appears to have."
+    },
+    {
+     "say": "A block-building game whose only mechanic is placing blocks can still produce fighter jets and helicopters, because players keep discovering what the one mechanic allows."
+    },
+    {
+     "say": "A role-playing game whose only structural rule is that anyone can play any character produces a different experience every session, without adding a single new system."
+    },
+    {
+     "say": "The mechanic is not shallow. The space it opens is simply large."
+    },
+    {
+     "say": "The same shape explains games that hold attention session after session: each run poses new, small questions inside a fixed set of rules. How far this time? What do I try differently now that I know what went wrong?"
+    },
+    {
+     "say": "None of that requires new mechanics between sessions, only a mechanic with enough internal room to keep asking those questions."
+    },
+    {
+     "say": "Whatever mechanic carries that depth has to be genuinely easy to use on mobile, not merely possible."
+    },
+    {
+     "say": "A mechanic that is slightly awkward to tap through on a small screen adds friction at the exact point a game is trying to earn attention, and that alone can cap how far it grows."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q73-1",
+     "concept": "simplicity-depth",
+     "type": "choice",
+     "ask": "How do the block-building and role-playing examples make the same point?",
+     "options": [
+      "Both need constant new content updates",
+      "Both show a single simple mechanic can hold enormous depth on its own",
+      "Both require a large multiplayer community",
+      "Both were designed for console first"
+     ],
+     "answer": 1,
+     "explain": "One rule, applied freely, can produce far more variety than the rule itself suggests."
+    },
+    {
+     "id": "q73-2",
+     "concept": "mobile-ux-cap",
+     "type": "choice",
+     "ask": "Why can a mechanic being merely possible on mobile, rather than genuinely easy, cap a game's growth?",
+     "options": [
+      "Mobile players do not spend money",
+      "The added friction costs attention at the exact point a game is trying to earn it",
+      "Mobile devices cannot run 3D games",
+      "Console players do not play mobile games"
+     ],
+     "answer": 1,
+     "explain": "Friction at the point of first engagement is costly regardless of how strong the underlying idea is."
+    }
+   ]
+  },
+  "74": {
+   "beats": [
+    {
+     "say": "A game with a simple mechanic and real depth tends to produce something else almost as a side effect: moments worth recording and sharing."
+    },
+    {
+     "say": "That is worth designing for on purpose, rather than hoping for after the fact."
+    },
+    {
+     "say": "A useful habit is imagining, while a game is still being designed, what a content creator will actually choose to include when they play it."
+    },
+    {
+     "say": "Watching real recordings of a game being played is the honest way to find out what those moments are, rather than guessing."
+    },
+    {
+     "say": "Games built around one flexible, visible mechanic tend to generate this naturally: unique hiding spots, elaborate creations, personalised looks."
+    },
+    {
+     "say": "That is the kind of thing a player wants to show someone else, not because they were asked to, but because it is genuinely worth seeing."
+    },
+    {
+     "say": "A strong, community-driven following can keep a game active long after its first wave of attention, when players keep making and sharing their own content inside it."
+    },
+    {
+     "say": "That tends to happen to games whose core mechanic gave players something worth showing off in the first place, which is why this depends on nearly everything earlier in this unit."
+    }
+   ],
+   "questions": [
+    {
+     "id": "q74-1",
+     "concept": "clippability",
+     "type": "choice",
+     "ask": "What is the recommended way to find out what moments in a game are actually worth sharing?",
+     "options": [
+      "Guess based on personal taste",
+      "Watch real recordings of the game being played",
+      "Copy whatever a competitor's game does",
+      "Ask players to vote on a feature list"
+     ],
+     "answer": 1,
+     "explain": "Watching real play is the honest way to find the actual shareable moments, rather than guessing."
+    },
+    {
+     "id": "q74-2",
+     "concept": "clippability",
+     "type": "choice",
+     "ask": "What tends to sustain a strong, community-driven following over years?",
+     "options": [
+      "Frequent paid promotion",
+      "A core mechanic that keeps giving players something worth showing off",
+      "A large initial marketing spend",
+      "Exclusive in-game currency"
+     ],
+     "answer": 1,
+     "explain": "The lasting community effect traces back to the mechanic itself, which is why clippability depends on the rest of the unit."
+    }
+   ]
   }
  }
 }
