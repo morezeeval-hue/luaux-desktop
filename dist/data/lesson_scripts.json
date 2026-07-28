@@ -5,23 +5,47 @@
   "0": {
    "beats": [
     {
-     "say": "Welcome. By the end of this lesson you will have written a program and watched it answer you back. That is not a figure of speech, it is the actual thing."
+     "say": "Welcome. By the end of this lesson you will have written a program and watched it answer you back. If you have never written code before, you are in exactly the right place."
     },
     {
-     "say": "A script is a list of instructions that you write and the computer follows, one at a time, from the top to the bottom. That is genuinely all it is. There is no hidden magic underneath."
+     "say": "Start with what a script actually is. A script is a list of instructions that you write and the computer follows, one at a time, from the top of the file to the bottom."
     },
     {
-     "say": "Luau is the language Roblox uses for those instructions. When you write Luau, you are writing the rules of your game. What happens when a player touches something. What a button does. How a score goes up."
+     "say": "That is genuinely all it is. There is no hidden machinery underneath, and you do not need to understand how a computer works to start telling one what to do."
     },
     {
-     "say": "The first instruction you will meet is print. It takes something you give it and shows it to you. It is how you get the computer to tell you what it is thinking, which turns out to be the most useful thing you can do while learning."
+     "say": "Luau is the language Roblox uses for those instructions. When you write Luau, you are writing the rules of your game: what happens when a player touches something, what a button does, how a score goes up."
     },
     {
-     "say": "Here is your first program. Two lines. The first line puts some text somewhere and gives it the name message. The second hands that name to print, which shows it to you.",
+     "say": "The first instruction you will meet is print. You hand it something, and it shows that something to you."
+    },
+    {
+     "say": "That sounds small. It is the single most useful thing you can do while learning, because it is how you get the computer to tell you what it is thinking."
+    },
+    {
+     "say": "Here is your first program. Two lines, two ideas.",
      "code": "local message = \"LuauX online\"\nprint(message)"
     },
     {
-     "say": "One thing worth saying before you start. The Practice runner in this app is a sandbox. Nothing you type there can break your computer, your Roblox account, or a real game. Type things, run them, break them on purpose. That is what it is for."
+     "say": "The first line takes the text LuauX online and gives it a name: message. The text is now stored somewhere, under a label you chose."
+    },
+    {
+     "say": "The second line hands that name to print. Print looks up what message holds and shows it to you."
+    },
+    {
+     "say": "Notice that the second line never mentions the text itself. It only mentions the name. That separation is the whole point: change the value in one place and everything that uses the name follows."
+    },
+    {
+     "say": "Now the experiment. Run it once unchanged and read the output. Then change only the words between the quotation marks and run it again."
+    },
+    {
+     "say": "Say out loud what changed and what stayed the same. The instructions did not change. The text you handed to them did."
+    },
+    {
+     "say": "One thing worth saying before you start. The Practice runner in this app is a sandbox. Nothing you type there can break your computer, your Roblox account, or a real game."
+    },
+    {
+     "say": "You cannot get it wrong in a way that matters. Type things, run them, see what happens, and break it on purpose if you like. That is how this is meant to be used."
     }
    ],
    "questions": [
@@ -65,8 +89,8 @@
      ],
      "explain": "The name greeting holds the text Hello, and print shows what is in it."
     },
-      {
-        "id": "q0-4",
+    {
+     "id": "q0-4",
      "concept": "sandbox-safety",
      "type": "choice",
      "ask": "You are worried about typing something wrong in Practice. What can happen?",
@@ -76,56 +100,75 @@
       "Nothing. It is a sandbox, so experiment freely",
       "It could delete your progress"
      ],
-        "answer": 2,
-        "explain": "The runner is isolated. Getting it wrong is how you learn, and it costs nothing."
-      },
-      {
-        "id": "q0-5",
-        "concept": "print-purpose",
-        "type": "blank",
-        "ask": "Fill in the missing word: print makes an otherwise invisible value ___.",
-        "answer": "visible",
-        "explain": "print is for making an invisible value visible. In Roblox Studio it writes to the Output window."
-      },
-      {
-        "id": "q0-6",
-        "concept": "script-order",
-        "type": "order",
-        "ask": "Put these events in the order Luau follows them.",
-        "code": "local greeting = \"Hello\"\nprint(greeting)",
-        "options": [
-          "Luau runs the local instruction and gives the text the name greeting.",
-          "Luau runs print with greeting.",
-          "The value Hello becomes visible in the output."
-        ],
-        "answer": [0, 1, 2],
-        "explain": "Luau follows instructions from top to bottom. The name exists before print uses it, and print then makes its value visible."
-      }
+     "answer": 2,
+     "explain": "The runner is isolated. Getting it wrong is how you learn, and it costs nothing."
+    },
+    {
+     "id": "q0-5",
+     "concept": "print-purpose",
+     "type": "blank",
+     "ask": "Fill in the missing word: print makes an otherwise invisible value ___.",
+     "answer": "visible",
+     "explain": "print is for making an invisible value visible. In Roblox Studio it writes to the Output window."
+    },
+    {
+     "id": "q0-6",
+     "concept": "script-order",
+     "type": "order",
+     "ask": "Put these events in the order Luau follows them.",
+     "code": "local greeting = \"Hello\"\nprint(greeting)",
+     "options": [
+      "Luau runs the local instruction and gives the text the name greeting.",
+      "Luau runs print with greeting.",
+      "The value Hello becomes visible in the output."
+     ],
+     "answer": [
+      0,
+      1,
+      2
+     ],
+     "explain": "Luau follows instructions from top to bottom. The name exists before print uses it, and print then makes its value visible."
+    }
    ]
   },
   "1": {
    "beats": [
     {
-     "say": "A line of code can look like one solid blob of symbols. It is not. Every line is made of a few kinds of piece, and once you can tell them apart, code stops looking like noise."
+     "say": "The goal here is narrow and worth having: look at a line of Luau and confidently say which part is a name you invented, which part is plain text, and which part is punctuation doing a job."
     },
     {
-     "say": "There are three kinds worth knowing now. Names are labels you invent, like playerName. They point at a value so you can refer to it later."
+     "say": "When you look at a line of code it can feel like one solid blob of symbols. It is not. Every line is made of a few kinds of piece, and once you can tell them apart, code stops looking like noise."
     },
     {
-     "say": "Text values sit inside quotation marks. The quotation marks are the fence. Everything inside is taken literally, exactly as written."
+     "say": "Three kinds are worth knowing right now."
     },
     {
-     "say": "And punctuation, like brackets and the two dots, groups things together and says how they relate."
+     "say": "Names are labels you invent, like playerName. They point at a value or a function so you can refer to it later."
     },
     {
-     "say": "Look at this line. playerName is a name you invented. The words in quotation marks are text. The two dots join two pieces of text into one.",
+     "say": "Text values sit inside quotation marks, like the word Ari in quotes. The quotation marks are a fence: everything inside is taken literally, exactly as written."
+    },
+    {
+     "say": "Punctuation, such as brackets and the two dots that join text together, groups things and says how they relate."
+    },
+    {
+     "say": "Here is all three in two lines.",
      "code": "local playerName = \"Ari\"\nprint(\"Welcome, \" .. playerName)"
     },
     {
-     "say": "Here is the practical payoff. When a first script goes wrong, it is almost never anything deep. It is a misspelled name, a missing quotation mark, or an unclosed bracket. You do not need to understand the language internals to find those."
+     "say": "On the first line, playerName is a name you invented. The word in quotation marks is a text value. Everything else is punctuation doing its job."
     },
     {
-     "say": "One rule that catches everybody. Luau names are case sensitive. PlayerName with a capital P and playerName with a small p are two completely different names, in the same way that two people with similar names are still two people."
+     "say": "On the second line there are two pieces of text either side of the two dots. The two dots join them into one longer piece of text, which is then handed to print."
+    },
+    {
+     "say": "Notice that the text in quotes includes a trailing space after the comma. That space is inside the fence, so it is taken literally, which is what keeps the two words apart in the output."
+    },
+    {
+     "say": "Here is the practical payoff. When something goes wrong in a first script, it is almost never anything deep."
+    },
+    {
+     "say": "It is a misspelled name, a missing quotation mark, or an unclosed bracket. You do not need to know how the language is built internally to find those. You just need to tell the pieces apart."
     }
    ],
    "questions": [
@@ -203,27 +246,45 @@
   "2": {
    "beats": [
     {
-     "say": "Almost every game needs to remember things. How many coins a player has. Whether a door is open. What round it is."
+     "say": "Almost every game needs to remember things: how many coins a player has, whether a door is open, what round it is."
     },
     {
-     "say": "You remember something by giving it a name and putting a value in it. That pairing is called a variable."
+     "say": "In code you remember something by giving it a name and putting a value in it. That pairing is called a variable."
     },
     {
-     "say": "The word local in front decides where that name exists. A name created with local lives inside the block it was declared in, and nowhere else."
+     "say": "The word local in front of the name is not decoration. It decides where that name exists."
     },
     {
-     "say": "That sounds like a restriction, and it is, deliberately. Keeping names contained means you can look at a piece of code and see everything it depends on, without hunting through the rest of the file."
+     "say": "A name created with local lives inside the block it was declared in, and nowhere else. A block is any chunk between a keyword and its matching end, such as the body of an if."
     },
     {
-     "say": "Here is a complete, if small, piece of game logic. A player picks something up and a counter goes up. The plus equals means take what is already there and add to it.",
+     "say": "That sounds like a restriction, and it is, deliberately."
+    },
+    {
+     "say": "Keeping names contained means you can look at a piece of code and see everything it depends on without hunting through the rest of the file."
+    },
+    {
+     "say": "It also stops two unrelated parts of a game accidentally writing to the same value and corrupting each other. Both problems get genuinely painful in a real game, so the habit is worth building now while everything is small."
+    },
+    {
+     "say": "Here is a value being stored and then changed.",
      "code": "local coins = 25\nlocal pickupAmount = 5\n\ncoins += pickupAmount\nprint(\"Coins: \" .. coins)"
     },
     {
-     "say": "Now the trap. A name declared inside a block cannot escape it. In this example bonus is created inside the if block, so it only exists between then and end. Once the block finishes, the name is gone.",
+     "say": "The first two lines each give a name to a number. The third line adds one to the other and stores the result back into coins."
+    },
+    {
+     "say": "Read that third line as: take what coins already holds, add pickupAmount to it, and put the answer back under the same name."
+    },
+    {
+     "say": "Now the boundary. Watch what happens to a name declared inside a block once the block ends.",
      "code": "if true then\n    local bonus = 10\n    print(bonus)\nend\n\nprint(bonus)"
     },
     {
-     "say": "The fix is to decide where the value actually needs to be visible, and declare it there. If code after the block needs it, create the name before the block and assign to it inside."
+     "say": "The first print works, because it sits inside the same block where bonus was declared. The second one is outside that block, and the name does not exist there."
+    },
+    {
+     "say": "That is not a bug in the language. It is the containment doing exactly what it was asked to do."
     }
    ],
    "questions": [
@@ -284,24 +345,38 @@
   "3": {
    "beats": [
     {
-     "say": "When one line contains several operations, Luau does not simply work left to right. It follows a fixed order, the same one you were taught at school. Multiplication and division happen before addition and subtraction."
+     "say": "The aim here is to write an arithmetic expression that produces the number you actually intended, and to use brackets to say so out loud."
     },
     {
-     "say": "So two plus three times four is fourteen, not twenty. The multiplication goes first, regardless of where it sits in the line."
+     "say": "When one line contains several operations, Luau does not simply work left to right. It follows a fixed order, the same one you were taught in school."
     },
     {
-     "say": "Brackets override that order. Anything inside brackets is worked out first, so with brackets around the two plus three, the answer becomes twenty."
+     "say": "Multiplication and division happen before addition and subtraction. So two plus three times four is fourteen, not twenty."
     },
     {
-     "say": "This matters more than it sounds. Reward formulas, damage calculations and prices are exactly the kind of thing where a quietly wrong number is hard to notice and annoying to track down later.",
+     "say": "The multiplication goes first regardless of where it sits in the line. Its position does not buy it priority; its kind does."
+    },
+    {
+     "say": "Brackets override that order. Anything inside brackets is worked out first, so two plus three, in brackets, times four is twenty."
+    },
+    {
+     "say": "This matters more than it sounds. Reward formulas, damage calculations and prices are exactly the kind of thing where a quietly wrong number is hard to notice and annoying to track down later."
+    },
+    {
+     "say": "Here is a reward being calculated with the order made explicit.",
      "code": "local baseReward = 20\nlocal multiplier = 2\nlocal bonus = 5\nlocal reward = (baseReward * multiplier) + bonus\nprint(\"Reward: \" .. reward)"
     },
     {
-     "say": "A habit worth building. When a calculation has more than two parts, add the brackets even when the default order already does what you want. You are writing for whoever reads this in a month, and that person is usually you."
+     "say": "The brackets around the multiplication are not strictly needed here, because multiplication would have gone first anyway."
     },
     {
-     "say": "One more trap. Text that looks like a number is still text. Twenty inside quotation marks is a piece of text that happens to contain digits, and adding text to a number is not a meaningful operation.",
-     "code": "local reward = \"20\" + 5"
+     "say": "They are there because they state the intent. A reader does not have to remember the rule to know what you meant."
+    },
+    {
+     "say": "So a practical habit: when a calculation has more than two parts, add the brackets even when the default order already does what you want."
+    },
+    {
+     "say": "You are writing for the person who reads this in a month, and that person is usually you."
     }
    ],
    "questions": [
@@ -356,24 +431,35 @@
   "4": {
    "beats": [
     {
-     "say": "Alongside numbers and text there is a third kind of value with only two possibilities. True and false. It is called a boolean, and every decision in your game comes down to one."
+     "say": "Alongside numbers and text there is a third kind of value, and it has only two possibilities: true and false."
     },
     {
-     "say": "Is the door powered. Does the player have the key. Is the round over. All booleans."
+     "say": "It is called a boolean, and it is what every decision in your game ultimately comes down to. Is the door powered? Does the player have the key? Is the round over?"
     },
     {
-     "say": "Two words combine them. And is true only when both sides are true. Or is true when at least one side is true."
+     "say": "Two words let you combine them."
     },
     {
-     "say": "Here is a door that needs both a key and power. Notice that the decision itself is stored in a name, canOpen, before it is used. The if below stays short and readable because the thinking already happened on its own line.",
+     "say": "The word and is true only when both sides are true. Both conditions must hold."
+    },
+    {
+     "say": "The word or is true when at least one side is true."
+    },
+    {
+     "say": "Here is a door that needs both a key and power. Two conditions, one decision.",
      "code": "local hasKey = false\nlocal isDoorPowered = true\nlocal canOpen = hasKey and isDoorPowered\n\nif canOpen then\n    print(\"Door opened\")\nelse\n    print(\"Find the key first\")\nend"
     },
     {
-     "say": "Naming the combination pays off immediately. A name like canOpen tells the next reader what the condition means. Repeating the raw condition in three places tells them nothing, and changing the rule later means finding all three."
+     "say": "Look at the third line. The combined condition is given a name: canOpen. That name is the part worth copying."
     },
     {
-     "say": "One trap to know about. There is a compact pattern using and then or to pick between two values. It breaks when the middle value is itself false, because then the or branch takes over and the result is always true. Write the decision out properly instead.",
-     "code": "local isHidden = hasAccess and false or true"
+     "say": "Naming the combination pays off immediately. A name like canOpen tells the next reader what the condition means."
+    },
+    {
+     "say": "Repeating the raw condition in three places instead tells them nothing, and means fixing the rule later requires finding all three."
+    },
+    {
+     "say": "In this run hasKey is false, so the and is false whatever the power is, and the door stays shut. Change hasKey to true and the same code takes the other branch."
     }
    ],
    "questions": [
@@ -438,24 +524,38 @@
   "5": {
    "beats": [
     {
-     "say": "Up to now every script has run straight through. Real games react differently to different situations, and that means branching."
+     "say": "Up to now every script has run straight through, top to bottom. Real games need to react differently to different situations, and that means branching."
     },
     {
-     "say": "The familiar shape is the if statement. When the condition holds, run this block of instructions, otherwise run that one. Use it when the two paths do different things."
+     "say": "There are two shapes for making a choice, and they look similar enough to be worth separating carefully."
     },
     {
-     "say": "Luau also has an if then else expression, which looks similar but is a different tool. Instead of running a block, it produces a single value that you can store in a name. Use it when both paths produce a value and the only question is which one."
+     "say": "The familiar shape is the if statement: when the condition holds, run this block of instructions, otherwise run that one."
     },
     {
-     "say": "Statements act. Expressions produce. Choosing the shape that matches your intent is most of what makes branching code readable.",
+     "say": "Use it when the two paths do different things."
+    },
+    {
+     "say": "Luau also has an if, then, else expression. That is a different tool. Instead of running a block, it produces a single value that you can store in a name."
+    },
+    {
+     "say": "Use it when both paths produce a value and the only question is which one."
+    },
+    {
+     "say": "Here both shapes appear together, doing related work, so you can compare them directly.",
      "code": "local health = 40\n\nlocal status = if health <= 0 then \"Respawning\" else \"Active\"\n\nif health <= 0 then\n    print(\"Disable player input\")\nelse\n    print(\"Keep playing\")\nend\n\nprint(\"Status: \" .. status)"
     },
     {
-     "say": "Now a trap that costs people real time. Written as two words, else if starts a brand new if statement nested inside the else, and that new statement needs its own end. The single word elseif continues the existing chain and needs no extra end.",
-     "code": "if health <= 0 then\n    print(\"Respawning\")\nelse if health < 20 then\n    print(\"Low health\")\nend"
+     "say": "The middle line produces a value. It picks one of two pieces of text and stores the winner under the name status. Nothing is done, something is chosen."
     },
     {
-     "say": "When you want to test several conditions in sequence, elseif is almost always what you meant. It keeps the chain flat instead of nesting deeper with every condition."
+     "say": "The block below it acts. Each branch runs a different instruction. Nothing is stored, something happens."
+    },
+    {
+     "say": "That is the distinction, and it is worth getting right early: statements act, expressions produce."
+    },
+    {
+     "say": "Choosing the shape that matches your intent is most of what makes branching code readable."
     }
    ],
    "questions": [
@@ -519,24 +619,35 @@
   "6": {
    "beats": [
     {
-     "say": "If you need to spawn three rewards, you could write the same instruction three times. If you need three hundred, you cannot. A loop lets you write it once and say how many times to run it."
+     "say": "If you need to spawn three rewards, you could write the same instruction three times. If you need three hundred, you cannot."
     },
     {
-     "say": "A numeric for loop counts. You give it a starting number and an ending number, and it runs the block once for each value, with the current number available inside under a name you choose.",
+     "say": "A loop lets you write the instruction once and say how many times to run it."
+    },
+    {
+     "say": "A numeric for loop counts. You give it a starting number and an ending number, and it runs the block once for each value."
+    },
+    {
+     "say": "The current number is available inside the block, under a name you choose."
+    },
+    {
+     "say": "Here is the simplest useful thing a loop can do.",
      "code": "for rewardNumber = 1, 3 do\n    print(\"Spawn reward #\" .. rewardNumber)\nend"
     },
     {
-     "say": "A while loop is the other shape. It keeps going as long as its condition stays true. That makes it more flexible and more dangerous, because something inside the loop has to eventually make that condition false."
+     "say": "One instruction is written. Three lines come out, and they differ only in the number, because rewardNumber holds a different value on each pass."
     },
     {
-     "say": "Here is what happens when nothing does. The condition checks count, but nothing inside ever changes it. It starts at zero and stays at zero, so the loop never ends.",
-     "code": "local count = 0\nwhile count < 3 do\n    print(count)\nend"
+     "say": "A while loop is the other shape. It keeps going as long as its condition stays true."
     },
     {
-     "say": "Whenever you write a while, immediately look at its condition and ask which line inside is going to make that false. If you cannot point at one, you have found the bug before it happened."
+     "say": "That makes it more flexible and more dangerous, because something inside the loop has to eventually make that condition false."
     },
     {
-     "say": "Reach for a for loop when you know how many times. Reach for while when you are waiting for a situation to change. The for loop manages its own counter, which is exactly why it cannot run away from you."
+     "say": "If nothing does, the loop never ends. A loop that never finishes is a bug, not a mystery."
+    },
+    {
+     "say": "So the rule of thumb: reach for for when you know how many times. Reach for while when you are waiting for a situation to change."
     }
    ],
    "questions": [
@@ -600,24 +711,32 @@
   "7": {
    "beats": [
     {
-     "say": "So far each name has held a single value. A table lets one name hold many, which is how you represent the collections games are full of. The pickups in a level. The players in a round. The items in an inventory."
+     "say": "So far each name has held a single value. A table lets one name hold many."
     },
     {
-     "say": "Written with curly brackets and commas, a list holds several values in order. Each one sits at a numbered position, starting at one."
+     "say": "That is how you represent the kinds of collections games are full of: the pickups in a level, the players in a round, the items in an inventory."
     },
     {
-     "say": "To visit every item you use a for in loop. On each pass it hands you two things. The position, and the value at that position. You choose the names for both.",
+     "say": "A list is written with curly brackets and commas. Three pieces of text in curly brackets is a list of three items."
+    },
+    {
+     "say": "Each one sits at a numbered position, and the numbering starts at one."
+    },
+    {
+     "say": "To visit every item you use a for, in loop. On each pass it hands you two things: the position, and the value at that position."
+    },
+    {
+     "say": "You choose the names for both. That is why the code below says index and pickup rather than anything the language imposed on you.",
      "code": "local pickups = {\"Coin\", \"Gem\", \"Key\"}\n\nfor index, pickup in pickups do\n    print(index .. \": \" .. pickup)\nend"
     },
     {
-     "say": "Add a fourth item to that list and run it again. The loop needs no changes at all. That is the point of looping over a list. The code stops depending on how many items there are."
+     "say": "Run it and match each output line back to an item in the list. The first pass has index one and pickup Coin, and so on down the list."
     },
     {
-     "say": "Here is a smaller trap. This version still receives both the position and the value, but only prints the first one. Nothing is broken. The value is simply not being used.",
-     "code": "for index, pickup in pickups do\n    print(index)\nend"
+     "say": "Then add a fourth item to the list and run it again. You do not touch the loop. The loop already says every item, however many that turns out to be."
     },
     {
-     "say": "That is a good habit to build. When output is missing something, check what you asked for before assuming the data is wrong. Most surprising output is a question phrased differently than intended."
+     "say": "That is the payoff of a loop over a list: the code stops depending on how much data there is."
     }
    ],
    "questions": [
@@ -681,27 +800,36 @@
   "8": {
    "beats": [
     {
-     "say": "A list is the right shape when order matters and position is meaningful. But a lot of game data is not like that. Settings, player stats and configuration are collections where each value has a name, not a position."
+     "say": "A list is the right shape when order matters and position is meaningful. A lot of game data is not like that."
     },
     {
-     "say": "Nobody wants to remember that the volume is item number two."
+     "say": "Settings, player stats and configuration are collections where each value has a name, not a position. Nobody wants to remember that the volume is item number two."
     },
     {
-     "say": "A table can do this too. Instead of listing values, you write name equals value pairs. Now you fetch the volume by asking for volume, which is both harder to get wrong and much easier to read six months later.",
+     "say": "A table can do this too. Instead of listing values, you write name equals value pairs."
+    },
+    {
+     "say": "Now you fetch the volume by asking for volume, which is both harder to get wrong and much easier to read six months later."
+    },
+    {
+     "say": "Here are three settings of three different kinds: a true-or-false, a number, and some text.",
      "code": "local settings = {music = true, volume = 0.7, difficulty = \"normal\"}\n\nfor key, value in settings do\n    print(key .. \": \" .. tostring(value))\nend"
     },
     {
-     "say": "The same for in loop walks these. The difference is what it hands you. Instead of a position and a value, you get the key and the value."
+     "say": "The same for, in loop walks these as well. What changes is what it hands you: instead of a position and a value, you get the key and the value."
     },
     {
-     "say": "Unlike a list, these have no guaranteed order. Do not rely on them coming back in the order you wrote them. If order matters to you, that is a signal you wanted a list."
+     "say": "One warning that matters. Unlike a list, these have no guaranteed order."
     },
     {
-     "say": "Notice tostring in that example. The values are not all text. One holds a true or false, another holds a number. tostring converts whatever it is given into text so it can be joined onto the key."
+     "say": "Do not rely on them coming back in the order you wrote them. If your code needs a particular order, a table with names is the wrong shape for it."
     },
     {
-     "say": "And when you already know which setting you want, you do not need a loop at all. A dot and the key fetches that one value directly. Loop when you want to visit everything, reach for the key when you want one specific thing.",
+     "say": "You can also reach a single setting directly by name, without looping at all.",
      "code": "print(\"Volume: \" .. settings.volume)"
+    },
+    {
+     "say": "Looping is for when you want all of them. Naming one is for when you want that one. Both read clearly, which is the entire reason to store settings this way."
     }
    ],
    "questions": [
