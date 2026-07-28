@@ -894,30 +894,42 @@
   "9": {
    "beats": [
     {
-     "say": "So far your scripts have run one instruction after another. A function lets you take a chunk of that work, give it a name, and run it whenever you want, as many times as you want."
+     "say": "So far your scripts have run one instruction after another, top to bottom."
     },
     {
-     "say": "Two words do the heavy lifting. Parameters are what the function takes in. Return values are what it hands back. A vending machine is a fair picture. You put something in, something specific comes out, and you do not need to know what happens inside to use it."
+     "say": "A function lets you take a chunk of that work, give it a name, and run it whenever you want, as many times as you want."
     },
     {
-     "say": "Here is the coin counter from earlier, with the logic given a name. Notice the last line. The result of the call is stored back into coins.",
+     "say": "Two words do the heavy lifting. Parameters are what the function takes in. Return values are what it hands back."
+    },
+    {
+     "say": "A vending machine is a fair picture of it. You put something in, something specific comes out, and you do not need to know what happens inside to use it."
+    },
+    {
+     "say": "Here is the coin counter from Section 2, with the logic given a name.",
      "code": "local function awardCoins(currentCoins: number, pickupAmount: number): number\n    return currentCoins + pickupAmount\nend\n\nlocal coins = 25\ncoins = awardCoins(coins, 5)\nprint(\"Coins: \" .. coins)"
     },
     {
-     "say": "There is one habit worth building from your very first function. When a function needs to change something, prefer handing back the new value over quietly reaching out and modifying something far away."
+     "say": "Read the first line as the contract. It takes two numbers in, and the number after the closing bracket says it hands a number back."
     },
     {
-     "say": "A function that takes inputs and returns a result can be tested on its own, reused somewhere else, and later moved into a ModuleScript without dragging hidden dependencies along."
+     "say": "The body does one thing: it works out the new total and returns it. It does not touch coins. It does not know coins exists."
     },
     {
-     "say": "Now the mistake that catches everyone once. Here the function clearly runs, but coins still prints twenty five. The answer was produced and then dropped on the floor, because nothing caught it.",
+     "say": "The important line is the one that calls it. The result is handed back and stored, which is why coins ends up holding the new value."
+    },
+    {
+     "say": "Now the habit worth building from your very first function. When a function needs to change something, prefer handing back the new value over quietly reaching out and modifying something far away."
+    },
+    {
+     "say": "Watch what happens when the result is thrown away.",
      "code": "local coins = 25\nawardCoins(coins, 5)\nprint(coins)"
     },
     {
-     "say": "Store what comes back. A return value only matters if something receives it."
+     "say": "The function ran. It worked out the right answer. Nobody caught it, so coins is unchanged and the output is the old number."
     },
     {
-     "say": "One last thing about those type annotations you saw. They tell the type checker what you intend, which lets it warn you when something does not line up. They do not convert anything while the game runs. They are a note to your tools and to the next reader, not a safety net."
+     "say": "A function that takes inputs and returns a result can be tested on its own, reused somewhere else, and later moved into a ModuleScript without dragging hidden dependencies along."
     }
    ],
    "questions": [
@@ -997,27 +1009,45 @@
   "10": {
    "beats": [
     {
-     "say": "A function written inside a scope can see the local variables around it. More than that, it keeps its connection to them even after the surrounding code has moved on."
+     "say": "A function written inside a scope can see the local variables around it."
     },
     {
-     "say": "A function bundled together with the outer variables it remembers is called a closure. That sounds abstract until you see what it buys you. A function with a memory."
+     "say": "More than that, it keeps its connection to them even after the surrounding code has moved on."
     },
     {
-     "say": "Here is a counter that keeps its own running total between calls. You do not pass the total in each time. It remembers.",
+     "say": "A function bundled together with the outer variables it remembers is called a closure."
+    },
+    {
+     "say": "That sounds abstract until you see what it buys you: a function with a memory. A counter that keeps counting between calls, without you passing the running total in every time."
+    },
+    {
+     "say": "Here is exactly that.",
      "code": "local score = 0\n\nlocal function addScore(amount)\n    score += amount\n    return score\nend\n\nprint(addScore(10))\nprint(addScore(5))"
     },
     {
-     "say": "It is a sharp tool in both directions. It is genuinely good for small state that one piece of code clearly owns."
+     "say": "The name score is declared outside the function. The function reaches out to it, adds to it, and hands the new total back."
     },
     {
-     "say": "It is a poor choice for anything another part of the game needs to read, check or trust, because that state is now tucked away where nothing else can see it. Ask who needs to own the truth, and let that answer decide."
+     "say": "Run it and read both numbers. The second call does not start over. It continues from where the first one left off, because both calls share the same score."
     },
     {
-     "say": "Here is what breaks it. score is now created fresh inside the function, so it starts at zero on every single call. There is nothing to remember, because the variable is born and dies within one call.",
+     "say": "Now move that name inside the function and the memory disappears.",
      "code": "local function addScore(amount)\n    local score = 0\n    score += amount\n    return score\nend"
     },
     {
-     "say": "Two honest fixes, depending on who should own the value. Move the state back out to the scope that owns it, or pass the current value in and return the next one, the way the previous section did. Choose the second whenever the value matters to anyone else."
+     "say": "Every call now makes a fresh score, starting at zero. The function still works, but it no longer remembers anything between calls."
+    },
+    {
+     "say": "So the tool is sharp in both directions."
+    },
+    {
+     "say": "It is genuinely good for small state that one piece of code clearly owns."
+    },
+    {
+     "say": "It is a poor choice for anything another part of the game needs to read, check or trust, because that state is now tucked away where nothing else can see it."
+    },
+    {
+     "say": "Ask who needs to own the truth, and let that answer decide."
     }
    ],
    "questions": [
@@ -1083,27 +1113,41 @@
   "11": {
    "beats": [
     {
-     "say": "When your code calls a function, the caller pauses and waits. The called function has to finish and return before the line underneath runs. Calls stack up and then unwind, like plates stacked and then taken off one at a time."
+     "say": "When your code calls a function, the caller pauses and waits."
+    },
+    {
+     "say": "The called function has to finish and return before the line underneath runs."
+    },
+    {
+     "say": "Calls stack up and then unwind, like plates stacked and then taken off one at a time."
     },
     {
      "say": "Recursion is a function that calls itself, each time with a smaller version of the same problem."
     },
     {
-     "say": "It needs a base case. A condition where it stops calling itself and simply returns. Without one, the calls never unwind.",
+     "say": "It needs a base case: a condition where it stops calling itself and simply returns. Without one, the calls never unwind."
+    },
+    {
+     "say": "Here is the smallest recursion that still shows the whole shape.",
      "code": "local function countdown(value)\n    if value <= 0 then\n        print(\"Go!\")\n        return\n    end\n\n    print(value)\n    countdown(value - 1)\nend\n\ncountdown(3)"
     },
     {
-     "say": "Be honest about when you need it. For most game scripting, repeating over a known collection, a plain loop is clearer, easier to read and easier to inspect when something goes wrong."
+     "say": "The first block is the base case. When the value has reached zero there is nothing left to count, so it prints and returns without calling itself again."
+    },
+    {
+     "say": "Below it, the function prints the current value and calls itself with one less. That is the smaller version of the same problem."
+    },
+    {
+     "say": "Run it with three and follow the order: three, two, one, then Go. Each call waited for the one it started before it could finish."
+    },
+    {
+     "say": "Now be honest about when you need this."
+    },
+    {
+     "say": "For most game scripting, repeating over a known collection, a plain loop is clearer, easier to read and easier to inspect when something goes wrong."
     },
     {
      "say": "Reach for recursion when the structure itself nests, such as walking a tree of Instances, and when you can state the stopping condition out loud before you write it."
-    },
-    {
-     "say": "Here is the classic failure. Passing the same value straight back in poses the identical problem again. Nothing shrinks, so the base case is never reached.",
-     "code": "countdown(value)"
-    },
-    {
-     "say": "Every recursive call must make the problem measurably smaller. If you cannot say what gets smaller, that is a strong sign a loop was the right tool."
     }
    ],
    "questions": [
@@ -1169,27 +1213,45 @@
   "12": {
    "beats": [
     {
-     "say": "Earlier you used a list without much said about what a list actually is. Here is the honest answer. Luau has one collection type, the table, and an array is simply a table used by a shared convention."
+     "say": "Section 7 used a list without saying much about what a list actually is. Here is the honest answer."
     },
     {
-     "say": "Values sit at numbered positions, counting up from one, with no gaps."
+     "say": "Luau has one collection type, the table. An array is simply a table used by a shared convention."
     },
     {
-     "say": "Two things trip people up early. The first is that positions start at one, not zero.",
+     "say": "The convention is this: values sit at numbered positions, counting up from one, with no gaps."
+    },
+    {
+     "say": "Two things trip people up early."
+    },
+    {
+     "say": "The first is that positions start at one, not zero."
+    },
+    {
+     "say": "The second is subtler and worth taking seriously. The length operator is dependable when the numbered positions are packed together with no holes."
+    },
+    {
+     "say": "If positions are missing in the middle, the length is not a trustworthy count, and you should not build logic on top of it."
+    },
+    {
+     "say": "Here is an inventory changed two different ways.",
      "code": "local inventory = {\"Sword\", \"Potion\", \"Key\"}\ninventory[2] = \"Shield\"\ntable.insert(inventory, \"Map\")\n\nprint(inventory[2])\nprint(#inventory)"
     },
     {
-     "say": "The second is subtler and worth taking seriously. The length operator is dependable when the numbered positions are packed together with no holes. If positions are missing in the middle, it is not a trustworthy count, and you should not build logic on top of it."
+     "say": "The second line replaces what is already at position two. Nothing moves, nothing is added; one slot now holds something else."
     },
     {
-     "say": "So keep ordered collections packed. Add with table dot insert, remove with table dot remove, and do not leave holes behind by assigning nil into the middle."
+     "say": "The third line adds to the end. The collection grows by one and stays packed."
     },
     {
-     "say": "Here is the position mistake in the flesh. There is nothing stored at position zero.",
+     "say": "So the practical takeaway is to keep ordered collections packed. Add with table.insert, remove with table.remove, and do not leave holes behind by assigning nil into the middle."
+    },
+    {
+     "say": "One more thing to try, because the result surprises people.",
      "code": "print(inventory[0])"
     },
     {
-     "say": "If you have come from another language, this will catch you more than once. It is not a quirk to work around. Write your loops and lookups in terms of one, and the rest of the language lines up with you."
+     "say": "Position zero is not part of the convention. Nothing was ever put there, so nothing comes back."
     }
    ],
    "questions": [
@@ -1255,24 +1317,42 @@
   "13": {
    "beats": [
     {
-     "say": "Position is the right way to organise some things and the wrong way for most others. Nobody wants to remember that a player's coin count is the second item in a list."
+     "say": "Position is the right way to organise some things and the wrong way for most others."
     },
     {
-     "say": "The same table can use meaningful names as keys instead of numbers. Now you ask for coins and get the coin count.",
+     "say": "Nobody wants to remember that a player's coin count is the second item in a list."
+    },
+    {
+     "say": "The same table can use meaningful names as keys instead of numbers. Now you ask for coins and get the coin count."
+    },
+    {
+     "say": "Compare asking for playerState.coins with asking for playerState position one."
+    },
+    {
+     "say": "The first explains itself. The second forces every future reader, including you, to remember a convention that was never written down."
+    },
+    {
+     "say": "Here is a small record with two named fields.",
      "code": "local playerState = {coins = 30, title = \"Rookie\"}\n\nprint(playerState.coins)\nprint(playerState.title)"
     },
     {
-     "say": "Compare asking for coins with asking for item number one. The first explains itself. The second forces every future reader, including you, to remember a convention that was never written down."
+     "say": "Each value is fetched by the name it was stored under. There is no counting and no convention to remember."
     },
     {
-     "say": "One behaviour to know before you rely on it. Asking for a key that was never set gives you nil rather than an error."
+     "say": "Run it and confirm both values arrive. Then add a level field and read it back. Nothing else in the code has to change."
     },
     {
-     "say": "That is convenient and it is also a trap, because the problem does not surface until you try to use the missing value. Here joining text onto nothing stops the script.",
+     "say": "One behaviour to know before you rely on it. Asking for a key that was never set gives you nothing back, rather than an error."
+    },
+    {
+     "say": "Watch what that costs when you use the missing value straight away.",
      "code": "print(\"Title: \" .. playerState.rank)"
     },
     {
-     "say": "Two clean fixes. Check the value and supply a fallback, or make sure whatever creates the record always sets the key. The second is usually better, because then every record has the same shape and readers can rely on it."
+     "say": "There is no rank in that record. The lookup itself is fine; the failure happens one step later, when the missing value is joined onto text."
+    },
+    {
+     "say": "That is convenient and it is also a trap, because the problem does not surface where it was caused. Check optional data before treating it as if it is there."
     }
    ],
    "questions": [
@@ -1341,21 +1421,33 @@
      "say": "Game values usually have edges. Health should not fall below zero. Volume belongs between zero and one. A reward should come from a stated range rather than anywhere at all."
     },
     {
-     "say": "You can enforce edges with a scatter of separate checks, and plenty of code does. The trouble is that the rule ends up spread across several places, so changing it later means finding all of them and hoping you did."
+     "say": "You can enforce edges with a scatter of separate checks, and plenty of code does."
     },
     {
-     "say": "math dot clamp says the whole rule in one line. Here is a value, here is the lowest it may be, here is the highest. It hands back a value inside that range.",
+     "say": "The trouble is that the rule ends up spread across several places, so changing it later means finding all of them and hoping you did."
+    },
+    {
+     "say": "There is a single call that says the whole rule in one line: here is a value, here is the lowest it may be, here is the highest. It hands back a value inside that range."
+    },
+    {
+     "say": "Here it is holding health inside its bounds.",
      "code": "local health = -15\nlocal maxHealth = 100\nhealth = math.clamp(health, 0, maxHealth)\nprint(\"Health: \" .. health)"
     },
     {
-     "say": "The rule lives at the point where the value actually changes, which is exactly where a reader will look for it. And the range includes both ends."
+     "say": "Minus fifteen is below the floor, so what comes back is zero. Anything above maxHealth comes back as maxHealth. Anything already inside passes through untouched."
     },
     {
-     "say": "The arguments have an order, and getting it wrong is quiet rather than loud. The value you are constraining comes first, then the range you are constraining it to. State first, rule second.",
+     "say": "Try a value above maxHealth and confirm it comes down. Then change maxHealth and predict the result before you run it."
+    },
+    {
+     "say": "Notice where the rule sits: on the line where the value actually changes. That is exactly where a reader will look for it."
+    },
+    {
+     "say": "The argument order carries the meaning, so getting it wrong does not fail loudly.",
      "code": "math.clamp(0, maxHealth, health)"
     },
     {
-     "say": "One caution worth taking seriously as you go further. Keep randomness well away from anything paid or fairness sensitive in a real game economy. That is a design and trust question long before it is a coding one."
+     "say": "That reads as: take zero, keep it between maxHealth and health. It is a valid call and a wrong question."
     }
    ],
    "questions": [
@@ -1418,24 +1510,39 @@
   "15": {
    "beats": [
     {
-     "say": "The table library gives you operations that name what you are doing. Insert, remove, clear, clone. Using the one that matches your intent beats rebuilding a collection by hand and hoping the side effects work out."
+     "say": "The table library gives you operations that name what you are doing: insert, remove, clear, clone."
     },
     {
-     "say": "When a collection holds game state, get into the habit of looking at it before and after a change. A removal that silently does nothing, or removes the wrong thing, is much easier to catch when you can see both sides of it."
+     "say": "Using the one that matches your intent beats rebuilding a collection by hand and hoping the side effects work out."
     },
     {
-     "say": "Here an item is used and the removed value is kept. table dot remove does two jobs at once. It hands back the value it took out, and it closes the gap so the numbered positions stay packed.",
+     "say": "When a collection holds game state, get into the habit of looking at it before and after a change."
+    },
+    {
+     "say": "A removal that silently does nothing, or removes the wrong thing, is much easier to catch when you can see both sides of it."
+    },
+    {
+     "say": "Here is an item being used, with the used item kept.",
      "code": "local inventory = {\"Potion\", \"Key\", \"Map\"}\nlocal usedItem = table.remove(inventory, 1)\n\nprint(\"Used: \" .. usedItem)\nprint(\"Remaining: \" .. #inventory)"
     },
     {
-     "say": "Catching that returned value is what turns a deletion into a transaction. The item is not just gone. It is in your hand and you can do something with it."
+     "say": "Removing hands back what it removed. That is why the item can be reported rather than lost."
     },
     {
-     "say": "Now the behaviour that surprises people. Removing from the middle of a packed array does not leave a hole. Everything after it shifts down to close the gap.",
+     "say": "Now the behaviour that matters more than the rest here. Removing from the middle of a packed array does not leave a hole."
+    },
+    {
+     "say": "Everything after the removed position shifts down to close the gap. That is usually what you want, and it is also the source of a classic bug."
+    },
+    {
+     "say": "Here is that bug.",
      "code": "table.remove(inventory, 1)\nprint(inventory[2])"
     },
     {
-     "say": "So the positions you remembered are no longer pointing at the same things. Either re-read the collection after changing it, or, if a thing's identity matters more than where it sits, stop identifying it by position and give it a name instead."
+     "say": "Position two no longer holds what it held a moment ago. Everything moved down by one when the first item left."
+    },
+    {
+     "say": "Nothing is broken. The collection did exactly what it promised. The mistake is reading a position that was captured before the shift."
     }
    ],
    "questions": [
