@@ -62,6 +62,39 @@ async fn main() {
     }
     println!("sentence splitting: {} cases checked", split_cases.len());
 
+    // Commas get their own, shorter pause, but only where both halves can
+    // carry phrasing, and the comma must stay attached or the fragment lands
+    // like a full stop.
+    let comma_cases: &[(&str, usize)] = &[
+        // Two clauses, both long enough: split.
+        ("Everyone in a multiplayer game sees the same world, even though they are on different computers.", 2),
+        // Second half too short to stand alone: left whole.
+        ("Hello, and welcome.", 1),
+        // First half too short: left whole.
+        ("It is fast, but it is not free at all here.", 1),
+    ];
+    for (input, want) in comma_cases {
+        let got = piper::segments(input, piper::SENTENCE_PAUSE_MS);
+        if got.len() != *want {
+            println!("FAIL clause {input:?}: wanted {want}, got {} -> {:?}", got.len(),
+                     got.iter().map(|(s, p)| format!("{s} +{p}ms")).collect::<Vec<_>>());
+            failures += 1;
+        }
+        if let Some((first, _)) = got.first() {
+            if got.len() > 1 && !(first.ends_with(',') || first.ends_with(';') || first.ends_with(':')) {
+                println!("FAIL clause {input:?}: punctuation was stripped from {first:?}");
+                failures += 1;
+            }
+        }
+    }
+    // The last piece must never carry a trailing pause.
+    let tail = piper::segments("One thing. Two things.", piper::SENTENCE_PAUSE_MS);
+    if tail.last().map(|(_, p)| *p) != Some(0) {
+        println!("FAIL: the final segment carries a pause");
+        failures += 1;
+    }
+    println!("clause splitting: {} cases checked", comma_cases.len());
+
     // The working copy must live outside the app bundle. An update replaces
     // the bundle wholesale, and espeak-ng opens its data lazily, so a copy
     // inside the bundle disappears under a running app and every later

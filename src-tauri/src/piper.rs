@@ -398,8 +398,84 @@ pub fn sentences(text: &str) -> Vec<String> {
 /// How long a pause at the end of a sentence should last, in milliseconds.
 ///
 /// Adjustable because the right value is a matter of taste and can only be
-/// judged by ear, not derived.
-pub const SENTENCE_PAUSE_MS: usize = 300;
+/// judged by ear, not derived. Chosen by listening to 0, 180, 300 and 450.
+pub const SENTENCE_PAUSE_MS: usize = 450;
+
+/// A comma is a shorter breath than a full stop, not the same one. Roughly
+/// four tenths of a sentence pause reads as a clause boundary; giving it the
+/// full pause makes every sentence sound like several.
+pub const CLAUSE_PAUSE_MS: usize = 180;
+
+/// Splitting at a comma is only worth it when both halves are long enough to
+/// carry their own phrasing. Below this, the fragment sounds clipped and the
+/// comma is better left inside one utterance.
+const MIN_CLAUSE_WORDS: usize = 4;
+
+/// Splits a sentence at its commas, keeping each comma attached to the words
+/// before it.
+///
+/// Keeping the punctuation matters more than the split: with the comma still
+/// there the model produces the rising, unfinished contour that a clause
+/// should have. Strip it and every fragment lands like a full stop, which is
+/// worse than not splitting at all.
+fn clauses(sentence: &str) -> Vec<String> {
+    let chars: Vec<char> = sentence.chars().collect();
+    let mut out: Vec<String> = Vec::new();
+    let mut start = 0usize;
+
+    let word_count = |s: &[char]| s.split(|c: &char| c.is_whitespace()).filter(|w| !w.is_empty()).count();
+
+    for i in 0..chars.len() {
+        if chars[i] != ',' && chars[i] != ';' && chars[i] != ':' {
+            continue;
+        }
+        if chars.get(i + 1) != Some(&' ') {
+            continue;
+        }
+        let left = &chars[start..=i];
+        let right = &chars[i + 1..];
+        if word_count(left) < MIN_CLAUSE_WORDS || word_count(right) < MIN_CLAUSE_WORDS {
+            continue;
+        }
+        out.push(left.iter().collect::<String>().trim().to_string());
+        start = i + 1;
+    }
+
+    if start < chars.len() {
+        let rest: String = chars[start..].iter().collect();
+        let rest = rest.trim().to_string();
+        if !rest.is_empty() {
+            out.push(rest);
+        }
+    }
+    if out.is_empty() {
+        out.push(sentence.trim().to_string());
+    }
+    out
+}
+
+/// The beat broken into what gets spoken, each with the silence that follows
+/// it. The last piece carries no pause.
+pub fn segments(text: &str, sentence_pause: usize) -> Vec<(String, usize)> {
+    let clause_pause = sentence_pause * CLAUSE_PAUSE_MS / SENTENCE_PAUSE_MS;
+    let sentences = sentences(text);
+    let mut out: Vec<(String, usize)> = Vec::new();
+
+    for (s_index, sentence) in sentences.iter().enumerate() {
+        let parts = clauses(sentence);
+        let last_sentence = s_index + 1 == sentences.len();
+        for (c_index, part) in parts.iter().enumerate() {
+            let last_clause = c_index + 1 == parts.len();
+            let pause = match (last_sentence, last_clause) {
+                (true, true) => 0,
+                (_, true) => sentence_pause,
+                _ => clause_pause,
+            };
+            out.push((part.clone(), pause));
+        }
+    }
+    out
+}
 
 /// A touch under one, so the tutor explains rather than announces.
 const PACE: f32 = 1.06;
@@ -463,20 +539,19 @@ pub fn synthesize_with(
     }
     let (_, piper) = held.as_mut().ok_or("no voice loaded")?;
 
-    let pieces = sentences(text);
     let mut all: Vec<f32> = Vec::new();
     let mut rate = 22_050u32;
 
-    for (i, piece) in pieces.iter().enumerate() {
+    for (piece, pause) in segments(text, pause_ms) {
         let (samples, r) = piper
-            .create(piece, false, None, Some(PACE), None, None)
+            .create(&piece, false, None, Some(PACE), None, None)
             .map_err(|e| format!("cannot speak that: {e}"))?;
         rate = r;
         let mut piece_audio = trim_and_fade(&samples, rate).to_vec();
         fade_edges(&mut piece_audio, rate);
         all.append(&mut piece_audio);
-        if i + 1 < pieces.len() && pause_ms > 0 {
-            all.extend(std::iter::repeat(0.0).take(rate as usize * pause_ms / 1000));
+        if pause > 0 {
+            all.extend(std::iter::repeat(0.0).take(rate as usize * pause / 1000));
         }
     }
 
