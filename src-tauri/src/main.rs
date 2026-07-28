@@ -1,7 +1,6 @@
 // LuauX Desktop — main process.
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-mod piper;
 mod whisper;
 
 use tauri::{Emitter, Manager, WebviewUrl, WebviewWindowBuilder};
@@ -58,10 +57,6 @@ fn main() {
         .plugin(tauri_plugin_process::init())
         .invoke_handler(tauri::generate_handler![
             open_discord_auth,
-            piper::piper_status,
-            piper::piper_install,
-            piper::piper_speak,
-            piper::piper_remove,
             whisper::whisper_status,
             whisper::whisper_install,
             whisper::whisper_transcribe

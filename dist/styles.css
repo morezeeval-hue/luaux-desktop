@@ -494,30 +494,16 @@ strong { color: var(--text); }
    One thing to read, one thing to do. The chrome stays out of the way. */
 .guided { max-width: 620px; margin: 0 auto; }
 .g-head { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
-.g-exit, .g-mute {
+.g-exit {
   background: none; border: 1px solid var(--line); border-radius: 8px;
   color: var(--text-faint); font-family: var(--font); font-size: 11.5px;
   padding: 5px 10px; cursor: pointer; flex: none;
 }
-.g-exit:hover, .g-mute:hover { color: var(--text); border-color: var(--line-2); }
+.g-exit:hover { color: var(--text); border-color: var(--line-2); }
 .g-meter { flex: 1; height: 6px; border-radius: 4px; background: var(--panel-2); overflow: hidden; }
 .g-meter i { display: block; height: 100%; background: var(--accent); transition: width .35s var(--ease); }
 .g-where { font-family: var(--font); font-size: 11px; color: var(--text-ghost); margin-bottom: 18px; }
 
-/* Offered once, above the lesson, and never in the way of it. */
-.g-offer {
-  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-  margin-bottom: 16px; padding: 10px 13px; border-radius: 10px;
-  background: var(--panel-2); border: 1px solid var(--line);
-  font-size: 12.5px; color: var(--text-faint);
-}
-.g-offer-yes, .g-offer-no {
-  font-family: var(--font); font-size: 11.5px; padding: 4px 11px;
-  border-radius: 7px; cursor: pointer; flex: none;
-}
-.g-offer-yes { background: var(--accent); border: none; color: var(--bg); }
-.g-offer-no { background: none; border: 1px solid var(--line); color: var(--text-faint); }
-.g-offer-no:hover { color: var(--text); border-color: var(--line-2); }
 
 .g-card {
   background: var(--panel); border: 1px solid var(--line);

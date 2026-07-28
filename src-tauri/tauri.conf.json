@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "LuauX",
-  "version": "1.21.0",
+  "version": "1.22.0",
   "identifier": "space.prestigex.luaux.desktop",
   "build": {
     "frontendDist": "../dist"
@@ -28,7 +28,6 @@
     "active": true,
     "createUpdaterArtifacts": true,
     "resources": {
-      "resources/espeak-ng-data": "espeak-ng-data",
       "resources/whisper_input.py": "whisper_input.py"
     },
     "targets": [

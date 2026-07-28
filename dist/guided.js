@@ -26,9 +26,9 @@ window.LuauGuided = (function () {
   function has(sectionID) { return !!script(sectionID); }
 
   /* A tutor says hello before launching into the material. Dropping straight
-     into the first analogy is what makes the app feel like a text-to-speech
-     toy rather than someone teaching you, so the opening is spoken as its
-     own beat: warm the first time, brief afterwards, and never in the way. */
+     into the first analogy makes a lesson feel like a wall of text rather
+     than someone teaching, so the opening is its own card: warm the first
+     time, brief afterwards, and never in the way. */
   const GREETED_KEY = "luaux.guided.greeted";
 
   function openingBeat(sectionID) {
@@ -54,42 +54,16 @@ window.LuauGuided = (function () {
     if (!s) return false;
     const beats = [openingBeat(sectionID)].concat(s.beats);
     state = { sectionID, stage: "beat", beat: 0, q: 0, answers: [], picked: null, checked: false, beats };
-    LuauSpeech.speak(beats[0].say);
     return true;
   }
 
-  /* Beats come from the script plus the spoken opening, so everything that
+  /* Beats come from the script plus the opening card, so everything that
      walks them goes through here rather than reaching into the script. */
   function beatsOf() {
     return (state && state.beats) || [];
   }
 
   /* ---------------------------------------------------------------- chrome */
-
-  /* The neural voice is worth having but it is a download, so it is offered
-     once, where the tutor actually starts talking, rather than fetched
-     behind the learner's back or buried in settings. */
-  const OFFER_KEY = "luaux.speech.offered";
-
-  function offerHTML() {
-    const S = window.LuauSpeech;
-    if (!S || typeof S.piperAvailable !== "function" || !S.piperAvailable()) return "";
-    const voices = S.voices().filter((v) => v.backend === "piper");
-    const recommended = voices.find((v) => v.id === "en_US-ryan-high") || voices[0];
-    if (!recommended || recommended.installed || localStorage.getItem("luaux.speech.ryan-offered") === "1") return "";
-
-    const busy = S.installing();
-    if (busy) {
-      const p = S.progress();
-      const pct = p && p.total ? Math.round((p.received / p.total) * 100) : 0;
-      return `<div class="g-offer"><span>Downloading the tutor voice, ${pct}%. The lesson carries on meanwhile.</span></div>`;
-    }
-    return `<div class="g-offer">
-      <span>A higher-quality tutor voice is available, ${Math.round(recommended.bytes / 1e6)} MB once, then offline.</span>
-      <button class="g-offer-yes" id="g-voice-get" data-voice="${esc(recommended.id)}">Download ${esc(recommended.label)} High</button>
-      <button class="g-offer-no" id="g-voice-no">Not now</button>
-    </div>`;
-  }
 
   function shell(sectionID, bodyHTML, progressFraction) {
     const data = LuauData.current;
@@ -100,12 +74,8 @@ window.LuauGuided = (function () {
       <header class="g-head">
         <button class="g-exit" id="g-exit" aria-label="Leave lesson">Leave</button>
         <div class="g-meter"><i style="width:${pct}%"></i></div>
-        <button class="g-mute" id="g-mute" aria-pressed="${LuauSpeech.isMuted()}">
-          ${LuauSpeech.isMuted() ? "Sound off" : "Sound on"}
-        </button>
       </header>
       <div class="g-where">${unit ? esc(unit.name) : ""} &middot; ${esc(section ? section.title : "")}</div>
-      ${offerHTML()}
       ${bodyHTML}
     </div>`;
   }
@@ -122,7 +92,6 @@ window.LuauGuided = (function () {
         ${beat.code ? `<pre class="g-code"><code>${window.LuauHighlight(beat.code)}</code></pre>` : ""}
       </div>
       <div class="g-actions">
-        <button class="g-secondary" id="g-again">Say it again</button>
         <button class="g-primary" id="g-next">${state.beat < beatsOf().length - 1 ? "Next" : "Start the questions"}</button>
       </div>`;
     return shell(state.sectionID, body, state.beat / total);
@@ -230,42 +199,19 @@ window.LuauGuided = (function () {
 
   function bind(rerender, leave) {
     const exit = $("#g-exit");
-    if (exit) exit.addEventListener("click", () => { LuauSpeech.stop(); state = null; leave(); });
-
-    const mute = $("#g-mute");
-    if (mute) mute.addEventListener("click", () => { LuauSpeech.setMuted(!LuauSpeech.isMuted()); rerender(); });
-
-    const getVoice = $("#g-voice-get");
-    if (getVoice) getVoice.addEventListener("click", () => {
-      const id = getVoice.dataset.voice || "en_US-ryan-high";
-      LuauSpeech.install(id)
-        .then(() => { LuauSpeech.setVoice(id); localStorage.setItem(OFFER_KEY, "1"); localStorage.setItem("luaux.speech.ryan-offered", "1"); })
-        .catch(() => {})
-        .then(() => rerender());
-      rerender();
-    });
-    const noVoice = $("#g-voice-no");
-    if (noVoice) noVoice.addEventListener("click", () => {
-      localStorage.setItem(OFFER_KEY, "1");
-      localStorage.setItem("luaux.speech.ryan-offered", "1");
-      rerender();
-    });
+    if (exit) exit.addEventListener("click", () => { state = null; leave(); });
 
     const s = script(state.sectionID);
 
     if (state.stage === "beat") {
-      const again = $("#g-again");
-      if (again) again.addEventListener("click", () => LuauSpeech.speak(beatsOf()[state.beat].say));
       const next = $("#g-next");
       if (next) next.addEventListener("click", () => {
         if (state.beat < beatsOf().length - 1) {
           state.beat += 1;
-          LuauSpeech.speak(beatsOf()[state.beat].say);
         } else {
           state.stage = "question";
           state.picked = null;
           state.checked = false;
-          LuauSpeech.speak(s.questions[0].ask);
         }
         rerender();
       });
@@ -310,12 +256,10 @@ window.LuauGuided = (function () {
           state.q += 1;
           state.picked = s.questions[state.q].type === "order" ? [] : null;
           state.checked = false;
-          LuauSpeech.speak(s.questions[state.q].ask);
         } else {
           state.stage = "summary";
           LuauProgress.markGuidedDone(state.sectionID);
           LuauProgress.setSectionDone(state.sectionID, true);
-          LuauSpeech.stop();
         }
         rerender();
       });
@@ -342,6 +286,6 @@ window.LuauGuided = (function () {
     has, start, render, bind,
     isActive() { return !!state; },
     sectionID() { return state ? state.sectionID : null; },
-    stop() { LuauSpeech.stop(); state = null; },
+    stop() { state = null; },
   };
 })();
