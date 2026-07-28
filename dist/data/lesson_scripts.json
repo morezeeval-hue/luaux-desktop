@@ -1608,31 +1608,34 @@
   "16": {
    "beats": [
     {
-     "say": "To understand how Luau handles text, picture a library where every book is carved into a permanent stone tablet."
+     "say": "To understand how Luau handles text, imagine a library where every book is carved into a permanent stone tablet."
     },
     {
-     "say": "Once a string is written, it can never be altered. If you want to change the word Cat to Cats, you cannot carve an s onto the end of the existing tablet. You must carve an entirely new tablet containing the word Cats. That property is called immutability."
+     "say": "Once a string is written, it can never be altered."
     },
     {
-     "say": "The library has a strict rule to save space. Only one copy of any unique word is allowed to exist. Ask for the word Apple and the librarian checks a master index. If Apple has already been carved, they hand you a slip pointing at that existing tablet."
+     "say": "If you want to change the word Cat to Cats, you cannot carve an s onto the end of the existing tablet."
     },
     {
-     "say": "That has a useful consequence. Comparing two words to see whether they are identical is very fast, because the librarian does not read both tablets letter by letter. They just check whether both slips point at the same tablet. That is called interning."
+     "say": "You must carve an entirely new tablet containing the word Cats. The old Cat tablet stays as it was, until nobody needs it any more."
     },
     {
-     "say": "For building sentences, string dot format is like playing Mad Libs. You provide a template with blanks, percent d for a number and percent s for a word, and hand over the list of items to write into them."
+     "say": "That is what immutability means here, and it is not a restriction for its own sake."
     },
     {
-     "say": "Luau also offers a shortcut. Wrap your text in backticks instead of double quotes, and you can write variables directly inside curly braces in the middle of the text. That is string interpolation."
+     "say": "The library has a second rule: only one copy of any unique word is allowed to exist."
     },
     {
-     "say": "Sometimes you do not need text to be readable by humans at all. You just want to pack numbers and letters tightly to send over a network or save to a file. String dot pack acts like a vacuum sealer, compressing them into a dense form."
+     "say": "Ask the librarian for Apple, and they check a master index. If Apple has already been carved, they hand you a slip of paper pointing at that existing tablet."
     },
     {
-     "say": "Now the trap that costs real performance. Building a sentence one word at a time in a loop, by joining onto the same variable over and over, asks the librarian to copy every existing letter onto a brand new tablet each time, then throw the old one away."
+     "say": "Which makes comparing two words for sameness extremely fast. The librarian does not read both tablets letter by letter. They check whether both slips point at the same shelf."
     },
     {
-     "say": "Do that a thousand times and you have created and discarded nine hundred and ninety nine intermediate tablets. The fix is to collect your pieces in a table and join them all at once, in a single pass."
+     "say": "The practical consequence is the one to carry with you. Building a long piece of text by adding to it repeatedly does not extend anything."
+    },
+    {
+     "say": "Each addition carves a fresh tablet and discards the last one. Do that inside a loop and you have made a pile of tablets nobody asked for."
     }
    ],
    "questions": [
@@ -1711,28 +1714,34 @@
   "17": {
    "beats": [
     {
-     "say": "Picture yourself as a customs inspector in a busy shipping port. Thousands of cargo crates pass your station every day, and each crate is a piece of text. Your job is to check whether a crate contains something specific, like a passport with exactly five digits."
+     "say": "Imagine you are a customs inspector in a busy shipping port. Thousands of cargo crates pass your station every day, and each crate is a piece of text."
     },
     {
-     "say": "You could hire an expensive team to open and catalogue every single item. That is what heavy regular expression engines do, and it slows the port down."
+     "say": "Your job is to check whether a crate contains something specific: a passport with exactly five digits, or a word that starts with a capital letter."
     },
     {
-     "say": "Instead you work from a highly optimised checklist with shorthand codes. Rather than writing check for a, b, c and so on through z, you use a single code. Percent l means a lowercase letter. Percent d means a digit."
+     "say": "You could hire a team to open and catalogue every single item. That is what heavy regular expression engines do, and it slows the port down."
     },
     {
-     "say": "There is an inversion key. Capitalise the code and it means the opposite. Percent d finds a digit, percent capital D finds anything that is not a digit."
+     "say": "Instead you use a short checklist with shorthand codes."
     },
     {
-     "say": "Then there is the question of appetite. A greedy inspector, marked with a star or a plus, is hungry to find the largest possible match. Ask them to find everything between angle brackets and hand them a full HTML line, and they will swallow the whole line from the first bracket to the last."
+     "say": "Rather than writing check for a, b, c and so on to z, you write one code that means a lowercase letter. Another means a digit."
     },
     {
-     "say": "A polite inspector, marked with a minus, stops as soon as the minimum is satisfied. Given the same line, they stop at the very first closing bracket."
+     "say": "Capitalising a code inverts it. Where one code means find a digit, its capital means find anything that is not a digit."
     },
     {
-     "say": "That difference is the single most common source of surprise in pattern matching. When a pattern matches far more than you expected, greed is usually why."
+     "say": "Then there is the question of how much an inspector grabs."
     },
     {
-     "say": "Luau's pattern matching is deliberately a fast, lightweight inspector working from a small portable clipboard, rather than a system that needs a warehouse of memory to do its job."
+     "say": "A greedy inspector wants the largest match possible. Tell them to find everything between angle brackets, hand them a line with several pairs, and they will take from the first opening bracket all the way to the last closing one."
+    },
+    {
+     "say": "That is usually not what you meant. The polite variant stops at the first closing bracket instead, which is almost always the intent."
+    },
+    {
+     "say": "This is worth learning properly because parsing text badly is a quiet kind of bug. It does not crash. It just returns the wrong slice, and everything downstream believes it."
     }
    ],
    "questions": [
@@ -1797,19 +1806,31 @@
   "18": {
    "beats": [
     {
-     "say": "Under the hood, computer memory has strict rules, even though code often makes data feel flexible. There are two very different ways of writing information down."
+     "say": "We treat data as flexible, but underneath, computer memory has strict rules. Two ways of writing information down make the difference clear."
     },
     {
-     "say": "Strings are like a printing press. To write the word CAT, your computer commissions a press to stamp those letters onto a strip of paper. Changing it means commissioning a whole new strip."
+     "say": "A string is a printing press. You want the word CAT, so the press stamps CAT onto a strip of paper."
     },
     {
-     "say": "A buffer is like a pre-built plastic grid of dry-erase slots, where each slot is exactly large enough to hold a single number. You can wipe a slot and write a new value into it without replacing anything."
+     "say": "Now change it to CAR. You cannot erase the T. The press runs again, stamps a brand new strip reading CAR, and the old strip goes in the bin."
     },
     {
-     "say": "That is the whole point. With a buffer you allocate a fixed-size workspace once, then rapidly overwrite its slots over and over, without making your computer clean up a trail of discarded waste behind you."
+     "say": "Do that hundreds of times a second and you have made a mountain of paper that the computer must keep clearing away."
     },
     {
-     "say": "So the choice is not about which is better in general. It is about whether you are writing something once, or rewriting the same slots many times in a hot path."
+     "say": "A buffer is the other thing entirely: a pre-built grid of dry-erase slots, each exactly large enough to hold one number."
+    },
+    {
+     "say": "To change the number in slot three, you wipe that slot and write a new one. The grid never changes size, no paper is produced, and no cleanup crew is ever called."
+    },
+    {
+     "say": "So the two are not competitors. They are for different jobs."
+    },
+    {
+     "say": "Text that a person reads belongs in a string. Numbers that change constantly, especially many of them, belong in a buffer."
+    },
+    {
+     "say": "The reason this sits in the course at all is the cleanup crew. Work that generates constant rubbish costs you frames, and frames are what a player actually feels."
     }
    ],
    "questions": [
@@ -1860,34 +1881,34 @@
   "19": {
    "beats": [
     {
-     "say": "Picture a physical control board with a row of exactly thirty two light switches, numbered from left to right. Each switch is either on or off, one or zero."
+     "say": "Imagine a control board with exactly thirty two light switches in a row, numbered from left to right."
     },
     {
-     "say": "Numbers in Luau are normally decimal values. When you use the bit thirty two library, the computer temporarily translates your number into this row of thirty two switches."
+     "say": "Each switch has two positions, on or off, and nothing in between."
     },
     {
-     "say": "Now suppose you have two boards and want to combine them into a third. And turns a switch on only when that exact switch is on for both boards. If either is off, the result is off."
+     "say": "Numbers are normally ordinary decimal values. When you use the bitwise library, the computer temporarily reads your number as that row of switches."
     },
     {
-     "say": "Or turns a switch on when at least one of the boards has it on."
+     "say": "Now suppose you have two boards and want to combine them into a third."
     },
     {
-     "say": "Exclusive or checks whether the two boards disagree. If one switch is on and the other off, the result is on. If both are the same, the result is off."
+     "say": "The and operation turns a switch on only when that exact switch is on for both boards. If either is off, the result is off."
     },
     {
-     "say": "Not takes a single board and flips every switch to its opposite."
+     "say": "The or operation turns a switch on when at least one of the boards has it on."
     },
     {
-     "say": "Then there is sliding. Shift left slides all the switches to the left. The ones on the far left fall off the board and are lost. Shift right does the same in the other direction, filling the vacated left side with off switches."
+     "say": "The exclusive or asks whether the two boards disagree. One on and one off gives on. Both the same gives off."
     },
     {
-     "say": "Arithmetic shift right is the exception. Instead of always filling with off, it clones whatever state was in the leftmost position, which is how it preserves the sign of a negative number."
+     "say": "And the not operation takes a single board and flips every switch to its opposite."
     },
     {
-     "say": "Rotate is different again. The switches that slide off one end run around and reappear at the other, so nothing is ever lost."
+     "say": "What is this for? Storing many yes-or-no facts in one number, and comparing them all in a single operation instead of one at a time."
     },
     {
-     "say": "Finally, you can work on a small group rather than all thirty two. Extract is a magnifying glass over a specific window of switches, read as a smaller independent value. Replace overwrites a section of the board without disturbing the switches around it."
+     "say": "Which is exactly the shape of things like permissions and collision rules, where a long list of small truths has to travel together."
     }
    ],
    "questions": [
@@ -1952,28 +1973,31 @@
   "20": {
    "beats": [
     {
-     "say": "Imagine you are a single chef cooking a complex dinner. You have three things to prepare: bread to bake, soup to simmer, and vegetables to chop. You have one set of hands, so you cannot physically do all three at the same instant."
+     "say": "Imagine you are a single chef cooking a complex dinner, with three things to prepare: bread to bake, soup to simmer, and vegetables to chop."
     },
     {
-     "say": "So you work cooperatively. You mix the dough, put it in the oven, and pause your work on the bread while it bakes. That pause is called a yield."
+     "say": "You have one set of hands, which is one processor. You cannot physically do all three in the same millisecond."
     },
     {
-     "say": "While the bread bakes you switch to the soup, turn on the heat, and pause again to let it simmer. While the soup simmers you chop the vegetables. When the oven timer goes, you resume the bread exactly where you left off."
+     "say": "So you work cooperatively rather than trying to do everything at once."
     },
     {
-     "say": "That is precisely what a coroutine is. Not true parallel work, which would be hiring three chefs, but one thread of execution smartly pausing a task, working on something else, and picking the original back up without losing its place."
+     "say": "You mix the dough, put it in the oven, and pause your work on the bread while it bakes."
     },
     {
-     "say": "Every coroutine moves through life stages. Suspended means the recipe is written down but not being worked on, either not started or paused mid way."
+     "say": "While the bread bakes you switch to the soup, turn on the heat, and pause again to let it simmer."
     },
     {
-     "say": "Running means you are actively working on it right now. Normal means this recipe is waiting on a sub recipe it asked for."
+     "say": "While the soup simmers you chop the vegetables. When the oven timer goes, you resume the bread exactly where you left it."
     },
     {
-     "say": "Dead means the dish is finished, or you dropped it on the floor with an error. Either way you cannot work on it any more."
+     "say": "That is what a coroutine is. Not a second chef, which would be true parallelism, but one worker who can put a task down and pick it up again without losing their place."
     },
     {
-     "say": "You can also pass messages in both directions. Starting a recipe passes in the raw ingredients. Pausing it can hand back a status report. Resuming it can hand in new tools or ingredients to keep going."
+     "say": "The word to hold on to is cooperative. A coroutine is never interrupted; it hands control back when it chooses to."
+    },
+    {
+     "say": "That is a real advantage: nothing can be halfway through changing something when another task starts. It also means one task that never yields blocks everything behind it."
     }
    ],
    "questions": [
@@ -2038,19 +2062,28 @@
   "21": {
    "beats": [
     {
-     "say": "Imagine standard English text as a train where every cargo car is exactly one metre long. To find the fifth car you measure five metres down the track, and you land exactly at its start. That is how simple byte based text works."
+     "say": "Imagine ordinary English text as a train where every cargo car is exactly one metre long."
     },
     {
-     "say": "Now picture international text, with emoji, Kanji or Arabic script, as a train where the cars have different lengths. A plain letter is still one metre, but a complex Chinese character might be three, and an emoji four."
+     "say": "To find the fifth car you measure five metres down the track, and you are exactly at its start. That is how plain ASCII text works: one character is one byte."
     },
     {
-     "say": "Try to find the fifth character by measuring five metres and you may cut straight through the middle of a four metre car. You are left with corrupted scrap rather than a character."
+     "say": "Now picture international text, with emoji, Kanji or Arabic script, as a train whose cars have different lengths."
     },
     {
-     "say": "The utf eight library is the smart train inspector. Instead of blindly measuring distance, it walks the train, identifies where each car actually begins and ends, and makes sure you never slice one in half."
+     "say": "A plain letter is still one metre. A complex Chinese character might be three. A smiley face might be four."
     },
     {
-     "say": "The practical rule follows from that. The moment your text can contain anything beyond plain English, stop reasoning in bytes and start using the library that understands character boundaries."
+     "say": "Try to find the fifth character by measuring five metres and you may cut straight through the middle of a four-metre car."
+    },
+    {
+     "say": "What you get back is not a shorter piece of text. It is a broken one: a byte sequence that is not a character at all."
+    },
+    {
+     "say": "The UTF-8 library is the inspector who walks the train instead of measuring it. It identifies where each car actually starts and ends."
+    },
+    {
+     "say": "So the rule is short. The moment text can contain anything a player typed, counting by bytes is guessing, and this library is how you stop guessing."
     }
    ],
    "questions": [
@@ -2101,22 +2134,31 @@
   "22": {
    "beats": [
     {
-     "say": "Picture your running code as a busy office building. Each time a function is called, a new floor is built on top. Inside that room, local variables are stored and work is done. If that function calls another, another floor goes up above it. That stack of floors is the call stack."
+     "say": "Picture your running code as a busy office building."
     },
     {
-     "say": "The debug library is a master detective with a clipboard and a stopwatch, who can inspect the building while it is still running."
+     "say": "Each time a function is called, a new floor is built on top. Inside that floor the local variables live and the work happens."
     },
     {
-     "say": "The clipboard is debug dot info. It is like asking a worker on the third floor: what is your name, what file did you come from, how many parameters did you arrive with."
+     "say": "If that function calls another one, another floor goes up on top of it. That stack of floors is the call stack."
     },
     {
-     "say": "Debug dot traceback is the elevator ride from the top floor down to the lobby, writing down every floor you pass. That list is exactly how the code got to where it is now, which is usually the fastest way to understand an error."
+     "say": "The debug library is a detective who can inspect the building while it is still running, with two tools."
     },
     {
-     "say": "The stopwatch is profile begin and profile end. You place a start sticker at the beginning of an expensive task and a stop sticker at the end, and the engine reports how long the work between them actually took."
+     "say": "The first is a clipboard. It lets you ask a worker on the third floor: what is your name, which file did you come from, how many parameters did you arrive with."
     },
     {
-     "say": "That last point matters more than it sounds. Guessing which part of your game is slow is unreliable. Measuring it is not."
+     "say": "The same clipboard can take the lift from the top floor down to the lobby, writing down every floor it passes. That is a traceback: exactly how the code got to where it is."
+    },
+    {
+     "say": "The second tool is a stopwatch. You put a start sticker at the beginning of an expensive task and a stop sticker at the end, and the engine reports how long the work between them took."
+    },
+    {
+     "say": "That is the honest way to find slow code. Reading a function and deciding it looks expensive is a guess; timing it is a measurement."
+    },
+    {
+     "say": "And measurement is the whole point of this section. Everything here answers a question about a program that is already running, rather than one you are imagining."
     }
    ],
    "questions": [
@@ -2181,22 +2223,34 @@
   "23": {
    "beats": [
     {
-     "say": "Imagine running a factory that packs toy boxes. Before anything ships, you want to be sure every box contains exactly what the label says."
+     "say": "Imagine a factory that packs toy boxes. Before anything ships, you want every box to contain exactly what the label says."
     },
     {
-     "say": "Luau's type checker is your quality control inspector, and you set how strict they are with a comment at the top of the script."
+     "say": "The type checker is your quality control inspector, and you choose how strict they are with one line at the top of a script."
     },
     {
-     "say": "No check mode is the blindfolded inspector. They only confirm the box is sealed and not physically broken. That is a grammar check, nothing about the contents."
+     "say": "On the loosest setting the inspector is blindfolded. They check only that boxes are sealed and not broken, which is the grammar of your code."
     },
     {
-     "say": "Non strict mode is the casual inspector, and it is the default. They do look inside, but they are relaxed about anything you have not clearly labelled."
+     "say": "They never look inside. A box labelled Action Figure containing a banana goes out of the door."
     },
     {
-     "say": "Strict mode is the perfectionist. They hold exact blueprints for every item, and every single toy must match what the label promised."
+     "say": "The middle setting is the default, and the inspector is casual. They look inside, but they are relaxed about it."
     },
     {
-     "say": "The mode is a choice about how much help you want. Stricter means more mistakes caught before they ship, and more work stating your intent up front."
+     "say": "They will stop you doing something obviously dangerous, but they let a lot of quieter mismatches through."
+    },
+    {
+     "say": "The strictest setting is the inspector who checks every label against every content, and says so when a box arrives unlabelled."
+    },
+    {
+     "say": "Here is the part worth understanding before you pick one. Stricter is not automatically better on day one."
+    },
+    {
+     "say": "On a codebase written without types, the strict inspector reports a great many things at once, and a wall of complaints is easy to ignore."
+    },
+    {
+     "say": "The setting is per file, which is the point. You can tighten one script that matters without stopping the rest of the game from running."
     }
    ],
    "questions": [
@@ -2247,19 +2301,31 @@
   "24": {
    "beats": [
     {
-     "say": "Picture solving a logic puzzle. You do not guess each answer as you go. First you collect all the clues, then you sit down and see how they connect."
+     "say": "Picture solving a logic puzzle. Rather than guessing an answer for each space, you first write down the clues."
     },
     {
-     "say": "The red house belongs to the painter. The painter owns a dog. From those two clues together you suddenly know something neither clue said on its own."
+     "say": "The red house belongs to the painter. The painter owns a dog. The person in the blue house owns a cat."
     },
     {
-     "say": "Luau's type checker works exactly this way. Reading your code does not immediately check whether everything is correct. It collects clues, which are called constraints."
+     "say": "At first you know nothing about who lives where. But once the clues are collected, you look at how they connect."
     },
     {
-     "say": "Only afterwards does it sit down and solve them together. That is why an error can point at a line that looks fine on its own. The contradiction only appears once several clues are combined."
+     "say": "Combine the first two and a new fact appears that nobody stated: the red house has a dog."
     },
     {
-     "say": "It also explains why the checker often knows a type you never wrote down. It deduced it, the same way you deduce who owns the cat."
+     "say": "That is exactly how the type checker works, and it is worth knowing because it explains the error messages."
+    },
+    {
+     "say": "Reading your code, it does not immediately decide whether things are correct. It collects clues."
+    },
+    {
+     "say": "Seeing a value set to five, it writes down a clue: this name holds a number. It does not stop to check anything yet."
+    },
+    {
+     "say": "Only afterwards does it sit down with the whole collection and work out what follows."
+    },
+    {
+     "say": "Which is why a complaint sometimes points at a line that looks innocent. That line is where two clues finally contradicted each other, not necessarily where the mistake was made."
     }
    ],
    "questions": [
@@ -2310,19 +2376,34 @@
   "25": {
    "beats": [
     {
-     "say": "Have you ever tried to put a square peg in a round hole, or poured salt instead of sugar into a cake? Types exist to stop exactly that kind of mix up."
+     "say": "Have you ever tried to put a square peg in a round hole, or poured salt into a cake instead of sugar?"
     },
     {
-     "say": "Think of every piece of information in your program as a toy. A type is the label you put on it saying what kind of toy it is."
+     "say": "Types exist to prevent that kind of mix-up, by labelling what each piece of information actually is."
     },
     {
-     "say": "Boolean is a light switch. It is either on or off, true or false. Number is a counting block, always a quantity. String is a name tag, always text."
+     "say": "Think of every value in your program as a toy, and a type as the label on it."
     },
     {
-     "say": "When you need to group several toys together, that is a table. And a table's type describes its shape: which named parts it has, and what kind of toy each part holds."
+     "say": "Some toys are basic. A true-or-false value is a light switch: on or off, nothing else."
     },
     {
-     "say": "Two toys match when their labels agree. A red square will not fit where a round one was promised, and the checker tells you before it becomes a bug at runtime."
+     "say": "A number is a counting block. It is always a quantity."
+    },
+    {
+     "say": "A piece of text is a name tag. It is always writing."
+    },
+    {
+     "say": "Sometimes you need several toys grouped together, and that is a table."
+    },
+    {
+     "say": "You can describe the shape of that group in advance: this box contains a name, which is text, and a score, which is a number."
+    },
+    {
+     "say": "Now anything claiming to be that kind of box has to have those things, in those shapes."
+    },
+    {
+     "say": "That is the whole idea. A type is a promise about shape, written down where a reader and the checker can both see it."
     }
    ],
    "questions": [
@@ -2373,22 +2454,31 @@
   "26": {
    "beats": [
     {
-     "say": "Sometimes you need very specific rules about what is allowed where. There are three shapes of rule worth knowing."
+     "say": "Sometimes you need precise rules about what is allowed where. There are two shapes of rule, and confusing them is the usual mistake."
     },
     {
-     "say": "A union is this or that. Picture a container that may hold a piece of fruit or a number. You can put an apple in it. You can put the number five in it. You cannot put a shoe in it."
+     "say": "The first is a union: this or that."
     },
     {
-     "say": "That is also how something optional is described. A phone number you might provide is a union of a number and nothing at all."
+     "say": "Picture a container that may hold either a piece of fruit or a number. An apple is fine. The number five is fine. A shoe is not."
     },
     {
-     "say": "An intersection is this and that at the same time. The thing must satisfy every part of the rule, not just one."
+     "say": "Something optional is the same idea. A phone number you might provide means: a number, or nothing at all."
     },
     {
-     "say": "A singleton is exactly this. Not any string, but that one specific value. It is how you describe a setting that may only ever be one of a few named states."
+     "say": "The second is an intersection: this and that, at the same time."
     },
     {
-     "say": "The trap with unions is forgetting that you have one. Before you use the value as a number, you have to establish that it is a number in this branch, which is what the next section is about."
+     "say": "Imagine needing a toy that is both red and round. A red square will not do. A blue circle will not do."
+    },
+    {
+     "say": "It must have every characteristic you asked for simultaneously."
+    },
+    {
+     "say": "So the two read almost identically in English and mean opposite things about how much is allowed."
+    },
+    {
+     "say": "A union widens what may arrive and narrows what you may assume. An intersection narrows what may arrive and widens what you may assume."
     }
    ],
    "questions": [
@@ -2453,16 +2543,31 @@
   "27": {
    "beats": [
     {
-     "say": "Imagine building a box specifically for apples, then a completely separate box for oranges, then another for pears. Three boxes, three sets of the same work."
+     "say": "Imagine building a box specifically for apples, and then a completely separate box for oranges, and another for anything else you might store."
     },
     {
-     "say": "A generic is one smart box instead. Put an apple in and it instantly knows it is an apple box. Put an orange in and it is an orange box, with no new code written."
+     "say": "A generic is one smart box instead."
     },
     {
-     "say": "The point is not saving typing. It is that the box keeps track of what went in, so what comes out is known too, rather than becoming a vague anything."
+     "say": "Put an apple in it and it becomes an apple box: from then on it accepts apples and hands back apples."
     },
     {
-     "say": "A type pack is the same idea applied to a whole group of values at once, rather than a single one, which is what makes it work for functions that take or return several things."
+     "say": "Put a toy car in and it becomes a toy car box."
+    },
+    {
+     "say": "The type it holds is decided the first time you use it, and it sticks to that decision afterwards, which is what stops apples and toy cars getting mixed."
+    },
+    {
+     "say": "A type pack is the same instinct applied to sequences rather than single values."
+    },
+    {
+     "say": "Picture a conveyor belt that takes items in and sends items out. Sometimes one item, sometimes three, sometimes five."
+    },
+    {
+     "say": "A type pack lets you describe whatever sequence arrives, rather than writing a separate rule for every possible length."
+    },
+    {
+     "say": "Both exist for the same reason: to write a rule once and have it hold for many shapes, instead of copying the rule and hoping the copies stay in step."
     }
    ],
    "questions": [
@@ -2513,19 +2618,28 @@
   "28": {
    "beats": [
     {
-     "say": "Picture a container that might hold a fruit, might hold a vegetable, or might hold nothing at all. When you first receive it, you do not know which."
+     "say": "Imagine a container that might hold a fruit, or a vegetable, or nothing at all. You cannot tell by looking at the outside."
     },
     {
-     "say": "That uncertain state is the broad type. It is a union, and while the value is in that state you cannot safely do anything specific with it."
+     "say": "That uncertainty is the broad type. It covers every possibility, honestly, which is exactly why you cannot do much with it."
     },
     {
-     "say": "To peel a banana or chop a carrot you first need to know which one you have. Establishing that is called narrowing."
+     "say": "To use what is inside you need to know which it is. You cannot peel a carrot or chop a banana and expect a good result."
     },
     {
-     "say": "You narrow by checking. A scanner that tells you this is a banana is a type guard. Once it confirms, the checker also knows, and inside that branch it lets you treat the value as a banana."
+     "say": "Narrowing is the act of finding out and having the checker remember."
     },
     {
-     "say": "This is why the checker sometimes refuses code that you are certain is fine. It is not doubting you. It is pointing out that nothing in the code has established which case you are in."
+     "say": "You do it with a check. Ask whether the thing is a banana, and inside the branch where the answer was yes, it is a banana."
+    },
+    {
+     "say": "Not might be. Is. The checker follows the same reasoning you just did, and stops complaining about the possibilities you ruled out."
+    },
+    {
+     "say": "The commonest version of this is checking whether something exists at all before using it."
+    },
+    {
+     "say": "Which is why this pairs so directly with the earlier warning about asking for a key that was never set. Narrowing is how that warning stops being a trap."
     }
    ],
    "questions": [
@@ -2576,19 +2690,28 @@
   "29": {
    "beats": [
     {
-     "say": "Picture a very organised digital helper that sorts everything it handles into categories. Numbers here, text there, true and false over there."
+     "say": "Your program likes to categorise everything: numbers, text, true or false, and objects of various kinds. Those categories are the types."
     },
     {
-     "say": "Sometimes the helper needs guidance from you. A type assertion, written with a double colon, is putting a specific label on a box. You are stating something you know that the helper could not work out."
+     "say": "Sometimes it works the category out on its own. Sometimes it needs telling."
     },
     {
-     "say": "That is a promise you are making, not a check being performed. If the promise is wrong, nothing catches it for you."
+     "say": "Telling it is like relabelling a box. You have one marked Stuff from the garage, and you happen to know it contains car parts."
     },
     {
-     "say": "Sometimes the helper adjusts things on its own. Combine the phrase my result is with the number forty two, and it quietly turns the number into text so the join works. That automatic adjustment is coercion."
+     "say": "So you say so, with a double colon, and from then on the program treats it as car parts."
     },
     {
-     "say": "Coercion is convenient and it is also where surprises hide, because the conversion happens silently. The danger is assuming a check took place when all that happened was a quiet conversion."
+     "say": "Now the part that matters more than the syntax. You have not changed what is in the box."
+    },
+    {
+     "say": "An assertion changes what the checker believes, not what is true. If the box really held garden tools, nothing complains at that moment, and something goes wrong later."
+    },
+    {
+     "say": "So the honest use is narrow: you genuinely know something the checker cannot, and you are willing to own it."
+    },
+    {
+     "say": "Reaching for it because the checker is being inconvenient is how a type system quietly stops protecting you."
     }
    ],
    "questions": [
@@ -2639,22 +2762,31 @@
   "30": {
    "beats": [
     {
-     "say": "Imagine a recipe written in plain English, full of natural language. To make sure a super efficient robot chef can follow it perfectly, someone has to translate it into precise machine steps first."
+     "say": "Imagine a complex recipe written in plain English, full of description and natural phrasing."
     },
     {
-     "say": "That is exactly what happens to your Luau code before it runs."
+     "say": "You would not hand that to a fast robot chef. You would first have it translated into something the robot follows exactly."
     },
     {
-     "say": "First the lexer reads it word by word, identifying each piece: chop, onion, two, cups. It does not understand meaning yet, only what the individual words are."
+     "say": "That is what happens to your Luau. What you write is the English recipe: readable, with words and loops and function calls."
     },
     {
-     "say": "Then the parser takes those words and works out the grammar and structure, understanding that chop two cups of onion is one complete instruction rather than four unrelated words."
+     "say": "The compiler is the translator, and it works in steps."
     },
     {
-     "say": "Then the optimiser reviews the whole thing before handing it over. If you wrote add one plus one teaspoon of salt, it quietly rewrites that as add two teaspoons, so the robot never has to do the arithmetic."
+     "say": "First it reads the recipe word by word, deciding what each piece is: a name, a number, a piece of punctuation doing a job."
     },
     {
-     "say": "What the machine finally receives is bytecode: a compact list of exact instructions, with the human phrasing already resolved away."
+     "say": "Then it works out the structure those pieces form, which turns a flat line of words into something with shape."
+    },
+    {
+     "say": "Then it writes the robot's version: a long list of tiny, exact instructions."
+    },
+    {
+     "say": "That list is the bytecode, and it is what actually runs. Your source file is not executed; its translation is."
+    },
+    {
+     "say": "Worth knowing for one practical reason. It explains why some mistakes are caught before anything runs at all, and others only when the robot reaches that instruction."
     }
    ],
    "questions": [
@@ -2719,19 +2851,28 @@
   "31": {
    "beats": [
     {
-     "say": "Picture your computer as a busy office. Every time a function runs, it is a worker tackling a new task."
+     "say": "Picture your computer as a busy office. Every time a function runs, a worker takes on a new task."
     },
     {
-     "say": "To work, the worker needs a desk. That temporary workspace belonging to one function is called the stack."
+     "say": "To work, they need a workspace. A desk. In these terms that desk is the stack, and it holds everything belonging to that one task while it happens."
     },
     {
-     "say": "Luau is a very organised worker. Rather than piling everything onto the desk, it uses a set of specifically labelled bins arranged in front of it. Those are registers."
+     "say": "Luau is a tidy worker. Rather than piling everything onto the desk, it uses labelled bins arranged on it."
     },
     {
-     "say": "One bin always reminds the worker which task they are currently on. Others hold the materials handed to them, which are the inputs. Others hold things created during the task, which are the local variables and intermediate results."
+     "say": "Those bins are registers, and one is always reserved to remind the worker which task they are currently on."
     },
     {
-     "say": "The reason this matters to you is speed. Reaching into a labelled bin directly in front of you is far quicker than searching a cluttered desk, and it is why Luau can run as fast as it does."
+     "say": "The rest hold the materials: the values that came in, and the intermediate results produced along the way."
+    },
+    {
+     "say": "The reason this design is worth a section is speed. Reaching into a labelled bin is faster than searching a pile."
+    },
+    {
+     "say": "And it is why the number of local values a function juggles is not a free choice, though you will rarely meet the limit while writing ordinary game code."
+    },
+    {
+     "say": "The practical takeaway is simply this: locals are cheap because they live in bins on the desk, and that is why the course keeps recommending them."
     }
    ],
    "questions": [
@@ -2782,22 +2923,28 @@
   "32": {
    "beats": [
     {
-     "say": "Picture a highly efficient robot chef that cannot read human recipes. It needs tiny, exact commands instead."
+     "say": "The robot chef from earlier does not understand human recipes. It needs tiny, exact instructions in a simplified language."
     },
     {
-     "say": "The Luau virtual machine is that chef. Its recipe book is the bytecode stream, a long list of tiny instructions called opcodes."
+     "say": "Those instructions are the opcodes, and the machine reading them is the virtual machine."
     },
     {
-     "say": "On the counter are small labelled containers, the registers, which the chef uses for whatever it is currently handling."
+     "say": "It works with three things."
     },
     {
-     "say": "There is also a pantry of pre made ingredients that never change, things like fixed numbers and pieces of text. That is the constant table, and keeping them there means they are not rebuilt every time."
+     "say": "A recipe book: the long list of instructions that make up your program."
     },
     {
-     "say": "Occasionally an instruction is too complex to fit on one line of the recipe, so a separate note is attached carrying the extra detail. That is the auxiliary word."
+     "say": "Small labelled containers on the counter, for holding ingredients while it works. Those are the registers from the previous section."
     },
     {
-     "say": "Every opcode is deliberately compact. The chef reads one, acts, and moves to the next, thousands of times a second."
+     "say": "And a pantry of things that never change, such as fixed numbers and pieces of text that appear in your code."
+    },
+    {
+     "say": "Every line you write becomes some sequence of these instructions: move this into that container, add these two, call the thing in that container."
+    },
+    {
+     "say": "You will not write opcodes. The value of seeing them is realising there is no magic left at the bottom, only a short list of very small operations done very quickly."
     }
    ],
    "questions": [
@@ -2848,19 +2995,31 @@
   "33": {
    "beats": [
     {
-     "say": "Picture Luau as a chef, and every piece of data as an ingredient. To keep the kitchen tidy, every ingredient goes into a multi purpose box of exactly the same size, whatever is inside."
+     "say": "Picture Luau as a chef, and every piece of data as an ingredient: a number, a piece of text, a true or false answer."
     },
     {
-     "say": "Internally that box is called a TValue, short for type and value. Each one always has two parts: a tag saying what kind of ingredient this is, and the ingredient itself or a pointer to it."
+     "say": "To keep the kitchen efficient the chef puts every single ingredient into the same standardised container."
     },
     {
-     "say": "Small, simple ingredients go directly into the box. A number, a true or false, a small coordinate. They fit, so they are stored right there."
+     "say": "Every box is exactly the same size, whatever is inside. That is the point of it."
     },
     {
-     "say": "Big or complex ingredients do not fit. Longer text, a table, a function. For those, the box holds a pointer to where the real thing lives, rather than the thing itself."
+     "say": "Same size means the chef can grab, move and store any ingredient without measuring anything first."
     },
     {
-     "say": "That uniform size is what makes the machine fast. Every slot is identical, so moving a value never requires asking how big it is first."
+     "say": "Each box has two parts."
+    },
+    {
+     "say": "The main space holds the ingredient itself, big enough for the small kinds of value."
+    },
+    {
+     "say": "And a label says which kind of ingredient this is, so the box can be read correctly."
+    },
+    {
+     "say": "Which is the answer to a question you may not have known you had: how can one name hold a number now and a piece of text later?"
+    },
+    {
+     "say": "Because the container never changed. Only the label and the contents did."
     }
    ],
    "questions": [
@@ -2911,25 +3070,31 @@
   "34": {
    "beats": [
     {
-     "say": "Picture memory as a giant library, and every piece of data your program uses as a book. Your program constantly writes new books and stops using old ones."
+     "say": "Imagine memory as a giant library, and every piece of data your program uses as a book."
     },
     {
-     "say": "If nobody ever cleaned up, the library would fill with books nobody reads, and eventually there would be no shelf space left. The garbage collector is the librarian who prevents that."
+     "say": "As the program runs it keeps creating books, and stops using others. Without tidying, the library fills with books nobody will open again."
     },
     {
-     "say": "The first thing to know is that the librarian tidies in shifts. Closing the whole library for a day would mean your game freezing, so instead the work is done incrementally, a little at a time."
+     "say": "The garbage collector is the librarian who keeps it usable."
     },
     {
-     "say": "To decide what to keep, the librarian uses three colours. White books are candidates for removal: nobody has been seen using them."
+     "say": "The first thing worth knowing is how they work: in shifts."
     },
     {
-     "say": "Grey books have been noticed as in use, but the librarian has not finished checking what else they refer to."
+     "say": "Rather than closing the library for a day, which would freeze your game, they tidy a small section at a time while people are still reading."
     },
     {
-     "say": "Black books have been fully checked, along with everything they point at. They are staying."
+     "say": "The second is how they decide what to keep, and it is a three-colour system."
     },
     {
-     "say": "The process starts from the shelves that definitely matter and works outward. Anything still white when the sweep finishes was genuinely unreachable, and only then is it cleared away."
+     "say": "Everything starts as not yet looked at. Anything reachable from the program gets marked as to be examined, and then as examined and kept."
+    },
+    {
+     "say": "When the pass finishes, whatever is still in the first group was reachable from nothing at all, and its space can be reused."
+    },
+    {
+     "say": "Which is exactly why a forgotten connection is such a problem. It is a reference, so the librarian keeps the book, and no amount of tidying will reclaim it."
     }
    ],
    "questions": [
@@ -2994,19 +3159,31 @@
   "35": {
    "beats": [
     {
-     "say": "Memory is a library again, and the strings in your code are the books. If you kept a separate copy of every word you ever used, the shelves would fill with duplicates."
+     "say": "This is the library from the string section, seen from the inside."
     },
     {
-     "say": "The string interning engine is the librarian who prevents that. For every unique word or phrase, exactly one master copy exists in the whole library."
+     "say": "When your code uses the same word repeatedly, making a fresh copy each time would be waste."
     },
     {
-     "say": "Ask for a piece of text that already exists and the librarian simply points you at the copy already on the shelf. Ask for one that does not exist and a new master copy is made, then you are pointed at that."
+     "say": "So there is a rule: for every unique word or phrase, exactly one master copy exists."
     },
     {
-     "say": "Two things follow from that rule. Memory is not cluttered with duplicates, which saves space."
+     "say": "Ask for a word and the librarian checks a special shelf first."
     },
     {
-     "say": "And comparing two pieces of text becomes very fast. The computer does not read them character by character. It checks whether both point at the same master copy, which is a single comparison however long the text is."
+     "say": "If it is already there, you are pointed at the existing copy rather than given a new one."
+    },
+    {
+     "say": "If it is not, it gets carved once and added to the shelf, and every later request is pointed at that."
+    },
+    {
+     "say": "Two consequences follow, and both are useful."
+    },
+    {
+     "say": "Comparing two pieces of text for sameness is fast, because it is a comparison of shelf locations rather than of letters."
+    },
+    {
+     "say": "And building many one-off pieces of text is more expensive than it looks, because each new unique one has to be added to the shelf."
     }
    ],
    "questions": [
@@ -3057,19 +3234,28 @@
   "36": {
    "beats": [
     {
-     "say": "Picture your computer as a kitchen and your script as a recipe. Normally an assistant reads the recipe step by step and carries each step out as they go."
+     "say": "Think of your script as a recipe and the machine as a kitchen."
     },
     {
-     "say": "Native execution is super chef mode. Marking a script that way hands the recipe to a master chef who studies and internalises the whole thing before any cooking starts."
+     "say": "Normally an assistant reads your recipe one step at a time and tells the kitchen what to do. Careful, correct, and always going through the reading step."
     },
     {
-     "say": "That distinction has a name. Just in time compilation would mean learning parts of the recipe as orders come in. Flexible, but not permitted on some platforms."
+     "say": "Native execution is a different mode. The recipe goes to a master chef who already knows the techniques."
     },
     {
-     "say": "Ahead of time is what this is. The entire recipe is understood before the first dish, so nothing has to be worked out mid service."
+     "say": "Rather than reading each step and then performing it, they translate the whole thing into direct actions and carry them out."
     },
     {
-     "say": "The gain is that the chef acts directly instead of consulting instructions for every movement. The cost is that this preparation only pays off where the work is heavy enough to justify it, so it is a tool for measured hot paths, not something to sprinkle everywhere."
+     "say": "The gain is real, and it is not free of conditions."
+    },
+    {
+     "say": "It helps most where the same arithmetic runs enormously often, which is the shape of physics and heavy numeric work."
+    },
+    {
+     "say": "It helps least where the work is mostly calls out to the engine, because the time is being spent on the other side of that boundary anyway."
+    },
+    {
+     "say": "So it is a tool to reach for after measuring, not before. Which is exactly what the debug library's stopwatch was for."
     }
    ],
    "questions": [
@@ -3120,19 +3306,28 @@
   "37": {
    "beats": [
     {
-     "say": "Imagine two friends who speak different languages. One speaks C plus plus, the other speaks Luau. They need to build something together."
+     "say": "Two friends need to build something together. One speaks C plus plus, the other speaks Luau."
     },
     {
-     "say": "So they use a shared workspace, a message board made of stacked sticky notes."
+     "say": "They cannot simply shout instructions at each other, because neither understands the other's language."
     },
     {
-     "say": "When the C plus plus side wants to pass something over, such as the number forty two or a piece of text, it writes a note and puts it on the board. That is pushing."
+     "say": "So they use a shared workspace: a message board made of a stack of sticky notes."
     },
     {
-     "say": "When the Luau side needs the information, it reads the notes and takes them off. That is popping."
+     "say": "When the C plus plus side wants to pass something over, a number or a piece of text, it writes a note and puts it on the board. That is pushing."
     },
     {
-     "say": "The whole bridge between the engine and your script works through that discipline: everything crossing over is placed on the stack and taken off in a known order. There is no other channel."
+     "say": "When the Luau side needs it, it reads the notes and takes them off. That is popping."
+    },
+    {
+     "say": "Everything crossing the boundary goes through that board, in a known order. There is no second channel and no shortcut."
+    },
+    {
+     "say": "That constraint is the reason the rest of this unit looks the way it does."
+    },
+    {
+     "say": "Every property you read and every method you call on a Roblox object is, underneath, notes going onto that board and coming back off it."
     }
    ],
    "questions": [
@@ -3169,19 +3364,28 @@
   "38": {
    "beats": [
     {
-     "say": "Luau is the chef, and C plus plus is a factory producing special ingredients such as game objects and tools. The chef needs to use them without knowing how they were made."
+     "say": "Luau is a chef. C plus plus is a factory producing special ingredients: game objects, tools, complex data."
     },
     {
-     "say": "Userdata is how the factory hands those ingredients over. It is a package the Luau side can hold and use."
+     "say": "The chef needs to use those ingredients without knowing how the factory made them."
     },
     {
-     "say": "With a full userdata, the factory sends a brand new complete toy. Luau now owns it, and when nobody needs it any more, Luau knows how to clean it up."
+     "say": "Userdata is how the factory hands them over. It is a package the Luau side can hold and use like any other value."
     },
     {
-     "say": "Each of these can arrive with its own instruction manual, so two objects of different kinds can respond differently to the same request."
+     "say": "With a full userdata the factory sends a complete, brand new item. Luau owns it from then on."
     },
     {
-     "say": "That is what lets a Roblox object feel like an ordinary Luau value while actually living on the engine side."
+     "say": "Owning it means Luau also knows when nobody needs it any more, and can clean it up."
+    },
+    {
+     "say": "Each package can arrive with its own instruction manual attached."
+    },
+    {
+     "say": "Which is why two engine objects can respond differently to the same request: they are not the same kind of thing, and their manuals say so."
+    },
+    {
+     "say": "The result is that a Roblox object feels like an ordinary Luau value while actually living on the engine side of the board."
     }
    ],
    "questions": [
@@ -3232,19 +3436,28 @@
   "39": {
    "beats": [
     {
-     "say": "You speak Luau. The Roblox engine speaks C plus plus. For the two of you to understand each other, something has to translate."
+     "say": "You speak Luau. The Roblox engine speaks C plus plus. Something has to translate between you."
     },
     {
      "say": "That translator is the reflection engine, sitting between your script and the engine's inner workings."
     },
     {
-     "say": "It carries a huge dictionary, the reflection database, holding every important detail about every property and method the engine exposes."
+     "say": "It carries a large dictionary, holding every detail about every property and method the engine exposes."
     },
     {
-     "say": "When your script asks for a part's position, you are asking the translator a question. It looks up Position for a Part, works out where the real value lives, fetches it, and hands it back."
+     "say": "Ask a part for its position and you are really asking the translator a question."
     },
     {
-     "say": "This is worth knowing because every property access crosses that boundary. It is fast, but it is not free, and that is exactly why doing it repeatedly inside a hot loop can cost more than the work itself."
+     "say": "It looks up Position for a Part, works out where the real value lives, fetches it, and hands it back."
+    },
+    {
+     "say": "Every property access crosses that boundary. It is fast, but it is not free."
+    },
+    {
+     "say": "Which is exactly why reading the same property repeatedly inside a hot loop can cost more than the work the loop is doing."
+    },
+    {
+     "say": "Read it once, keep it in a local, and the crossing happens once instead of a thousand times."
     }
    ],
    "questions": [
@@ -3281,25 +3494,28 @@
   "40": {
    "beats": [
     {
-     "say": "Picture a complex play on a stage. Many things must happen in a specific order, at exactly the right moment, for the performance to work."
+     "say": "Picture a complex play on a stage. Many things must happen in a specific order, at exactly the right moment, or the whole thing feels wrong."
     },
     {
-     "say": "The task scheduler is the stage manager. Everything in your game, from what you type to what is drawn, happens because it decided when."
+     "say": "The task scheduler is the stage manager. Everything in your game happens because it decided when."
     },
     {
-     "say": "Each frame is divided into phases, and where your work runs decides what it can safely see and change."
+     "say": "Each frame is divided into phases, and the phase your work runs in decides what it can safely see and change."
     },
     {
-     "say": "Some things belong before the camera shot, and only things tied to the camera's view belong there."
+     "say": "Some work belongs before the frame is drawn, and only things tied to the camera's view belong there."
     },
     {
-     "say": "Some belong during the physics calculations, which is anything that must affect how objects physically move."
+     "say": "Some belongs during the physics calculations, which is anything that must affect how objects physically move."
     },
     {
-     "say": "And some belong after everything else, which is where general gameplay logic and interface updates sit, because they can safely wait a moment longer."
+     "say": "And some belongs after everything else. General gameplay logic and interface updates sit there, because they can safely wait a moment longer."
     },
     {
-     "say": "Choosing the wrong phase is a common cause of movement that stutters or lags one frame behind."
+     "say": "Choosing the wrong phase does not usually produce an error."
+    },
+    {
+     "say": "It produces movement that stutters, or a camera that lags one frame behind what it is following. The work happened; it happened at the wrong moment."
     }
    ],
    "questions": [
@@ -3353,16 +3569,25 @@
      "say": "Your game is a busy chef running a restaurant, and a frame is one shift: a single complete pass of work."
     },
     {
-     "say": "Task spawn is the chef turning to an assistant and saying do this immediately. It starts right now, without waiting."
+     "say": "Sometimes the chef needs help, or needs to arrange work that does not have to happen this instant."
     },
     {
-     "say": "Task defer is saying do this at the end of the shift. It waits until the current work is finished, then runs."
+     "say": "Telling an assistant to do something immediately starts it right now, without waiting for anything."
     },
     {
-     "say": "Task delay is setting a timer. When it goes off, the work begins, and not before."
+     "say": "Deferring it says: do this at the end of the shift. It waits until the current work finishes, then runs."
     },
     {
-     "say": "The distinction matters because reaching for the immediate one everywhere is how a single frame ends up carrying far more work than it should. Choosing deliberately is what keeps a frame from overflowing."
+     "say": "Delaying it sets a timer. The work begins when the timer goes off, and not before."
+    },
+    {
+     "say": "The three look interchangeable and are not."
+    },
+    {
+     "say": "Reaching for the immediate one everywhere is how a single frame ends up carrying far more work than it should."
+    },
+    {
+     "say": "A frame has a budget. Choosing deliberately is what keeps that budget from being spent all at once."
     }
    ],
    "questions": [
@@ -3413,19 +3638,28 @@
   "42": {
    "beats": [
     {
-     "say": "Picture your Roblox game as a giant magical toy box called the DataModel. Every single item in the game, a character, a block, a light, a script, is an object inside it."
+     "say": "Picture your Roblox game as a giant magical toy box called the DataModel."
     },
     {
-     "say": "Each of those objects is called an Instance."
+     "say": "Every single item in the game is an object inside it: a character, a block, a light, a script."
+    },
+    {
+     "say": "Each of those is called an Instance."
     },
     {
      "say": "Just as you organise toys in real life, instances nest inside one another. A big box holds smaller boxes, and a doll's hat sits on the doll."
     },
     {
-     "say": "That nesting is not decoration. Where a thing sits decides what it belongs to, what happens when its parent is removed, and often whether it runs at all."
+     "say": "That nesting is not decoration."
     },
     {
-     "say": "So the tree is not just a way of finding things. It is the structure the whole engine reasons about."
+     "say": "Where a thing sits decides what it belongs to, and what happens to it when its parent is removed."
+    },
+    {
+     "say": "It often decides whether the thing runs at all, because a script's position in the tree is part of what says where it executes."
+    },
+    {
+     "say": "So the tree is not a filing system laid over the game. It is the structure the engine itself reasons about."
     }
    ],
    "questions": [
@@ -3462,19 +3696,31 @@
   "43": {
    "beats": [
     {
-     "say": "Imagine sharing news in a busy office. A signal is the announcement board. Anyone with news posts it there, for example that a new player has joined."
+     "say": "Imagine sharing news in a busy office. A signal is the announcement board."
     },
     {
-     "say": "A connection is a person subscribing to those announcements. You put your name down, and from then on you hear about every new post."
+     "say": "Anyone with news posts it there: a new player joined, a part was touched."
     },
     {
-     "say": "Now the problem. Suppose you only needed the news for a short task. You sign up, do the task, and walk away without taking your name off the list."
+     "say": "A connection is a person subscribing. You put your name down, and from then on you hear about every new post."
     },
     {
-     "say": "The board keeps your name, and keeps holding on to you. You are gone, but you cannot be cleaned up, because something still refers to you."
+     "say": "Now the problem, and it is the most common one in Roblox code."
     },
     {
-     "say": "That is a memory leak, and it is the single most common one in Roblox code. The rule that prevents it is simple: whoever creates a connection is responsible for disconnecting it when it is no longer needed."
+     "say": "Suppose you only needed the news for a short task. You sign up, do the task, and walk away without taking your name off the list."
+    },
+    {
+     "say": "The board keeps your name. And because it keeps your name, it keeps hold of you."
+    },
+    {
+     "say": "You are finished, but nothing can be cleaned up, because something still refers to you."
+    },
+    {
+     "say": "That is a memory leak, and it is why the garbage collector cannot help: a reference is a reference, whether or not you still want it."
+    },
+    {
+     "say": "The rule that prevents it is short. Whoever creates a connection is responsible for disconnecting it when it is no longer needed."
     }
    ],
    "questions": [
@@ -3525,19 +3771,28 @@
   "44": {
    "beats": [
     {
-     "say": "Everyone in a multiplayer game sees the same world, even though they are on different computers. Picture the world as a shared storybook."
+     "say": "Everyone in a multiplayer game sees the same world, even though they are on different computers. Picture that world as a shared storybook."
     },
     {
-     "say": "The server is the author. It writes down everything that happens. When something changes, the author records it."
+     "say": "The server is the author. It writes down everything that happens: where characters are, what exists, what changed."
     },
     {
-     "say": "Every client is a reader holding a copy. The server constantly sends updates so each copy matches the original."
+     "say": "Every client is a reader holding a copy, and the server constantly sends updates so each copy matches the original."
     },
     {
-     "say": "Now the crucial part. If you scribble in your own copy, nobody else sees it. The author does not know about it, so it is not part of the official story."
+     "say": "Now the part that decides how you write multiplayer code."
     },
     {
-     "say": "That is the whole client server model in one image. Changes on a client are local scribbles until the server accepts them. Only what the author writes is real."
+     "say": "If you scribble in your own copy, nobody else sees it. The author does not know about it, so it is not part of the story."
+    },
+    {
+     "say": "Your screen changed. The world did not."
+    },
+    {
+     "say": "That is the client server model in one image: changes on a client are local scribbles until the server accepts them."
+    },
+    {
+     "say": "Which is why the question to ask about any piece of state is not where is this convenient, but who is allowed to be right about it."
     }
    ],
    "questions": [
@@ -3588,19 +3843,31 @@
   "45": {
    "beats": [
     {
-     "say": "Your client sometimes needs to talk to the server. That conversation happens through remote events."
+     "say": "Your client sometimes needs to talk to the server, and that conversation goes through remote events."
     },
     {
-     "say": "There are two ways to send. The first is like posting an important letter. You want certainty that it arrives, and that letters arrive in the order you sent them."
+     "say": "There are two ways to send, and they are not ranked. They are different tools."
     },
     {
-     "say": "That reliability has a cost. If the carrier loses a letter, they stop delivering new ones until the missing one is resolved, so everything behind it waits."
+     "say": "The first is like posting an important letter. You want certainty that it arrives, and that letters arrive in the order you sent them."
+    },
+    {
+     "say": "That reliability has a cost worth understanding."
+    },
+    {
+     "say": "If the carrier loses a letter, they stop delivering new ones until the missing one is resolved. Everything behind it waits."
     },
     {
      "say": "The second way is like shouting a quick update across a room. Faster, and you accept that the occasional shout is missed or arrives out of order."
     },
     {
-     "say": "The choice follows from what the message is. Something that must not be lost, such as a purchase, wants the letter. Something replaced constantly, such as a position update many times a second, is usually better shouted."
+     "say": "The choice follows from what the message is."
+    },
+    {
+     "say": "Something that must not be lost, such as a purchase, wants the letter."
+    },
+    {
+     "say": "Something replaced constantly, such as a position sent many times a second, is better shouted. A missed one is immediately replaced by the next."
     }
    ],
    "questions": [
@@ -3654,16 +3921,28 @@
      "say": "Picture a drive through. You need something from the kitchen, and there are two ways to ask."
     },
     {
-     "say": "With a remote event you simply tell them. Make me a burger. Then you drive on to the window without waiting for an answer."
+     "say": "With a remote event you simply tell them: make me a burger. Then you drive on to the window without waiting."
     },
     {
-     "say": "With a remote function you ask and wait. Do you have the special sauce? The person says hold on, let me check, and you sit at the speaker until they come back."
+     "say": "With a remote function you ask and wait. Do you have the special sauce? They say hold on, and you sit at the speaker until they come back."
     },
     {
-     "say": "Here is the danger. If they never come back, you are stuck at the speaker forever. Your script is frozen, unable to do anything else, holding up everyone behind you."
+     "say": "Here is the danger in that second one."
     },
     {
-     "say": "That is the real difference. An event costs you nothing to send. A function ties your code's progress to somebody else answering, and if the other side stalls or errors, you inherit that stall."
+     "say": "If they never come back, you are stuck at the speaker. Your script is frozen, unable to do anything else."
+    },
+    {
+     "say": "And everyone behind you in the queue waits too, because you are the one holding the lane."
+    },
+    {
+     "say": "So the real difference is not convenience. An event costs you nothing to send."
+    },
+    {
+     "say": "A function ties your code's progress to somebody else answering, and if the other side stalls or errors, you inherit that stall."
+    },
+    {
+     "say": "Which is why the honest default is an event, and a function only when you genuinely cannot continue without the answer."
     }
    ],
    "questions": [
@@ -3714,19 +3993,28 @@
   "47": {
    "beats": [
     {
-     "say": "Picture building with advanced building blocks in a virtual world. How do they know how to fall, collide and move when connected?"
+     "say": "Picture building with advanced building blocks in a virtual world. How do they know how to fall, collide and move when you connect them?"
     },
     {
-     "say": "A diligent team of helpers, the physics solver, works that out. They do not know your intent. They only apply the rules to whatever they are given."
+     "say": "A diligent team of helpers works that out. They are the physics solver."
     },
     {
-     "say": "Some joints are super glue. They lock two parts together completely, so neither can move relative to the other. Glue two bricks side by side and they are stuck."
+     "say": "They do not know what you intended. They apply the rules to whatever they are given."
     },
     {
-     "say": "Other joints are special connectors, allowing movement but only in a controlled way, such as turning around one axis."
+     "say": "Some connections are super glue. They lock two parts together completely, so neither can move relative to the other."
     },
     {
-     "say": "Choosing between them is really a question about what movement you want to permit, not about what looks right when it is standing still."
+     "say": "Glue two bricks side by side and they behave as one object from then on."
+    },
+    {
+     "say": "Other connections are specialised, allowing movement but only in a controlled way, such as turning around a single axis."
+    },
+    {
+     "say": "Choosing between them is a question about permitted movement, not about appearance."
+    },
+    {
+     "say": "Two arrangements can look identical standing still and behave completely differently the moment anything pushes them."
     }
    ],
    "questions": [
@@ -3780,16 +4068,25 @@
      "say": "In a virtual world you want things to interact realistically, but also intelligently. Not everything should bump into everything."
     },
     {
-     "say": "By default, everyone collides with everyone. A soccer player running into a basketball player collides with them."
+     "say": "By default, everything collides with everything. A soccer player running into a basketball player collides with them."
     },
     {
-     "say": "Collision groups let you set special rules. Perhaps soccer players should never bump into basketball players, while both still collide with the ground."
+     "say": "Collision groups let you write exceptions to that default."
     },
     {
-     "say": "You do that by labelling each object with its group, and the supervisor uses those labels to decide which pairs actually interact."
+     "say": "Perhaps soccer players should never bump into basketball players, while both still collide with the ground."
     },
     {
-     "say": "This is the tool to reach for when you find yourself trying to solve a collision problem with clever positioning. The rule belongs in the group setup, not in the movement code."
+     "say": "You do it by labelling each object with the group it belongs to."
+    },
+    {
+     "say": "A supervisor then uses those labels to decide which pairs actually interact."
+    },
+    {
+     "say": "This is the tool to reach for the moment you catch yourself solving a collision problem with clever positioning."
+    },
+    {
+     "say": "The rule belongs in the group setup, where it is stated once, not scattered through the code that moves things."
     }
    ],
    "questions": [
@@ -3829,19 +4126,28 @@
      "say": "Imagine designing a poster with pictures and text boxes. When you place something, you can describe its size in two different ways."
     },
     {
-     "say": "Scale is a proportion. Fifty percent of the poster's width. Print the poster smaller and that picture shrinks with it."
+     "say": "Scale is a proportion: fifty percent of the poster's width. Print the poster smaller and that picture shrinks with it."
     },
     {
-     "say": "Offset is an exact distance. Twenty pixels from the top edge, and it stays twenty pixels whatever size the poster becomes."
+     "say": "Offset is an exact distance: twenty pixels from the top edge, and it stays twenty pixels whatever size the poster becomes."
     },
     {
-     "say": "Almost every layout that breaks on a different screen is a case of using one where the other was meant. Scale adapts, offset does not, and both are correct in the right place."
+     "say": "Almost every layout that breaks on a different screen is one of these used where the other was meant."
     },
     {
-     "say": "There is also a rearrangement cost. Every time the contents change, the layout has to be worked out again."
+     "say": "Neither is wrong. Scale adapts, offset does not, and each is correct in its place."
     },
     {
-     "say": "A canvas group is the answer to that. It arranges everything inside once, then takes a single picture of the result, so the whole thing can be moved or faded as one image rather than recomputed piece by piece."
+     "say": "There is a second cost worth knowing about, and it is not about looks."
+    },
+    {
+     "say": "Every time the contents change, the arrangement has to be worked out again."
+    },
+    {
+     "say": "A canvas group is the answer to that: it arranges everything inside once, then treats the result as a single picture."
+    },
+    {
+     "say": "Which is what makes moving or fading the whole group cheap, instead of recomputing every piece inside it."
     }
    ],
    "questions": [
@@ -3892,19 +4198,28 @@
   "50": {
    "beats": [
     {
-     "say": "Picture your Roblox server as a base camp in a forest. Most of the time it talks only to itself, to its own tents and people."
+     "say": "Picture your Roblox server as a base camp in a forest. Most of the time it talks only to itself: its own tents, its own people."
     },
     {
      "say": "HttpService is the camp's radio, letting it send messages out to other websites and receive answers back."
     },
     {
-     "say": "Any such request needs three things. Which website to talk to, what you want to do there, and any special notes, such as a key that identifies you."
+     "say": "Any such request needs three things: which website to talk to, what you want to do there, and any notes that go with it, such as a key identifying you."
     },
     {
-     "say": "The important part is where this can happen. Reaching outside is a server side capability. A client asking the outside world directly would be a client you cannot trust."
+     "say": "The important part is where this is allowed to happen."
     },
     {
-     "say": "And because the outside world can be slow or unavailable, every such call is something that might not answer. Code that assumes it always will is code that eventually freezes."
+     "say": "Reaching outside is a server side capability, and that is not an arbitrary restriction."
+    },
+    {
+     "say": "A client that could reach the outside world directly is a client you cannot trust, because a client is under its owner's control."
+    },
+    {
+     "say": "And because the outside world can be slow or unavailable, every such call is one that might not answer."
+    },
+    {
+     "say": "Code written as though the answer always arrives is code that eventually freezes waiting for one."
     }
    ],
    "questions": [
@@ -3955,22 +4270,34 @@
   "51": {
    "beats": [
     {
-     "say": "Players want their progress to still be there tomorrow. A DataStore is the sturdy safe deposit box that makes that possible. Each player can have their own."
+     "say": "Players want their progress to still be there tomorrow. A DataStore is the sturdy safe deposit box that makes that possible."
+    },
+    {
+     "say": "Each player can have their own box, and what goes in it survives long after the server they played on has gone."
     },
     {
      "say": "There are two ways to write to it, and the difference matters more than almost anything else in this section."
     },
     {
-     "say": "Set async takes everything out of the box and puts a completely new set of items in. It is fast, and it overwrites without looking at what was there."
+     "say": "The first takes everything out of the box and puts a completely new set of contents in."
     },
     {
-     "say": "Update async is the safe one. It asks the bank manager to check what is currently in the box, and then applies your change to that."
+     "say": "It is fast, and it overwrites without looking at what was there."
     },
     {
-     "say": "Why that matters: two servers can hold the same player at once. With the blind overwrite, whichever writes last wins and the other's change vanishes. With the checked update, the change is applied to what is actually there."
+     "say": "The second asks the bank manager to check what is currently in the box, and then applies your change to that."
     },
     {
-     "say": "That is the difference between a player losing an hour of progress and not losing it."
+     "say": "Here is why that distinction is not academic."
+    },
+    {
+     "say": "Two servers can hold the same player at once, which happens routinely when someone rejoins quickly."
+    },
+    {
+     "say": "With the blind overwrite, whichever writes last wins, and the other server's change vanishes without a trace."
+    },
+    {
+     "say": "With the checked update, the change is applied to what is actually there. That is the difference between a player losing an hour of progress and not losing it."
     }
    ],
    "questions": [
@@ -4021,19 +4348,28 @@
   "52": {
    "beats": [
     {
-     "say": "Imagine building a giant castle out of blocks. With one person it takes a very long time. Parallel Luau is bringing in more builders."
+     "say": "Imagine building a giant castle out of blocks. With one person it takes a very long time."
     },
     {
-     "say": "Instead of the engine using one brain, it can use several cores at once."
+     "say": "Parallel Luau is bringing in more builders: instead of the engine using one brain, it can use several at once."
     },
     {
      "say": "Each Actor is a separate workstation, with its own bench and its own materials."
     },
     {
-     "say": "And here is the rule that defines everything else. A builder at one workstation cannot reach over and take bricks from another. Each has their own."
+     "say": "And here is the rule that defines everything else about them."
     },
     {
-     "say": "That independence is what makes parallel work safe, and it is also the constraint you have to design around. Work that constantly needs to touch shared state is not work that parallelises well."
+     "say": "A builder at one workstation cannot reach over and take bricks from another. Each has their own."
+    },
+    {
+     "say": "That independence is what makes parallel work safe. Nothing can be half-changed by one worker while another reads it."
+    },
+    {
+     "say": "It is also the constraint you have to design around."
+    },
+    {
+     "say": "Work that constantly needs to touch shared state is not work that parallelises well, because the isolation that makes it safe is exactly what such work fights."
     },
     {
      "say": "So the honest advice is to profile first. Parallelising before you can measure is usually effort spent in the wrong place."
@@ -4090,19 +4426,25 @@
      "say": "If each worker has a private bench, how do they share something everyone needs, such as the player's gold or the score?"
     },
     {
-     "say": "A SharedTable is the treasure chest they can all reach, and it has a strict manager."
+     "say": "A SharedTable is the treasure chest they can all reach, and it comes with a strict manager."
     },
     {
-     "say": "If a worker wants to put something in or take something out, the manager supervises it, so two workers cannot corrupt the contents by reaching in at the same moment."
+     "say": "If a worker wants to put something in or take something out, the manager supervises it."
     },
     {
-     "say": "When one worker tells another about the chest, they do not hand over a copy of everything inside. They hand over the map to it. Both are then looking at the same chest."
+     "say": "Which is what stops two workers corrupting the contents by reaching in at the same moment."
     },
     {
-     "say": "The chest is also picky about what it accepts. Simple, easily understood items only: numbers, true or false values, and simple text."
+     "say": "When one worker tells another about the chest, they do not hand over a copy of everything inside."
     },
     {
-     "say": "That restriction is not arbitrary. Anything more complex could not be safely shared between workers without the very tangles this design exists to prevent."
+     "say": "They hand over the map to it. Both are then looking at the same chest, which is the entire point."
+    },
+    {
+     "say": "The chest is also picky about what it accepts: simple, easily understood items only. Numbers, true or false values, and simple text."
+    },
+    {
+     "say": "That restriction is not arbitrary. Anything more complex could not be shared safely between workers without the very tangles this design exists to prevent."
     }
    ],
    "questions": [
@@ -4156,16 +4498,25 @@
      "say": "In a large online game, keeping things fair means knowing what each piece of running code is allowed to do."
     },
     {
-     "say": "Think of every script as carrying an identity card. Ordinary game scripts carry one kind of card, which permits ordinary game actions."
+     "say": "Think of every script as carrying an identity card."
+    },
+    {
+     "say": "Ordinary game scripts carry one kind of card, and it permits ordinary game actions."
     },
     {
      "say": "Other cards belong to the engine and to privileged internal code, and they permit things a game script must never be able to do."
     },
     {
-     "say": "There is a second layer too. For most things you create, you are free to write or change their instruction manual. For protected engine objects, that manual is locked."
+     "say": "There is a second layer alongside that one."
     },
     {
-     "say": "Both mechanisms exist for the same reason. Without them, code running in a game could reach past the boundaries it was given and act as though it were the engine itself."
+     "say": "For most things you create, you are free to write or change their instruction manual, which is how objects get custom behaviour."
+    },
+    {
+     "say": "For protected engine objects, that manual is locked."
+    },
+    {
+     "say": "Both mechanisms exist for the same reason. Without them, code running inside a game could reach past the boundaries it was given and act as though it were the engine itself."
     }
    ],
    "questions": [
@@ -4205,19 +4556,28 @@
      "say": "Picture a board game where everyone has their own tablet showing the board, and you are the referee."
     },
     {
-     "say": "Because each player's tablet is their own, a player can change what their tablet shows. They can secretly alter how far their piece moves, teleport it across the board, or claim a power they do not have."
+     "say": "Because each player's tablet is their own, a player can change what it shows."
     },
     {
-     "say": "None of that is cheating yet. It only becomes cheating if the referee believes it."
+     "say": "They can secretly alter how far their piece moves, teleport it across the board, or claim a power they do not have."
     },
     {
-     "say": "So the whole of anti cheat comes down to a single rule. The referee does not accept what a tablet claims happened. The referee decides what happened."
+     "say": "None of that is cheating yet."
     },
     {
-     "say": "A client says I would like to move here. The server decides whether that move was possible, and only then is it real."
+     "say": "It only becomes cheating if the referee believes it."
     },
     {
-     "say": "Which is why validation belongs on the server, always, and why a client side check is a convenience for the honest player rather than a defence against the dishonest one."
+     "say": "So the whole of anti cheat reduces to a single rule. The referee does not accept what a tablet claims happened."
+    },
+    {
+     "say": "The referee decides what happened. A client says I would like to move here; the server decides whether that move was possible, and only then is it real."
+    },
+    {
+     "say": "Which is why validation belongs on the server, always."
+    },
+    {
+     "say": "A check on the client is a convenience for the honest player. Anyone able to cheat is able to remove it, so it defends nothing."
     }
    ],
    "questions": [
@@ -4271,22 +4631,25 @@
      "say": "Imagine your screen is a flat table. Building an interface is like stacking clear sheets of glass on top of it."
     },
     {
-     "say": "Before placing any glass, you need a tray to hold it, and there are three kinds."
+     "say": "Before placing any glass you need a tray to hold it, and there are three kinds. Choosing the tray is really choosing what the interface is attached to."
     },
     {
-     "say": "A screen tray sits flat on your screen. Anything in it is drawn directly on the display, no matter where the player is standing."
+     "say": "A screen tray sits flat on your screen. Anything in it is drawn directly on the display, wherever the player happens to be standing."
     },
     {
-     "say": "A floating tray sits on a stick attached to a three dimensional object, so it hovers over that object as you walk around it. Name tags work this way."
+     "say": "A floating tray sits on a stick attached to an object in the world, so it hovers over that object as you walk around it. Name tags work this way."
     },
     {
      "say": "A board tray is taped flat onto the face of a part. It moves and rotates exactly with that part, like a sign on a wall."
     },
     {
-     "say": "Choosing the tray is really choosing what the interface is attached to: the screen, an object in the world, or a surface."
+     "say": "So the question is never which one looks right. It is what the interface belongs to: the screen, an object, or a surface."
     },
     {
-     "say": "Within a tray, the stacking order decides which sheet is on top. A higher number sits above a lower one, and that is usually the answer when something is mysteriously hidden."
+     "say": "Within a tray, the stacking order decides which sheet is on top. A higher number sits above a lower one."
+    },
+    {
+     "say": "That is almost always the answer when something is mysteriously hidden behind something else."
     }
    ],
    "questions": [
@@ -4343,19 +4706,25 @@
      "say": "Roblox gives you two measurements at once, and understanding the pair is most of interface work."
     },
     {
-     "say": "The first is like giving directions by landmark. Halfway across the field. Make the field bigger and halfway is still the middle. That is scale, a proportion from zero to one."
+     "say": "The first is like giving directions by landmark. Halfway across the field."
+    },
+    {
+     "say": "Make the field bigger and halfway is still the middle. That is scale, a proportion from zero to one."
     },
     {
      "say": "A frame with a scale size of one half always takes exactly half the space of its parent, on a tiny phone or a giant monitor."
     },
     {
-     "say": "The second is like a tape measure. Twenty pixels is twenty pixels, whatever the screen. That is offset, measured in the physical dots on the display."
+     "say": "The second is a tape measure. Twenty pixels is twenty pixels, whatever the screen."
+    },
+    {
+     "say": "That is offset, measured in the physical dots on the display."
     },
     {
      "say": "Both are combined into a single value, so every position and size can carry a proportion plus a fixed nudge."
     },
     {
-     "say": "The practical rule that follows: use the proportion for anything that should adapt, and the tape measure only for things that genuinely should not change, such as a border width or a small gap."
+     "say": "The rule that follows is short. Use the proportion for anything that should adapt, and the tape measure only for things that genuinely should not change, such as a border width or a small gap."
     }
    ],
    "questions": [
@@ -4406,22 +4775,31 @@
   "58": {
    "beats": [
     {
-     "say": "Imagine a closet full of clothes. If you had to measure and place every shirt exactly two inches apart by hand, it would take forever, and adding one more shirt would mean redoing all of it."
+     "say": "Imagine a closet full of clothes. If you had to measure and place every shirt exactly two inches apart by hand, it would take forever."
+    },
+    {
+     "say": "Worse, adding one more shirt would mean redoing all of it."
     },
     {
      "say": "Layout managers are automatic shelf organisers that do that spacing for you."
     },
     {
-     "say": "A list layout arranges items in a line. Add a new item and it snaps to the end. Delete one and the rest slide up to fill the gap. You never position them yourself."
+     "say": "A list layout arranges items in a line. Add a new item and it snaps to the end."
     },
     {
-     "say": "A grid layout does the same in rows and columns, for things such as an inventory of equal sized slots."
+     "say": "Delete one and the rest slide up to fill the gap. You never position any of them yourself."
     },
     {
-     "say": "Alongside them are small styling helpers. Padding acts as bumper cushions, keeping items from pressing against the frame's outer edges."
+     "say": "A grid layout does the same in rows and columns, which is the shape of an inventory of equal sized slots."
     },
     {
-     "say": "The reason to reach for these is not tidiness. It is that hand positioned interfaces break the moment the content changes, and organised ones do not."
+     "say": "Alongside them sit small styling helpers. Padding acts as bumper cushions, keeping items from pressing against the frame's outer edges."
+    },
+    {
+     "say": "The reason to reach for these is not tidiness."
+    },
+    {
+     "say": "Hand positioned interfaces break the moment the content changes, and organised ones absorb the change without you touching them."
     }
    ],
    "questions": [
@@ -4472,22 +4850,28 @@
   "59": {
    "beats": [
     {
-     "say": "Think of a button as a physical doorbell. A player presses it, the bell rings, and a signal travels down a wire to your script, which is waiting at the other end."
+     "say": "Think of a button as a physical doorbell. A player presses it, the bell rings, and a signal travels down a wire to your script."
     },
     {
-     "say": "You wire it by connecting a function to the button's click event. Despite the name mentioning a mouse, it fires for mouse clicks on a computer and finger taps on a phone alike."
+     "say": "You wire it by connecting a function to the button's click event."
     },
     {
-     "say": "Which brings up the rule that trips up most new interfaces. Fingers are much less precise than a cursor."
+     "say": "Despite the name mentioning a mouse, it fires for mouse clicks on a computer and finger taps on a phone alike."
     },
     {
-     "say": "So keep clickable buttons reasonably large. The widely used standard is at least forty four by forty four pixels, and give them space so a player does not hit the wrong one."
+     "say": "Which brings up the rule that trips up most new interfaces: fingers are far less precise than a cursor."
+    },
+    {
+     "say": "So keep clickable buttons reasonably large. The widely used standard is at least forty four by forty four pixels."
+    },
+    {
+     "say": "And give them space, so a player reaching for one does not hit its neighbour."
     },
     {
      "say": "There is one more behaviour worth knowing. An interface element can absorb a click so it does not reach anything behind it."
     },
     {
-     "say": "That is usually what you want for a panel, since a click meant for a menu should not also act on the world underneath."
+     "say": "That is usually what you want for a panel. A click meant for a menu should not also act on the world underneath it."
     }
    ],
    "questions": [
@@ -4538,22 +4922,28 @@
   "60": {
    "beats": [
     {
-     "say": "Picture a slideshow. Switching instantly from one slide to the next works, but it is abrupt. Sliding the new picture in smoothly feels considered."
+     "say": "Picture a slideshow. Switching instantly from one slide to the next works, but it is abrupt."
     },
     {
-     "say": "Tweens are those smooth transitions. Rather than moving something pixel by pixel yourself, you describe the destination and let the engine work out every step in between."
+     "say": "Sliding the new picture in smoothly reads as considered rather than sudden."
+    },
+    {
+     "say": "Tweens are those smooth transitions. Rather than moving something pixel by pixel yourself, you describe the destination."
+    },
+    {
+     "say": "The engine works out every step in between."
     },
     {
      "say": "You describe the movement with a few rules. How long it should take, for example half a second."
     },
     {
-     "say": "And how the speed behaves along the way. Linear is a steady speed, like a conveyor belt, which is honest but reads as mechanical."
+     "say": "And how the speed behaves along the way. A steady speed is honest, and reads as mechanical, because almost nothing in the real world starts at full speed."
     },
     {
-     "say": "The styles that start or end gently are what make motion feel physical, because almost nothing in the real world starts at full speed."
+     "say": "The styles that begin or end gently are what make motion feel physical."
     },
     {
-     "say": "Which is the real lesson here. Animation is not decoration. It tells the player what just happened and where a thing came from."
+     "say": "Which is the real lesson here. Animation is not decoration: it tells the player what just happened and where a thing came from."
     }
    ],
    "questions": [
@@ -4590,22 +4980,28 @@
   "61": {
    "beats": [
     {
-     "say": "Interfaces are usually flat drawings, but sometimes you want to show a rotating model of a sword inside a shop menu."
+     "say": "Interfaces are usually flat drawings. Sometimes you want to show a rotating model of a sword inside a shop menu."
     },
     {
-     "say": "A viewport frame is a tiny television embedded in your flat screen. It is tuned to a private camera in a closed studio room."
+     "say": "A viewport frame is a tiny television embedded in your flat screen, tuned to a private camera in a closed studio room."
     },
     {
-     "say": "You put the model into that studio room, place a virtual camera looking at it, and the little screen shows exactly what that camera sees."
+     "say": "You put the model into that studio, place a virtual camera looking at it, and the little screen shows exactly what that camera sees."
     },
     {
-     "say": "Which is how a three dimensional item ends up sitting neatly inside a shop or an inventory slot, without being in the world at all."
+     "say": "Which is how a three dimensional item ends up sitting neatly inside an inventory slot, without being anywhere in the world."
     },
     {
-     "say": "The second idea in this section is about the edges of real devices. Phones have rounded corners, notches and system bars, and anything you place right at the edge risks being cut off."
+     "say": "The second idea in this section is about the edges of real devices."
     },
     {
-     "say": "So the safe area is the region you can actually rely on. Respecting it is the difference between an interface that works on one test device and one that works everywhere."
+     "say": "Phones have rounded corners, notches and system bars. Anything placed right at the edge risks being cut off by one of them."
+    },
+    {
+     "say": "The safe area is the region you can actually rely on."
+    },
+    {
+     "say": "Respecting it is the difference between an interface that works on your test device and one that works everywhere."
     }
    ],
    "questions": [
@@ -4642,13 +5038,19 @@
   "62": {
    "beats": [
     {
-     "say": "Now let us put the whole unit together and build something real: a health display at the top, and a shop panel that slides in from the right."
+     "say": "Now put the whole unit together and build something real: a health display at the top, and a shop panel that slides in from the right."
     },
     {
-     "say": "The screen tray goes into the player's own interface folder, and is set to respect the device's safe insets, so nothing is clipped by a notch."
+     "say": "The screen tray goes into the player's own interface folder, set to respect the device's safe insets, so nothing is clipped by a notch."
     },
     {
-     "say": "The shop panel is anchored by its right middle edge. That choice matters, because anchoring is what lets a single position value slide the panel cleanly on and off the screen."
+     "say": "The shop panel is anchored by its right middle edge."
+    },
+    {
+     "say": "That choice is the one doing the work: the anchor decides which part of the panel a position refers to."
+    },
+    {
+     "say": "Anchored that way, a single position value can slide the panel cleanly on and off the screen."
     },
     {
      "say": "It starts just past the right edge, out of view, ready to come in."
@@ -4657,7 +5059,7 @@
      "say": "Opening it is then one tween to its visible position, and closing it is one tween back. No pixel arithmetic anywhere."
     },
     {
-     "say": "Notice what made that simple. Anchoring chosen deliberately, position expressed as a proportion, and animation describing a destination instead of a path."
+     "say": "Notice what made that simple: anchoring chosen deliberately, position expressed as a proportion, and animation describing a destination instead of a path."
     }
    ],
    "questions": [
@@ -4694,25 +5096,34 @@
   "63": {
    "beats": [
     {
-     "say": "In a tycoon game each player buys buttons that build walls, droppers and weapons on their own plot of land. Every plot needs its own separate life."
+     "say": "In a tycoon game each player buys buttons that build walls, droppers and weapons on their own plot of land."
     },
     {
-     "say": "If player A buys a wall, only player A's plot should build it, and only player A's money should go down."
+     "say": "Every plot needs its own separate life. If player A buys a wall, only player A's plot should build it, and only player A's money should go down."
     },
     {
      "say": "So you write a blueprint for a plot once, and stamp out a living plot object for each player who joins."
     },
     {
-     "say": "Each stamped object carries its own private state: who owns it, its income rate, what has been bought. Nothing is shared by accident, because nothing is shared at all."
+     "say": "Each stamped object carries its own private state: who owns it, its income rate, what has been bought."
     },
     {
-     "say": "The second piece is cleanup. A plot creates parts, connections and running loops, and when the player leaves, all of it must go."
+     "say": "Nothing is shared by accident, because nothing is shared at all."
     },
     {
-     "say": "So the plot keeps a cleanup box. Every time it creates something that would need undoing, it drops the undo into the box. When the player leaves, you empty the box once."
+     "say": "The second piece is cleanup, and it is the one people skip."
     },
     {
-     "say": "That pattern is worth internalising, because it turns cleanup from something you must remember in ten places into something that happens in one."
+     "say": "A plot creates parts, connections and running loops. When the player leaves, all of it must go."
+    },
+    {
+     "say": "So the plot keeps a cleanup box. Every time it creates something that would need undoing, it drops the undo into the box."
+    },
+    {
+     "say": "When the player leaves, you empty the box once."
+    },
+    {
+     "say": "That pattern turns cleanup from something you must remember in ten places into something that happens in one, which is why connections stop leaking."
     }
    ],
    "questions": [
@@ -4763,22 +5174,31 @@
   "64": {
    "beats": [
     {
-     "say": "When a player leaves, they want their walls and purchases still there tomorrow. That means writing to a cloud file cabinet, looked up by a key unique to the player."
+     "say": "When a player leaves, they want their walls and purchases still there tomorrow. That means writing to a cloud file cabinet, looked up by a key unique to that player."
     },
     {
-     "say": "Two things make this harder than it looks, and both have to be handled."
+     "say": "Two things make this harder than it looks, and both have to be handled or the feature is unreliable."
     },
     {
-     "say": "The first is that a cloud call can fail. The network can be slow, the service can be busy, and a failure that is not caught takes your script down with it."
+     "say": "The first is that a cloud call can fail. The network can be slow, the service can be busy."
     },
     {
-     "say": "So every save and load is wrapped in a safety fuse, a protected call. If it blows, you find out and can react, rather than the whole thing stopping."
+     "say": "A failure that is not caught takes your script down with it."
     },
     {
-     "say": "The second is what you are allowed to store. You cannot post a whole three dimensional object into the cloud, any more than you could post a wardrobe."
+     "say": "So every save and load is wrapped in a safety fuse, a protected call. If it blows you find out and can react, rather than everything stopping."
     },
     {
-     "say": "So you pack a suitcase: reduce the plot to a plain description, such as a list of item names and positions, save that, and rebuild the real objects from the description when the player returns."
+     "say": "The second is what you are allowed to store."
+    },
+    {
+     "say": "You cannot post a whole three dimensional object into the cloud, any more than you could post a wardrobe."
+    },
+    {
+     "say": "So you pack a suitcase: reduce the plot to a plain description, such as a list of item names and positions."
+    },
+    {
+     "say": "Save the description, and rebuild the real objects from it when the player returns."
     }
    ],
    "questions": [
@@ -4832,19 +5252,28 @@
      "say": "Code running on the player's computer is entirely under their control. A determined player can change what it sends."
     },
     {
-     "say": "So the server has to behave like a strict bank teller. Someone slides a request across the counter, and the teller checks before doing anything."
+     "say": "So the server behaves like a strict bank teller. A request slides across the counter, and the teller checks before doing anything."
     },
     {
-     "say": "First, who is this. The envelope is stamped with the sender by the system itself, and the player cannot fake that stamp. So the server always knows whose request it is."
+     "say": "First, who is this."
     },
     {
-     "say": "Second, can they afford it. The teller looks at the bank's own record of the balance, never at the number written on the slip by the customer."
+     "say": "The envelope is stamped with the sender by the system itself, and the player cannot fake that stamp. So the server always knows whose request it is, without being told."
+    },
+    {
+     "say": "Second, can they afford it."
+    },
+    {
+     "say": "The teller looks at the bank's own record of the balance, never at the number written on the slip by the customer."
     },
     {
      "say": "Third, does the request even make sense. Is the item actually for sale, and is the player close enough to the shop to be buying from it?"
     },
     {
-     "say": "Only if all three pass does anything happen. That is the whole discipline: identity from the system, values from the server's own record, and a sanity check on the rest."
+     "say": "Only if all three pass does anything happen."
+    },
+    {
+     "say": "That is the whole discipline: identity from the system, values from the server's own record, and a sanity check on the rest. A request can be authentic and affordable and still be nonsense."
     }
    ],
    "questions": [
@@ -4895,22 +5324,28 @@
   "66": {
    "beats": [
     {
-     "say": "Imagine building a car. You would not glue the engine directly to the speedometer dial. Swap the engine and you break the dial."
+     "say": "Imagine building a car. You would not glue the engine directly to the speedometer dial."
     },
     {
-     "say": "Instead you run a wire. The engine sends a signal down it, the speedometer reads the signal and moves its needle. The engine does not know a speedometer exists."
+     "say": "Swap the engine and you break the dial."
+    },
+    {
+     "say": "Instead you run a wire. The engine sends a signal down it, the speedometer reads the signal and moves its needle."
+    },
+    {
+     "say": "The engine does not know a speedometer exists."
     },
     {
      "say": "Interface code should work the same way. The part that changes the player's gold should not reach into the interface and set a label."
     },
     {
-     "say": "Instead, the value changes, and whatever is displaying it notices and updates itself."
+     "say": "The value changes, and whatever is displaying it notices and updates itself."
     },
     {
-     "say": "The gain is that you can redesign the entire display, or add a second one, without touching the game logic at all. Neither side knows about the other."
+     "say": "The gain is concrete: you can redesign the entire display, or add a second one, without touching the game logic at all."
     },
     {
-     "say": "For messages that stay on one machine, a local wire does the same job as a remote event does across the network: a way to announce something without knowing who is listening."
+     "say": "For messages that stay on one machine, a local wire does the same job a remote event does across the network: announce something without knowing who is listening."
     }
    ],
    "questions": [
@@ -4961,22 +5396,31 @@
   "67": {
    "beats": [
     {
-     "say": "Professional teams do not write their code inside the Studio editor. They treat Luau as an ordinary codebase, edited in a real editor and kept in version control."
+     "say": "Professional teams do not write their code inside the Studio editor."
+    },
+    {
+     "say": "They treat Luau as an ordinary codebase, edited in a real editor and kept in version control."
     },
     {
      "say": "The tool that makes that possible synchronises files on your disk into the live object tree inside Studio."
     },
     {
-     "say": "A project file describes the mapping: which folder becomes which part of the game. The file naming carries meaning too, marking a file as server code or client code."
+     "say": "A project file describes the mapping: which folder becomes which part of the game."
     },
     {
-     "say": "And a file named as the folder's entry point becomes the module representing that folder, which is the standard way of packaging a directory as one importable unit."
+     "say": "The file naming carries meaning too, marking a file as server code or client code without you configuring anything."
     },
     {
-     "say": "Alongside it sits a package manager, so shared libraries are declared as dependencies with versions rather than copied by hand into the place file."
+     "say": "A file named as a folder's entry point becomes the module representing that folder, which is the standard way of packaging a directory as one importable unit."
     },
     {
-     "say": "The point of the whole setup is not sophistication. It is that code review, history, branching and reproducible builds all become possible the moment the source lives in files."
+     "say": "Alongside it sits a package manager, so shared libraries are declared as versioned dependencies rather than copied by hand into the place file."
+    },
+    {
+     "say": "The point of the whole setup is not sophistication."
+    },
+    {
+     "say": "It is that code review, history, branching and reproducible builds all become possible the moment the source lives in files."
     }
    ],
    "questions": [
@@ -5027,22 +5471,31 @@
   "68": {
    "beats": [
     {
-     "say": "At scale, raw cloud storage and loose remote events start producing real failures: race conditions, replication lag and corrupted data."
+     "say": "At scale, raw cloud storage and loose remote events start producing real failures: race conditions, replication lag, corrupted data."
     },
     {
-     "say": "So established codebases put a layer on top, and the two worth knowing solve two different problems."
+     "say": "So established codebases put a layer on top. Two are worth knowing, and they solve different problems."
     },
     {
-     "say": "The first is session locking. A player can be saving on server A while already joining server B, which is how progress gets lost or duplicated."
+     "say": "The first is session locking."
     },
     {
-     "say": "The fix is a lock. While one server holds a player's data, no other server can read or write it, and the lock is released only once that player's client has fully disconnected."
+     "say": "A player can be saving on one server while already joining another, which is how progress gets lost or duplicated."
     },
     {
-     "say": "The second is structure. A framework that separates server side services from client side controllers, with a defined way for them to talk, so a growing project does not become a web of scripts reaching into each other."
+     "say": "The fix is a lock. While one server holds a player's data, no other server can read or write it."
     },
     {
-     "say": "Neither is magic. Both are the same instinct applied at scale: make ownership explicit, and make the boundaries something you declare rather than something you remember."
+     "say": "And the lock is released only once that player's client has fully disconnected. Releasing it earlier reopens the exact gap it exists to close."
+    },
+    {
+     "say": "The second is structure: a framework separating server side services from client side controllers, with a defined way for them to talk."
+    },
+    {
+     "say": "So a growing project does not become a web of scripts reaching into each other."
+    },
+    {
+     "say": "Neither is magic. Both are the same instinct applied at scale: make ownership explicit, and make boundaries something you declare rather than something you remember."
     }
    ],
    "questions": [
@@ -5093,25 +5546,34 @@
   "69": {
    "beats": [
     {
-     "say": "Roblox is built as a set of services. Almost every capability, from physics to player management to cloud storage, is reached by asking for the service that owns it."
+     "say": "Roblox is built as a set of services. Almost every capability is reached by asking for the service that owns it."
     },
     {
      "say": "A handful of them are containers, sitting at the root of the game and holding things."
     },
     {
-     "say": "Workspace holds everything physically present in the three dimensional world, and it is where the camera, gravity and the spatial queries live."
+     "say": "Workspace holds everything physically present in the three dimensional world."
     },
     {
-     "say": "Players holds the people currently connected, which is where you learn that someone joined or left."
+     "say": "Which is also why the camera, gravity and the spatial queries live there: they are all about that physical world."
+    },
+    {
+     "say": "Players holds the people currently connected, and is where you learn that someone joined or left."
     },
     {
      "say": "Replicated storage holds what both the server and the clients need to see, which is where shared modules and remote events belong."
     },
     {
-     "say": "Learning the service list is less about memorising names and more about developing one instinct: when you need a capability, the first question is which service owns it."
+     "say": "Learning the full list is less useful than developing one instinct."
     },
     {
-     "say": "And that is the end of the course. Everything from here is the same three habits repeated at larger scale. Know where your code runs, know who owns each piece of state, and clean up what you create."
+     "say": "When you need a capability, the first question is which service owns it. That gets you to the right place faster than trying to recall a name."
+    },
+    {
+     "say": "And that is the end of the course."
+    },
+    {
+     "say": "Everything from here is the same three habits repeated at larger scale. Know where your code runs, know who owns each piece of state, and clean up what you create."
     }
    ],
    "questions": [
