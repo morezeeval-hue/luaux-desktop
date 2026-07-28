@@ -71,7 +71,7 @@
     const el = $("#sidebar");
     el.innerHTML =
       '<div class="brand"><span class="windots"><i></i><i></i><i></i></span>' +
-      LuauMascot.svg(pilotMood(), 20, 'brand-pilot') + 'LuauX</div>' +
+      'LuauX</div>' +
       NAV.map((n) => `<button class="navbtn ${(route.view === n.id || (n.id === "more" && MORE_VIEWS.includes(route.view))) ? "active" : ""}" data-nav="${n.id}"><span class="ic">${n.ic}</span>${n.label}</button>`).join("") +
       '<div class="spacer"></div>' +
       `<div class="streak">🔥 ${LuauProgress.streak}-day streak</div>`;
@@ -113,12 +113,7 @@
     const step = LuauProgress.nextStep();
     const unit = step ? (step.kind === "read" ? data.unitForSection(step.section.id) : step.kind === "exercise" ? data.unit(step.exercise.unitId) : data.unit(step.unitID)) : null;
 
-    const mood = pilotMood();
     let html = '<h1 class="pagetitle">LuauX</h1><p class="subtitle">Offline course. No account, no server.</p>';
-    html += `<div class="card row pilot-card">
-      ${LuauMascot.svg(mood, 62)}
-      <div><div style="font-weight:600;font-size:15px">${esc(LuauMascot.line(mood, pilotState()))}</div>
-      <div style="font-size:12px;color:var(--secondary)">Pilot</div></div></div>`;
     html += `<div class="card row">${ring(journey.total ? journey.done / journey.total : 0)}
       <div><div style="font-weight:600;font-size:15px">${journey.done} of ${journey.total} milestones</div>
       <div style="font-size:12px;color:var(--secondary)">🔥 ${LuauProgress.streak}-day streak</div></div></div>`;
